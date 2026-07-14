@@ -267,7 +267,7 @@ function runGsapMotion() {
         });
     });
 
-    gsap.utils.toArray(".stack-showcase article, .skill-card, .project-card, .course-card, .discrete-topic, .calculus-topic, .case-panel").forEach((card) => {
+    gsap.utils.toArray(".stack-showcase article, .skill-card, .project-card, .course-card, .discrete-topic, .calculus-topic, .case-panel, .timeline-placeholder").forEach((card) => {
         card.addEventListener("mouseenter", () => {
             gsap.to(card, {
                 y: -8,
@@ -337,6 +337,26 @@ function runGsapMotion() {
                 }
             }
         );
+    });
+
+    const revealCurrentViewport = () => {
+        ScrollTrigger.refresh();
+        gsap.utils.toArray("[data-animate]").forEach((item) => {
+            if (item.closest("[hidden]")) {
+                return;
+            }
+
+            const rect = item.getBoundingClientRect();
+
+            if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+                gsap.set(item, { autoAlpha: 1, y: 0 });
+            }
+        });
+    };
+
+    window.addEventListener("load", revealCurrentViewport, { once: true });
+    window.addEventListener("hashchange", () => {
+        window.requestAnimationFrame(revealCurrentViewport);
     });
 }
 

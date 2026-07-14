@@ -636,6 +636,7 @@ h1 {
 .discrete-section,
 .calculus-section,
 .projects-section,
+.timeline-section,
 .case-study-section {
     padding: 108px 0;
 }
@@ -2456,6 +2457,78 @@ h1 {
     pointer-events: none;
 }
 
+.timeline-section {
+    border-top: 1px solid var(--line);
+    position: relative;
+}
+
+.timeline-placeholder {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.58fr);
+    gap: clamp(22px, 5vw, 72px);
+    align-items: stretch;
+    margin-top: 46px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: clamp(22px, 4vw, 38px);
+    background:
+        linear-gradient(110deg, rgba(248, 240, 223, 0.86), rgba(238, 226, 204, 0.66)),
+        repeating-linear-gradient(0deg, rgba(55, 38, 22, 0.052) 0 1px, transparent 1px 44px);
+    box-shadow: var(--shadow);
+}
+
+.timeline-placeholder span {
+    color: var(--teal);
+    font-size: 0.78rem;
+    font-weight: 840;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.timeline-placeholder h3 {
+    margin: 14px 0 0;
+    font-size: clamp(1.9rem, 4vw, 4rem);
+    line-height: 0.95;
+}
+
+.timeline-placeholder p {
+    max-width: 620px;
+    margin: 18px 0 0;
+    color: var(--muted);
+    line-height: 1.75;
+}
+
+.timeline-placeholder ol {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: waypoint;
+}
+
+.timeline-placeholder li {
+    counter-increment: waypoint;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 13px;
+    background: rgba(255, 249, 235, 0.58);
+    color: var(--text);
+    font-weight: 760;
+}
+
+.timeline-placeholder li::before {
+    content: counter(waypoint, decimal-leading-zero);
+    color: var(--amber);
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+}
+
 .contact-section {
     border-top: 1px solid var(--line);
     padding: 108px 0;
@@ -3069,6 +3142,7 @@ h1 {
     .discrete-stats,
     .analysis-pipeline,
     .resource-grid,
+    .timeline-placeholder,
     .contact-grid {
         grid-template-columns: 1fr;
     }

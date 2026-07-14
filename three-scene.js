@@ -114,6 +114,13 @@ if (renderer) {
     const pointerTarget = new THREE.Vector2();
     const pointerCurrent = new THREE.Vector2();
     const pointerNeutral = new THREE.Vector2();
+    const sceneLights = {
+        hemisphere: null,
+        key: null,
+        fill: null,
+        rim: null,
+        under: null
+    };
 
     const flightState = {
         currentStage: "hero",
@@ -125,8 +132,32 @@ if (renderer) {
         targetScale: 1,
         bank: 0,
         targetBank: 0,
+        transitionBank: 0,
+        targetRouteBankMax: 0.12,
         pitch: 0,
         targetPitch: 0,
+        floatAmount: 0.065,
+        targetFloatAmount: 0.065,
+        floatSpeed: 0.82,
+        targetFloatSpeed: 0.82,
+        driftAmount: 0.04,
+        targetDriftAmount: 0.04,
+        pointerInfluence: 1,
+        targetPointerInfluence: 1,
+        cameraPointerInfluence: 1,
+        targetCameraPointerInfluence: 1,
+        environmentPathOpacity: 0.16,
+        targetEnvironmentPathOpacity: 0.16,
+        particleOpacity: 0.22,
+        targetParticleOpacity: 0.22,
+        particleSpeed: 0.08,
+        targetParticleSpeed: 0.08,
+        fogDensity: 0.026,
+        targetFogDensity: 0.026,
+        keyLightIntensity: 3.45,
+        targetKeyLightIntensity: 3.45,
+        rimLightIntensity: 4.2,
+        targetRimLightIntensity: 4.2,
         cameraPosition: new THREE.Vector3(0.15, 1.05, 7.35),
         targetCameraPosition: new THREE.Vector3(0.15, 1.05, 7.35),
         cameraTarget: new THREE.Vector3(0, -0.12, -0.78),
@@ -136,100 +167,428 @@ if (renderer) {
         isModelLoaded: false,
         isPageVisible: !document.hidden,
         isSmallScreen: false,
+        isTablet: false,
         isTouchOnly: !supportsFinePointer,
         lastPointerMoveTime: 0,
         lastStateWriteTime: 0
     };
 
+    const secondsPerRotation = (seconds) => (Math.PI * 2) / seconds;
+
+    const dampingProfiles = {
+        desktop: {
+            position: 2.35,
+            scale: 3.85,
+            bank: 3.35,
+            routeBank: 2.95,
+            pitch: 2.85,
+            rotationSpeed: 1.75,
+            float: 2.55,
+            drift: 2.65,
+            pointer: 3.25,
+            cameraPosition: 2.05,
+            cameraTarget: 2.45,
+            cameraPointer: 3.35,
+            environment: 1.85
+        },
+        tablet: {
+            position: 2.8,
+            scale: 4.2,
+            bank: 3.65,
+            routeBank: 3.25,
+            pitch: 3.1,
+            rotationSpeed: 2,
+            float: 2.9,
+            drift: 3,
+            pointer: 3.6,
+            cameraPosition: 2.45,
+            cameraTarget: 2.8,
+            cameraPointer: 3.8,
+            environment: 2.1
+        },
+        mobile: {
+            position: 3.35,
+            scale: 4.8,
+            bank: 4.2,
+            routeBank: 4.1,
+            pitch: 3.8,
+            rotationSpeed: 2.25,
+            float: 3.4,
+            drift: 3.5,
+            pointer: 4.5,
+            cameraPosition: 3.2,
+            cameraTarget: 3.35,
+            cameraPointer: 4.5,
+            environment: 2.5
+        }
+    };
+
+    function getDampingProfile() {
+        if (flightState.isSmallScreen) {
+            return dampingProfiles.mobile;
+        }
+
+        if (flightState.isTablet) {
+            return dampingProfiles.tablet;
+        }
+
+        return dampingProfiles.desktop;
+    }
+
     const flightStages = {
         opening: {
-            position: { x: 1.85, y: 0.04, z: 0.16 },
-            scale: 0.92,
-            bank: 0.02,
-            pitch: 0.04,
-            rotationSpeed: 0.28,
-            cameraPosition: { x: 0.18, y: 1.12, z: 7.65 },
-            cameraTarget: { x: 0, y: -0.12, z: -0.78 }
+            position: { x: 2.2, y: -0.26, z: -0.54 },
+            scale: 1.15,
+            bank: 0.015,
+            pitch: 0.035,
+            rotationSpeed: secondsPerRotation(22),
+            cameraPosition: { x: 0.22, y: 1.08, z: 6.9 },
+            cameraTarget: { x: 0.34, y: -0.1, z: -0.78 },
+            transitionDuration: 1.4,
+            transitionEase: "power3.out",
+            floatAmount: 0.055,
+            floatSpeed: 0.72,
+            driftAmount: 0.026,
+            pointerInfluence: 0.65,
+            cameraPointerInfluence: 0.58,
+            environment: {
+                fogDensity: 0.026,
+                pathOpacity: 0.13,
+                particleOpacity: 0.19,
+                particleSpeed: 0.06,
+                keyLightIntensity: 3.2,
+                rimLightIntensity: 3.7
+            }
         },
         hero: {
-            position: { x: 3.1, y: -0.42, z: -0.38 },
-            scale: 1.78,
-            bank: 0.02,
-            pitch: 0.035,
-            rotationSpeed: (Math.PI * 2) / 20,
-            cameraPosition: { x: 0.35, y: 1.08, z: 6.65 },
-            cameraTarget: { x: 0.72, y: 0.02, z: -0.68 },
+            position: { x: 3.25, y: -0.6, z: -0.66 },
+            scale: 1.46,
+            bank: 0.018,
+            pitch: 0.032,
+            routeBankMax: 0.08,
+            rotationSpeed: secondsPerRotation(20),
+            cameraPosition: { x: 0.34, y: 1.04, z: 7.06 },
+            cameraTarget: { x: 0.72, y: -0.06, z: -0.78 },
+            transitionDuration: 1.55,
+            transitionEase: "power3.out",
+            floatAmount: 0.066,
+            floatSpeed: 0.78,
+            driftAmount: 0.042,
+            pointerInfluence: 1,
+            cameraPointerInfluence: 1,
+            environment: {
+                fogDensity: 0.026,
+                pathOpacity: 0.16,
+                particleOpacity: 0.23,
+                particleSpeed: 0.08,
+                keyLightIntensity: 3.45,
+                rimLightIntensity: 4.2
+            },
+            tablet: {
+                position: { x: 2.0, y: -0.72, z: -0.92 },
+                scale: 1.08,
+                cameraPosition: { x: 0.18, y: 1.02, z: 7.28 },
+                cameraTarget: { x: 0.36, y: -0.12, z: -0.88 }
+            },
             mobile: {
-                position: { x: 0.18, y: -0.54, z: -1.08 },
-                scale: 0.78,
-                bank: 0.01,
-                pitch: 0.02,
-                cameraPosition: { x: 0.02, y: 0.98, z: 7.45 },
-                cameraTarget: { x: 0, y: -0.28, z: -0.92 }
+                position: { x: 0.1, y: -2.05, z: -1.42 },
+                scale: 0.36,
+                bank: 0.008,
+                pitch: 0.018,
+                cameraPosition: { x: 0.02, y: 1.02, z: 8.05 },
+                cameraTarget: { x: 0, y: -0.18, z: -1.02 },
+                floatAmount: 0.032,
+                driftAmount: 0.014,
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
             }
         },
         skills: {
-            position: { x: 1.22, y: -0.02, z: -0.38 },
-            scale: 0.94,
-            bank: -0.05,
-            pitch: 0.03,
-            rotationSpeed: (Math.PI * 2) / 22,
-            cameraPosition: { x: 0.02, y: 1, z: 7.05 },
-            cameraTarget: { x: 0, y: -0.1, z: -0.82 }
+            position: { x: 1.25, y: -0.16, z: -0.86 },
+            scale: 0.98,
+            bank: -0.014,
+            pitch: 0.022,
+            routeBankMax: 0.07,
+            rotationSpeed: secondsPerRotation(25),
+            cameraPosition: { x: 0.16, y: 1.01, z: 7.22 },
+            cameraTarget: { x: 0.26, y: -0.13, z: -0.92 },
+            transitionDuration: 1.8,
+            transitionEase: "power3.inOut",
+            floatAmount: 0.035,
+            floatSpeed: 0.52,
+            driftAmount: 0.018,
+            pointerInfluence: 0.52,
+            cameraPointerInfluence: 0.42,
+            environment: {
+                fogDensity: 0.023,
+                pathOpacity: 0.12,
+                particleOpacity: 0.17,
+                particleSpeed: 0.045,
+                keyLightIntensity: 3.05,
+                rimLightIntensity: 3.35
+            },
+            tablet: {
+                position: { x: 0.62, y: -0.46, z: -1.02 },
+                scale: 0.76,
+                cameraPosition: { x: 0.06, y: 0.98, z: 7.52 },
+                cameraTarget: { x: 0.12, y: -0.22, z: -0.96 }
+            },
+            mobile: {
+                position: { x: -0.06, y: -0.62, z: -1.24 },
+                scale: 0.58,
+                bank: -0.006,
+                pitch: 0.012,
+                cameraPosition: { x: 0, y: 0.96, z: 7.78 },
+                cameraTarget: { x: 0, y: -0.34, z: -1 },
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
+            }
         },
         coursework: {
-            position: { x: 0.82, y: -0.08, z: -0.72 },
-            scale: 0.9,
-            bank: 0.07,
-            pitch: 0.025,
-            rotationSpeed: (Math.PI * 2) / 22,
-            cameraPosition: { x: -0.08, y: 0.96, z: 6.85 },
-            cameraTarget: { x: 0, y: -0.1, z: -0.86 }
+            position: { x: 0.44, y: -0.22, z: -1.04 },
+            scale: 0.84,
+            bank: 0.032,
+            pitch: 0.026,
+            routeBankMax: 0.09,
+            rotationSpeed: secondsPerRotation(31),
+            cameraPosition: { x: 0.08, y: 0.98, z: 7.42 },
+            cameraTarget: { x: 0.14, y: -0.15, z: -1.02 },
+            transitionDuration: 1.9,
+            transitionEase: "power2.inOut",
+            floatAmount: 0.04,
+            floatSpeed: 0.62,
+            driftAmount: 0.034,
+            pointerInfluence: 0.44,
+            cameraPointerInfluence: 0.36,
+            environment: {
+                fogDensity: 0.024,
+                pathOpacity: 0.22,
+                particleOpacity: 0.19,
+                particleSpeed: 0.07,
+                keyLightIntensity: 3.15,
+                rimLightIntensity: 3.55
+            },
+            tablet: {
+                position: { x: 0.26, y: -0.54, z: -1.2 },
+                scale: 0.66,
+                cameraPosition: { x: 0.02, y: 0.96, z: 7.8 },
+                cameraTarget: { x: 0.04, y: -0.28, z: -1.06 }
+            },
+            mobile: {
+                position: { x: 0.08, y: -0.64, z: -1.36 },
+                scale: 0.54,
+                bank: 0.012,
+                pitch: 0.012,
+                cameraPosition: { x: 0, y: 0.94, z: 7.92 },
+                cameraTarget: { x: 0, y: -0.36, z: -1.06 },
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
+            }
         },
         discrete: {
-            position: { x: -0.72, y: -0.12, z: -1.02 },
-            scale: 0.88,
-            bank: -0.08,
-            pitch: 0.02,
-            rotationSpeed: (Math.PI * 2) / 23,
-            cameraPosition: { x: -0.18, y: 0.92, z: 6.62 },
-            cameraTarget: { x: 0, y: -0.12, z: -0.88 }
+            position: { x: -0.48, y: -0.2, z: -1.18 },
+            scale: 0.78,
+            bank: -0.046,
+            pitch: 0.018,
+            routeBankMax: 0.1,
+            rotationSpeed: secondsPerRotation(32),
+            cameraPosition: { x: -0.04, y: 0.94, z: 7.58 },
+            cameraTarget: { x: -0.08, y: -0.16, z: -1.1 },
+            transitionDuration: 1.9,
+            transitionEase: "power2.inOut",
+            floatAmount: 0.026,
+            floatSpeed: 0.5,
+            driftAmount: 0.016,
+            pointerInfluence: 0.28,
+            cameraPointerInfluence: 0.24,
+            environment: {
+                fogDensity: 0.022,
+                pathOpacity: 0.28,
+                particleOpacity: 0.2,
+                particleSpeed: 0.055,
+                keyLightIntensity: 3,
+                rimLightIntensity: 3.85
+            },
+            tablet: {
+                position: { x: -0.24, y: -0.56, z: -1.32 },
+                scale: 0.62,
+                cameraPosition: { x: -0.02, y: 0.94, z: 7.86 },
+                cameraTarget: { x: -0.04, y: -0.3, z: -1.1 }
+            },
+            mobile: {
+                position: { x: -0.08, y: -0.66, z: -1.48 },
+                scale: 0.5,
+                bank: -0.012,
+                pitch: 0.01,
+                cameraPosition: { x: 0, y: 0.94, z: 8.04 },
+                cameraTarget: { x: 0, y: -0.36, z: -1.1 },
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
+            }
         },
         calculus: {
-            position: { x: 0.72, y: -0.12, z: -1.08 },
-            scale: 0.88,
-            bank: 0.08,
-            pitch: 0.02,
-            rotationSpeed: (Math.PI * 2) / 23,
-            cameraPosition: { x: 0.14, y: 0.92, z: 6.62 },
-            cameraTarget: { x: 0, y: -0.12, z: -0.9 }
+            position: { x: 0.24, y: -0.06, z: -1.22 },
+            scale: 0.8,
+            bank: 0.04,
+            pitch: 0.036,
+            routeBankMax: 0.1,
+            rotationSpeed: secondsPerRotation(28),
+            cameraPosition: { x: 0.04, y: 1.02, z: 7.5 },
+            cameraTarget: { x: 0.08, y: -0.12, z: -1.1 },
+            transitionDuration: 1.9,
+            transitionEase: "power2.inOut",
+            floatAmount: 0.058,
+            floatSpeed: 0.7,
+            driftAmount: 0.032,
+            pointerInfluence: 0.36,
+            cameraPointerInfluence: 0.36,
+            environment: {
+                fogDensity: 0.024,
+                pathOpacity: 0.2,
+                particleOpacity: 0.2,
+                particleSpeed: 0.085,
+                keyLightIntensity: 3.22,
+                rimLightIntensity: 3.7
+            },
+            tablet: {
+                position: { x: 0.18, y: -0.44, z: -1.32 },
+                scale: 0.64,
+                cameraPosition: { x: 0.02, y: 0.98, z: 7.86 },
+                cameraTarget: { x: 0.02, y: -0.26, z: -1.12 }
+            },
+            mobile: {
+                position: { x: 0.1, y: -0.6, z: -1.42 },
+                scale: 0.52,
+                bank: 0.012,
+                pitch: 0.018,
+                cameraPosition: { x: 0, y: 0.96, z: 8.02 },
+                cameraTarget: { x: 0, y: -0.34, z: -1.1 },
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
+            }
         },
         projects: {
-            position: { x: -1.18, y: -0.2, z: -1.25 },
-            scale: 0.86,
-            bank: -0.1,
-            pitch: 0.015,
-            rotationSpeed: (Math.PI * 2) / 21,
-            cameraPosition: { x: -0.28, y: 0.86, z: 6.38 },
-            cameraTarget: { x: 0, y: -0.12, z: -0.92 }
+            position: { x: -0.72, y: -0.28, z: -1.12 },
+            scale: 0.88,
+            bank: -0.066,
+            pitch: 0.026,
+            routeBankMax: 0.14,
+            rotationSpeed: secondsPerRotation(24),
+            cameraPosition: { x: -0.12, y: 0.9, z: 7.24 },
+            cameraTarget: { x: -0.08, y: -0.14, z: -1.02 },
+            transitionDuration: 1.6,
+            transitionEase: "power3.inOut",
+            floatAmount: 0.052,
+            floatSpeed: 0.78,
+            driftAmount: 0.044,
+            pointerInfluence: 0.58,
+            cameraPointerInfluence: 0.5,
+            environment: {
+                fogDensity: 0.025,
+                pathOpacity: 0.24,
+                particleOpacity: 0.24,
+                particleSpeed: 0.105,
+                keyLightIntensity: 3.45,
+                rimLightIntensity: 4.35
+            },
+            tablet: {
+                position: { x: -0.34, y: -0.58, z: -1.22 },
+                scale: 0.7,
+                cameraPosition: { x: -0.04, y: 0.94, z: 7.58 },
+                cameraTarget: { x: -0.04, y: -0.28, z: -1.02 }
+            },
+            mobile: {
+                position: { x: -0.08, y: -0.66, z: -1.34 },
+                scale: 0.54,
+                bank: -0.018,
+                pitch: 0.014,
+                cameraPosition: { x: 0, y: 0.94, z: 7.92 },
+                cameraTarget: { x: 0, y: -0.36, z: -1.04 },
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
+            }
         },
         timeline: {
-            position: { x: 0.36, y: -0.18, z: -1.18 },
-            scale: 0.84,
-            bank: 0.04,
-            pitch: 0.018,
-            rotationSpeed: (Math.PI * 2) / 24,
-            cameraPosition: { x: 0, y: 0.88, z: 6.55 },
-            cameraTarget: { x: 0, y: -0.12, z: -0.9 }
+            position: { x: -0.12, y: -0.38, z: -1.52 },
+            scale: 0.66,
+            bank: 0.022,
+            pitch: 0.016,
+            routeBankMax: 0.07,
+            rotationSpeed: secondsPerRotation(34),
+            cameraPosition: { x: 0, y: 0.86, z: 7.96 },
+            cameraTarget: { x: 0.02, y: -0.2, z: -1.18 },
+            transitionDuration: 2,
+            transitionEase: "power2.inOut",
+            floatAmount: 0.024,
+            floatSpeed: 0.46,
+            driftAmount: 0.018,
+            pointerInfluence: 0.18,
+            cameraPointerInfluence: 0.18,
+            environment: {
+                fogDensity: 0.027,
+                pathOpacity: 0.31,
+                particleOpacity: 0.18,
+                particleSpeed: 0.05,
+                keyLightIntensity: 2.9,
+                rimLightIntensity: 3.25
+            },
+            tablet: {
+                position: { x: -0.08, y: -0.58, z: -1.64 },
+                scale: 0.54,
+                cameraPosition: { x: 0, y: 0.92, z: 8.16 },
+                cameraTarget: { x: 0, y: -0.32, z: -1.2 }
+            },
+            mobile: {
+                position: { x: 0, y: -0.68, z: -1.7 },
+                scale: 0.46,
+                bank: 0.008,
+                pitch: 0.008,
+                cameraPosition: { x: 0, y: 0.94, z: 8.22 },
+                cameraTarget: { x: 0, y: -0.38, z: -1.16 },
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
+            }
         },
         contact: {
-            position: { x: 1.1, y: -0.24, z: -1.36 },
-            scale: 0.82,
-            bank: 0.06,
-            pitch: 0.02,
-            rotationSpeed: (Math.PI * 2) / 24,
-            cameraPosition: { x: 0.24, y: 0.84, z: 6.4 },
-            cameraTarget: { x: 0, y: -0.12, z: -0.92 }
+            position: { x: 0.18, y: -0.6, z: -1.66 },
+            scale: 0.64,
+            bank: 0.006,
+            pitch: -0.018,
+            routeBankMax: 0.05,
+            rotationSpeed: secondsPerRotation(42),
+            cameraPosition: { x: 0.04, y: 0.8, z: 8.12 },
+            cameraTarget: { x: 0.04, y: -0.28, z: -1.24 },
+            transitionDuration: 2.1,
+            transitionEase: "power2.out",
+            floatAmount: 0.018,
+            floatSpeed: 0.38,
+            driftAmount: 0.012,
+            pointerInfluence: 0.12,
+            cameraPointerInfluence: 0.12,
+            environment: {
+                fogDensity: 0.03,
+                pathOpacity: 0.12,
+                particleOpacity: 0.14,
+                particleSpeed: 0.035,
+                keyLightIntensity: 2.75,
+                rimLightIntensity: 2.9
+            },
+            tablet: {
+                position: { x: 0.04, y: -0.66, z: -1.74 },
+                scale: 0.52,
+                cameraPosition: { x: 0, y: 0.84, z: 8.32 },
+                cameraTarget: { x: 0, y: -0.36, z: -1.22 }
+            },
+            mobile: {
+                position: { x: 0, y: -0.72, z: -1.8 },
+                scale: 0.44,
+                bank: 0,
+                pitch: -0.01,
+                cameraPosition: { x: 0, y: 0.9, z: 8.34 },
+                cameraTarget: { x: 0, y: -0.42, z: -1.18 },
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
+            }
         }
     };
 
@@ -242,11 +601,26 @@ if (renderer) {
     let lastSceneWidth = 0;
     let lastSceneHeight = 0;
     let lastPixelRatio = 0;
-    let stageObserver = null;
+    let stageScrollTriggers = [];
     let stageScrollFallback = null;
     let isDisposed = false;
+    const transitionState = {
+        active: false,
+        fromStage: "hero",
+        toStage: "hero",
+        startedAt: 0,
+        duration: 1.8
+    };
 
     function applyResponsiveStage(stage) {
+        const environment = {
+            fogDensity: stage.environment?.fogDensity ?? 0.026,
+            pathOpacity: stage.environment?.pathOpacity ?? 0.16,
+            particleOpacity: stage.environment?.particleOpacity ?? 0.22,
+            particleSpeed: stage.environment?.particleSpeed ?? 0.08,
+            keyLightIntensity: stage.environment?.keyLightIntensity ?? 3.45,
+            rimLightIntensity: stage.environment?.rimLightIntensity ?? 4.2
+        };
         const nextStage = {
             position: { ...stage.position },
             scale: stage.scale,
@@ -254,16 +628,47 @@ if (renderer) {
             pitch: stage.pitch,
             rotationSpeed: stage.rotationSpeed,
             cameraPosition: { ...stage.cameraPosition },
-            cameraTarget: { ...stage.cameraTarget }
+            cameraTarget: { ...stage.cameraTarget },
+            transitionDuration: stage.transitionDuration ?? 1.6,
+            transitionEase: stage.transitionEase ?? "power3.out",
+            floatAmount: stage.floatAmount ?? 0.05,
+            floatSpeed: stage.floatSpeed ?? 0.7,
+            driftAmount: stage.driftAmount ?? 0.03,
+            pointerInfluence: stage.pointerInfluence ?? 0.5,
+            cameraPointerInfluence: stage.cameraPointerInfluence ?? 0.5,
+            routeBankMax: stage.routeBankMax ?? 0.12,
+            environment
         };
 
         if (flightState.isSmallScreen && stage.mobile) {
             nextStage.position = { ...stage.mobile.position };
-            nextStage.scale = stage.mobile.scale;
-            nextStage.bank = stage.mobile.bank;
-            nextStage.pitch = stage.mobile.pitch;
+            nextStage.scale = stage.mobile.scale ?? nextStage.scale;
+            nextStage.bank = stage.mobile.bank ?? nextStage.bank;
+            nextStage.pitch = stage.mobile.pitch ?? nextStage.pitch;
             nextStage.cameraPosition = { ...stage.mobile.cameraPosition };
             nextStage.cameraTarget = { ...stage.mobile.cameraTarget };
+            nextStage.floatAmount = stage.mobile.floatAmount ?? nextStage.floatAmount * 0.62;
+            nextStage.floatSpeed = stage.mobile.floatSpeed ?? nextStage.floatSpeed * 0.86;
+            nextStage.driftAmount = stage.mobile.driftAmount ?? nextStage.driftAmount * 0.48;
+            nextStage.pointerInfluence = stage.mobile.pointerInfluence ?? 0;
+            nextStage.cameraPointerInfluence = stage.mobile.cameraPointerInfluence ?? 0;
+            nextStage.routeBankMax = stage.mobile.routeBankMax ?? Math.min(nextStage.routeBankMax, 0.045);
+            return nextStage;
+        }
+
+        if (flightState.isTablet && stage.tablet) {
+            nextStage.position = { ...stage.tablet.position };
+            nextStage.scale = stage.tablet.scale ?? nextStage.scale;
+            nextStage.bank = stage.tablet.bank ?? nextStage.bank;
+            nextStage.pitch = stage.tablet.pitch ?? nextStage.pitch;
+            nextStage.cameraPosition = { ...stage.tablet.cameraPosition };
+            nextStage.cameraTarget = { ...stage.tablet.cameraTarget };
+            nextStage.floatAmount = stage.tablet.floatAmount ?? nextStage.floatAmount * 0.82;
+            nextStage.floatSpeed = stage.tablet.floatSpeed ?? nextStage.floatSpeed;
+            nextStage.driftAmount = stage.tablet.driftAmount ?? nextStage.driftAmount * 0.72;
+            nextStage.pointerInfluence = stage.tablet.pointerInfluence ?? nextStage.pointerInfluence * 0.58;
+            nextStage.cameraPointerInfluence = stage.tablet.cameraPointerInfluence ?? nextStage.cameraPointerInfluence * 0.58;
+            nextStage.routeBankMax = stage.tablet.routeBankMax ?? Math.min(nextStage.routeBankMax, 0.085);
             return nextStage;
         }
 
@@ -287,96 +692,116 @@ if (renderer) {
         vector.set(values.x, values.y, values.z);
     }
 
-    function setFlightStage(stageName) {
+    function setFlightStage(stageName, options = {}) {
         const stage = flightStages[stageName];
+        const force = Boolean(options.force);
 
         if (!stage) {
             console.warn(`Unknown flight stage: ${stageName}`);
             return;
         }
 
+        if (!force && flightState.currentStage === stageName) {
+            return;
+        }
+
         const responsiveStage = applyResponsiveStage(stage);
+        const previousStage = flightState.currentStage;
         flightState.currentStage = stageName;
+        transitionState.active = !prefersReducedMotion;
+        transitionState.fromStage = previousStage;
+        transitionState.toStage = stageName;
+        transitionState.startedAt = clock.getElapsedTime();
+        transitionState.duration = responsiveStage.transitionDuration;
         setVectorFromObject(flightState.targetPosition, responsiveStage.position);
         flightState.targetScale = responsiveStage.scale;
         flightState.targetBank = responsiveStage.bank;
+        flightState.targetRouteBankMax = responsiveStage.routeBankMax;
         flightState.targetPitch = responsiveStage.pitch;
         flightState.targetRotationSpeed = prefersReducedMotion ? 0 : responsiveStage.rotationSpeed;
+        flightState.targetFloatAmount = responsiveStage.floatAmount;
+        flightState.targetFloatSpeed = responsiveStage.floatSpeed;
+        flightState.targetDriftAmount = responsiveStage.driftAmount;
+        flightState.targetPointerInfluence = responsiveStage.pointerInfluence;
+        flightState.targetCameraPointerInfluence = responsiveStage.cameraPointerInfluence;
+        flightState.targetFogDensity = responsiveStage.environment.fogDensity;
+        flightState.targetEnvironmentPathOpacity = responsiveStage.environment.pathOpacity;
+        flightState.targetParticleOpacity = responsiveStage.environment.particleOpacity;
+        flightState.targetParticleSpeed = responsiveStage.environment.particleSpeed;
+        flightState.targetKeyLightIntensity = responsiveStage.environment.keyLightIntensity;
+        flightState.targetRimLightIntensity = responsiveStage.environment.rimLightIntensity;
         setVectorFromObject(flightState.targetCameraPosition, responsiveStage.cameraPosition);
         setVectorFromObject(flightState.targetCameraTarget, responsiveStage.cameraTarget);
+        canvas.dataset.rotationDuration = responsiveStage.rotationSpeed
+            ? (Math.PI * 2 / responsiveStage.rotationSpeed).toFixed(1)
+            : "0";
     }
+
+    const sectionStageMap = [
+        { selector: "#home", stage: "hero" },
+        { selector: "#skills", stage: "skills" },
+        { selector: "#coursework", stage: "coursework" },
+        { selector: "#discrete", stage: "discrete" },
+        { selector: "#calculus", stage: "calculus" },
+        { selector: "#projects", stage: "projects" },
+        { selector: "#timeline", stage: "timeline" },
+        { selector: "#contact", stage: "contact" }
+    ];
 
     function getFlightStageElements() {
-        const stageSelectors = [
-            { name: "hero", selector: "#home" },
-            { name: "skills", selector: "#skills" },
-            { name: "coursework", selector: "#coursework" },
-            { name: "discrete", selector: "#discrete, #discrete-case-study" },
-            { name: "calculus", selector: "#calculus, #calculus-case-study" },
-            { name: "projects", selector: "#projects, #quizmaster-case-study, #tumble-pop-case-study" },
-            { name: "timeline", selector: ".flight-chapters" },
-            { name: "contact", selector: "#contact" }
-        ];
-
-        return stageSelectors.flatMap(({ name, selector }) => {
-            return Array.from(document.querySelectorAll(selector)).map((element) => {
-                element.dataset.flightStage = element.dataset.flightStage || name;
-                return { name, element };
-            });
-        });
+        return sectionStageMap
+            .map(({ selector, stage }) => {
+                const element = document.querySelector(selector);
+                return element ? { element, stage } : null;
+            })
+            .filter(Boolean);
     }
 
-    function setupFlightStageObserver() {
+    function applyNearestStage(stageElements) {
+        const viewportCenter = window.innerHeight * 0.52;
+        const nearestStage = stageElements.reduce((nearest, candidate) => {
+            const rect = candidate.element.getBoundingClientRect();
+
+            if (rect.height === 0 || rect.bottom < 0 || rect.top > window.innerHeight) {
+                return nearest;
+            }
+
+            const distance = Math.abs(rect.top + rect.height * 0.5 - viewportCenter);
+
+            if (!nearest || distance < nearest.distance) {
+                return { stage: candidate.stage, distance };
+            }
+
+            return nearest;
+        }, null);
+
+        if (nearestStage && nearestStage.stage !== flightState.currentStage) {
+            setFlightStage(nearestStage.stage);
+        }
+    }
+
+    function setupFlightStageScrollTriggers() {
         const stageElements = getFlightStageElements();
 
         if (!stageElements.length) {
             return;
         }
 
-        const applyNearestStage = () => {
-            const viewportCenter = window.innerHeight * 0.5;
-            const nearestStage = stageElements.reduce((nearest, candidate) => {
-                const rect = candidate.element.getBoundingClientRect();
-
-                if (rect.height === 0 || rect.bottom < 0 || rect.top > window.innerHeight) {
-                    return nearest;
-                }
-
-                const distance = Math.abs(rect.top + rect.height * 0.5 - viewportCenter);
-
-                if (!nearest || distance < nearest.distance) {
-                    return { name: candidate.name, distance };
-                }
-
-                return nearest;
-            }, null);
-
-            if (nearestStage && nearestStage.name !== flightState.currentStage) {
-                setFlightStage(nearestStage.name);
-            }
-        };
-
-        if ("IntersectionObserver" in window) {
-            stageObserver = new IntersectionObserver(
-                (entries) => {
-                    const visibleEntries = entries
-                        .filter((entry) => entry.isIntersecting)
-                        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-                    const nextStage = visibleEntries[0]?.target?.dataset?.flightStage;
-
-                    if (nextStage && nextStage !== flightState.currentStage) {
-                        setFlightStage(nextStage);
-                    }
-                },
-                {
-                    root: null,
-                    rootMargin: "-22% 0px -44% 0px",
-                    threshold: [0.12, 0.28, 0.5, 0.72]
-                }
-            );
-
-            stageElements.forEach(({ element }) => stageObserver.observe(element));
-            applyNearestStage();
+        if (window.gsap && window.ScrollTrigger) {
+            window.gsap.registerPlugin(window.ScrollTrigger);
+            stageScrollTriggers = stageElements.map(({ element, stage }) => {
+                return window.ScrollTrigger.create({
+                    trigger: element,
+                    start: "top 66%",
+                    end: "bottom 34%",
+                    invalidateOnRefresh: true,
+                    onEnter: () => setFlightStage(stage),
+                    onEnterBack: () => setFlightStage(stage),
+                    onRefresh: () => applyNearestStage(stageElements)
+                });
+            });
+            applyNearestStage(stageElements);
+            window.ScrollTrigger.refresh();
             return;
         }
 
@@ -389,12 +814,12 @@ if (renderer) {
             isScrollQueued = true;
             window.requestAnimationFrame(() => {
                 isScrollQueued = false;
-                applyNearestStage();
+                applyNearestStage(stageElements);
             });
         };
 
         window.addEventListener("scroll", stageScrollFallback, { passive: true });
-        applyNearestStage();
+        applyNearestStage(stageElements);
     }
 
     function setupLighting() {
@@ -409,6 +834,11 @@ if (renderer) {
         rimLight.position.set(4.6, 2.4, -3.2);
         underLight.position.set(-2.8, -1.8, 2.2);
 
+        sceneLights.hemisphere = hemisphereLight;
+        sceneLights.key = keyLight;
+        sceneLights.fill = fillLight;
+        sceneLights.rim = rimLight;
+        sceneLights.under = underLight;
         scene.add(hemisphereLight, keyLight, fillLight, rimLight, underLight);
     }
 
@@ -594,7 +1024,7 @@ if (renderer) {
             "assets/models/stylized_ww1_plane.glb",
             (gltf) => {
                 normalizeAircraftModel(gltf.scene);
-                setFlightStage("hero");
+                setFlightStage("hero", { force: true });
                 resizeScene(true);
                 revealAircraftModel();
                 renderSceneOnce();
@@ -616,15 +1046,18 @@ if (renderer) {
 
     function updateResponsiveState() {
         const wasSmallScreen = flightState.isSmallScreen;
+        const wasTablet = flightState.isTablet;
         const cssMobile = sceneStage
             ? Number.parseFloat(getComputedStyle(sceneStage).getPropertyValue("--scene-mobile")) === 1
             : false;
 
         flightState.isSmallScreen = cssMobile || window.innerWidth < 760;
+        flightState.isTablet = !flightState.isSmallScreen && window.innerWidth < 1025;
+        flightState.isTouchOnly = !supportsFinePointer || flightState.isSmallScreen;
 
-        if (wasSmallScreen !== flightState.isSmallScreen) {
+        if (wasSmallScreen !== flightState.isSmallScreen || wasTablet !== flightState.isTablet) {
             createAtmosphere();
-            setFlightStage(flightState.currentStage);
+            setFlightStage(flightState.currentStage, { force: true });
         }
     }
 
@@ -752,34 +1185,89 @@ if (renderer) {
     }
 
     function updateAircraftMotion(delta, elapsed) {
-        const positionDamping = 3.2;
-        const rotationDamping = 4.2;
+        const damping = getDampingProfile();
 
         flightState.rotationSpeed = THREE.MathUtils.damp(
             flightState.rotationSpeed,
             flightState.targetRotationSpeed,
-            3.4,
+            damping.rotationSpeed,
             delta
         );
-        dampVector(flightState.basePosition, flightState.targetPosition, positionDamping, delta);
-        flightState.baseScale = THREE.MathUtils.damp(flightState.baseScale, flightState.targetScale, 3.6, delta);
-        flightState.bank = THREE.MathUtils.damp(flightState.bank, flightState.targetBank, rotationDamping, delta);
-        flightState.pitch = THREE.MathUtils.damp(flightState.pitch, flightState.targetPitch, rotationDamping, delta);
+        flightState.floatAmount = THREE.MathUtils.damp(
+            flightState.floatAmount,
+            flightState.targetFloatAmount,
+            damping.float,
+            delta
+        );
+        flightState.floatSpeed = THREE.MathUtils.damp(
+            flightState.floatSpeed,
+            flightState.targetFloatSpeed,
+            damping.float,
+            delta
+        );
+        flightState.driftAmount = THREE.MathUtils.damp(
+            flightState.driftAmount,
+            flightState.targetDriftAmount,
+            damping.drift,
+            delta
+        );
+        flightState.pointerInfluence = THREE.MathUtils.damp(
+            flightState.pointerInfluence,
+            flightState.targetPointerInfluence,
+            damping.pointer,
+            delta
+        );
+
+        if (prefersReducedMotion) {
+            flightState.basePosition.copy(flightState.targetPosition);
+            flightState.baseScale = flightState.targetScale;
+            flightState.bank = flightState.targetBank;
+            flightState.pitch = flightState.targetPitch;
+            flightState.transitionBank = 0;
+        } else {
+            dampVector(flightState.basePosition, flightState.targetPosition, damping.position, delta);
+            flightState.baseScale = THREE.MathUtils.damp(
+                flightState.baseScale,
+                flightState.targetScale,
+                damping.scale,
+                delta
+            );
+            flightState.bank = THREE.MathUtils.damp(flightState.bank, flightState.targetBank, damping.bank, delta);
+            flightState.pitch = THREE.MathUtils.damp(flightState.pitch, flightState.targetPitch, damping.pitch, delta);
+
+            const remainingX = flightState.targetPosition.x - flightState.basePosition.x;
+            const remainingDistanceSq = flightState.basePosition.distanceToSquared(flightState.targetPosition);
+            const routeBankTarget = remainingDistanceSq > 0.006
+                ? THREE.MathUtils.clamp(-remainingX * 0.042, -flightState.targetRouteBankMax, flightState.targetRouteBankMax)
+                : 0;
+            flightState.transitionBank = THREE.MathUtils.damp(
+                flightState.transitionBank,
+                routeBankTarget,
+                damping.routeBank,
+                delta
+            );
+
+            if (transitionState.active && remainingDistanceSq < 0.004 && Math.abs(flightState.transitionBank) < 0.004) {
+                transitionState.active = false;
+            }
+        }
 
         aircraftPositionGroup.position.copy(flightState.basePosition);
         aircraftPositionGroup.scale.setScalar(flightState.baseScale);
-        aircraftBankGroup.rotation.z = prefersReducedMotion ? flightState.targetBank : flightState.bank;
+        aircraftBankGroup.rotation.z = prefersReducedMotion
+            ? flightState.targetBank
+            : THREE.MathUtils.clamp(flightState.bank + flightState.transitionBank, -0.18, 0.18);
         aircraftBankGroup.rotation.x = prefersReducedMotion ? flightState.targetPitch : flightState.pitch;
 
         if (!prefersReducedMotion) {
             aircraftRotationGroup.rotation.y += delta * flightState.rotationSpeed;
-            aircraftFloatGroup.position.y = Math.sin(elapsed * 0.82) * (flightState.isSmallScreen ? 0.038 : 0.065);
-            aircraftFloatGroup.position.x = Math.sin(elapsed * 0.42) * (flightState.isSmallScreen ? 0.018 : 0.04);
+            aircraftFloatGroup.position.y = Math.sin(elapsed * flightState.floatSpeed) * flightState.floatAmount;
+            aircraftFloatGroup.position.x = Math.sin(elapsed * 0.42) * flightState.driftAmount;
             aircraftFloatGroup.rotation.x = Math.sin(elapsed * 0.72) * 0.018;
             aircraftFloatGroup.rotation.z = Math.sin(elapsed * 0.58) * 0.02;
-            aircraftPointerGroup.rotation.x = -flightState.pointerY * (flightState.isSmallScreen ? 0.012 : 0.028);
-            aircraftPointerGroup.rotation.z = -flightState.pointerX * (flightState.isSmallScreen ? 0.018 : 0.042);
-            aircraftPointerGroup.rotation.y = flightState.pointerX * (flightState.isSmallScreen ? 0.016 : 0.036);
+            aircraftPointerGroup.rotation.x = -flightState.pointerY * 0.028 * flightState.pointerInfluence;
+            aircraftPointerGroup.rotation.z = -flightState.pointerX * 0.042 * flightState.pointerInfluence;
+            aircraftPointerGroup.rotation.y = flightState.pointerX * 0.036 * flightState.pointerInfluence;
             return;
         }
 
@@ -790,18 +1278,26 @@ if (renderer) {
     }
 
     function updateCamera(delta) {
+        const damping = getDampingProfile();
+
         if (prefersReducedMotion) {
             flightState.cameraPosition.copy(flightState.targetCameraPosition);
             flightState.cameraTarget.copy(flightState.targetCameraTarget);
+            flightState.cameraPointerInfluence = 0;
         } else {
-            dampVector(flightState.cameraPosition, flightState.targetCameraPosition, 3, delta);
-            dampVector(flightState.cameraTarget, flightState.targetCameraTarget, 3, delta);
+            dampVector(flightState.cameraPosition, flightState.targetCameraPosition, damping.cameraPosition, delta);
+            dampVector(flightState.cameraTarget, flightState.targetCameraTarget, damping.cameraTarget, delta);
+            flightState.cameraPointerInfluence = THREE.MathUtils.damp(
+                flightState.cameraPointerInfluence,
+                flightState.targetCameraPointerInfluence,
+                damping.cameraPointer,
+                delta
+            );
         }
 
-        const pointerStrength = flightState.isSmallScreen ? 0.28 : 1;
         tempCameraPosition.copy(flightState.cameraPosition);
-        tempCameraPosition.x += flightState.pointerX * 0.1 * pointerStrength;
-        tempCameraPosition.y += flightState.pointerY * 0.045 * pointerStrength;
+        tempCameraPosition.x += flightState.pointerX * 0.1 * flightState.cameraPointerInfluence;
+        tempCameraPosition.y += flightState.pointerY * 0.045 * flightState.cameraPointerInfluence;
         tempCameraTarget.copy(flightState.cameraTarget);
 
         camera.position.copy(tempCameraPosition);
@@ -809,13 +1305,80 @@ if (renderer) {
     }
 
     function updateEnvironment(delta, elapsed) {
+        const damping = getDampingProfile();
+
+        flightState.environmentPathOpacity = THREE.MathUtils.damp(
+            flightState.environmentPathOpacity,
+            flightState.targetEnvironmentPathOpacity,
+            damping.environment,
+            delta
+        );
+        flightState.particleOpacity = THREE.MathUtils.damp(
+            flightState.particleOpacity,
+            flightState.targetParticleOpacity,
+            damping.environment,
+            delta
+        );
+        flightState.particleSpeed = THREE.MathUtils.damp(
+            flightState.particleSpeed,
+            flightState.targetParticleSpeed,
+            damping.environment,
+            delta
+        );
+        flightState.fogDensity = THREE.MathUtils.damp(
+            flightState.fogDensity,
+            flightState.targetFogDensity,
+            damping.environment,
+            delta
+        );
+        flightState.keyLightIntensity = THREE.MathUtils.damp(
+            flightState.keyLightIntensity,
+            flightState.targetKeyLightIntensity,
+            damping.environment,
+            delta
+        );
+        flightState.rimLightIntensity = THREE.MathUtils.damp(
+            flightState.rimLightIntensity,
+            flightState.targetRimLightIntensity,
+            damping.environment,
+            delta
+        );
+
+        scene.fog.density = prefersReducedMotion ? flightState.targetFogDensity : flightState.fogDensity;
+
+        if (sceneLights.key) {
+            sceneLights.key.intensity = prefersReducedMotion
+                ? flightState.targetKeyLightIntensity
+                : flightState.keyLightIntensity;
+        }
+
+        if (sceneLights.rim) {
+            sceneLights.rim.intensity = prefersReducedMotion
+                ? flightState.targetRimLightIntensity
+                : flightState.rimLightIntensity;
+        }
+
+        pathGroup.children.forEach((line) => {
+            if (line.material) {
+                line.material.opacity = prefersReducedMotion
+                    ? flightState.targetEnvironmentPathOpacity
+                    : flightState.environmentPathOpacity;
+            }
+        });
+
+        if (atmospherePoints?.material) {
+            atmospherePoints.material.opacity = prefersReducedMotion
+                ? flightState.targetParticleOpacity
+                : flightState.particleOpacity;
+        }
+
         if (!prefersReducedMotion) {
-            pathGroup.position.z = (elapsed * 0.42) % 1.7;
+            pathGroup.position.z = (elapsed * (0.28 + flightState.particleSpeed * 1.7)) % 1.7;
             pathGroup.rotation.y = flightState.pointerX * 0.014;
 
             if (atmospherePoints) {
-                atmospherePoints.position.z = 4 + (elapsed * 0.08) % 4;
-                atmospherePoints.rotation.y += delta * 0.018;
+                atmospherePoints.position.z = 4 + (elapsed * flightState.particleSpeed) % 4;
+                atmospherePoints.rotation.y += delta * (0.012 + flightState.particleSpeed * 0.08);
             }
             return;
         }
@@ -894,7 +1457,8 @@ if (renderer) {
         window.removeEventListener("load", handleWindowLoadResize);
         document.removeEventListener("visibilitychange", handleVisibilityChange);
         window.removeEventListener("pagehide", cleanupScene);
-        stageObserver?.disconnect();
+        stageScrollTriggers.forEach((trigger) => trigger.kill());
+        stageScrollTriggers = [];
         resizeObserver?.disconnect();
 
         if (initialResizeFrameId !== null) {
@@ -927,8 +1491,8 @@ if (renderer) {
     createFlightLines();
     updateResponsiveState();
     createAtmosphere();
-    setFlightStage("hero");
-    setupFlightStageObserver();
+    setFlightStage("hero", { force: true });
+    setupFlightStageScrollTriggers();
     scheduleInitialSizing();
     setupResizeObserver();
     loadAircraftModel();
