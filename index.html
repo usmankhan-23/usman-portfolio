@@ -500,24 +500,37 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
 
         <section class="projects-section" id="projects" aria-labelledby="projects-title">
             <div class="section-heading" data-animate>
-                <p class="eyebrow">Featured Projects</p>
-                <h2 id="projects-title">Project work that shows practical thinking.</h2>
+                <p class="eyebrow">Stage 06 / Completed Missions</p>
+                <h2 id="projects-title">Mission archives for the systems I completed.</h2>
                 <p>
-                    These builds show how I handled course requirements, user flow,
-                    data handling, and practical implementation details.
+                    Each mission documents the problem, my implementation decisions,
+                    the technical evidence, and what the final result taught me as a
+                    computer science student.
                 </p>
             </div>
 
+            <div class="mission-console" data-animate aria-label="Project mission archive overview">
+                <span>MISSION ARCHIVE // ACTIVE</span>
+                <span>4 completed builds</span>
+                <span>C++ / SFML / Python / Graph Theory / Calculus</span>
+            </div>
+
             <div class="project-grid">
-                <article class="project-card" data-animate>
+                <article class="project-card mission-card" data-animate>
                     <div class="project-topline">
-                        <span class="project-index">01</span>
-                        <span class="project-type">Learning App</span>
+                        <span class="project-index">M-01</span>
+                        <span class="project-type">Learning System</span>
                     </div>
                     <h3>QuizMaster</h3>
                     <p class="project-summary">
-                        A C++ console quiz system with difficulty levels, timed answers, score records, and logs.
+                        A C++ console quiz system built from a Programming Fundamentals brief into a complete
+                        learning flow with difficulty levels, timers, records, logs, replay, and review.
                     </p>
+                    <div class="mission-meta" aria-label="QuizMaster mission metadata">
+                        <span>Role: solo implementation</span>
+                        <span>Domain: PF logic and files</span>
+                        <span>Status: completed</span>
+                    </div>
                     <div class="project-artifact quiz-artifact" aria-hidden="true">
                         <div class="artifact-header">
                             <span>QUIZMASTER.RUN</span>
@@ -531,9 +544,13 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         <div class="artifact-meter"><span></span></div>
                     </div>
                     <p class="project-insight">
-                        Engineering focus: dependable file handling, replayable quiz flow,
-                        and clean state management inside a console-first interface.
+                        Engineering focus: reliable file handling, deterministic quiz state,
+                        replayable user flow, and score persistence inside a console-first interface.
                     </p>
+                    <ul class="mission-brief" aria-label="QuizMaster engineering contribution">
+                        <li><strong>Built</strong> menu flow, question loading, random order, timing, scoring, records, and logs.</li>
+                        <li><strong>Solved</strong> state consistency across replay, wrong-answer review, and file writes.</li>
+                    </ul>
                     <ul class="project-features" aria-label="QuizMaster features">
                         <li>Difficulty-based question files</li>
                         <li>Timer, scoring, and replay flow</li>
@@ -545,20 +562,26 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         <span>Arrays</span>
                     </div>
                     <div class="project-actions">
-                        <a class="btn secondary project-btn" href="#" aria-label="Open QuizMaster GitHub repository">GitHub</a>
+                        <button class="btn secondary project-btn is-disabled" type="button" aria-label="QuizMaster source package is pending upload">Source Pending</button>
                         <a class="btn primary project-btn" href="#quizmaster-case-study" data-case-link aria-label="Read QuizMaster case study">Case Study</a>
                     </div>
                 </article>
 
-                <article class="project-card" data-animate>
+                <article class="project-card mission-card" data-animate>
                     <div class="project-topline">
-                        <span class="project-index">02</span>
-                        <span class="project-type">Game Project</span>
+                        <span class="project-index">M-02</span>
+                        <span class="project-type">Arcade Game</span>
                     </div>
                     <h3>Tumble Pop</h3>
                     <p class="project-summary">
-                        A C++/SFML arcade project with player movement, enemy capture, projectiles, and boss logic.
+                        A C++/SFML arcade project that turns a large PF game brief into player movement,
+                        collision, enemy capture, projectile release, dynamic storage, and boss behavior.
                     </p>
+                    <div class="mission-meta" aria-label="Tumble Pop mission metadata">
+                        <span>Role: gameplay systems</span>
+                        <span>Domain: C++ and SFML</span>
+                        <span>Status: completed</span>
+                    </div>
                     <div class="project-artifact game-artifact" aria-hidden="true">
                         <div class="level-lane">
                             <span></span><span></span><span></span><span></span>
@@ -572,6 +595,10 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         Engineering focus: separating movement, collision, capture,
                         projectile, and boss behaviors into predictable game systems.
                     </p>
+                    <ul class="mission-brief" aria-label="Tumble Pop engineering contribution">
+                        <li><strong>Built</strong> movement, gravity, collision checks, vacuum capture, release logic, and boss states.</li>
+                        <li><strong>Solved</strong> large-feature complexity by shipping the game through testable milestones.</li>
+                    </ul>
                     <ul class="project-features" aria-label="Tumble Pop features">
                         <li>Vacuum capture and release system</li>
                         <li>360-degree aiming and projectiles</li>
@@ -583,20 +610,25 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         <span>Dynamic Memory</span>
                     </div>
                     <div class="project-actions">
-                        <a class="btn secondary project-btn" href="#" aria-label="Open Tumble Pop GitHub repository">GitHub</a>
+                        <button class="btn secondary project-btn is-disabled" type="button" aria-label="Tumble Pop source package is pending upload">Source Pending</button>
                         <a class="btn primary project-btn" href="#tumble-pop-case-study" data-case-link aria-label="Read Tumble Pop case study">Case Study</a>
                     </div>
                 </article>
 
-                <article class="project-card" data-animate>
+                <article class="project-card mission-card" data-animate>
                     <div class="project-topline">
-                        <span class="project-index">03</span>
-                        <span class="project-type">Discrete Project</span>
+                        <span class="project-index">M-03</span>
+                        <span class="project-type">Data Network</span>
                     </div>
                     <h3>Price Co-Movement Network</h3>
                     <p class="project-summary">
                         A graph-theory analysis of PBS CPI data that modeled consumer items as nodes and price co-movement as weighted edges.
                     </p>
+                    <div class="mission-meta" aria-label="Price Co-Movement Network mission metadata">
+                        <span>Role: analysis and interpretation</span>
+                        <span>Domain: graph theory</span>
+                        <span>Status: completed</span>
+                    </div>
                     <div class="project-artifact network-artifact" aria-hidden="true">
                         <span class="node n1"></span>
                         <span class="node n2"></span>
@@ -611,6 +643,10 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         Engineering focus: turning raw economic records into a weighted
                         network that exposes central items and yearly movement patterns.
                     </p>
+                    <ul class="mission-brief" aria-label="Price Co-Movement Network engineering contribution">
+                        <li><strong>Built</strong> a reproducible graph workflow from cleaned CPI data to centrality results.</li>
+                        <li><strong>Solved</strong> interpretation complexity by connecting density, persistent edges, and hubs.</li>
+                    </ul>
                     <ul class="project-features" aria-label="Price Co-Movement Network features">
                         <li>31,212 PBS price records analyzed</li>
                         <li>Cosine similarity and centrality metrics</li>
@@ -627,15 +663,20 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                     </div>
                 </article>
 
-                <article class="project-card" data-animate>
+                <article class="project-card mission-card" data-animate>
                     <div class="project-topline">
-                        <span class="project-index">04</span>
-                        <span class="project-type">Calculus Project</span>
+                        <span class="project-index">M-04</span>
+                        <span class="project-type">Math + Algorithms</span>
                     </div>
                     <h3>Search Algorithm Growth Analysis</h3>
                     <p class="project-summary">
                         A calculus and Python study comparing Linear Search and Binary Search using functions, derivatives, thresholds, and graphs.
                     </p>
+                    <div class="mission-meta" aria-label="Search Algorithm Growth Analysis mission metadata">
+                        <span>Role: modeling and visualization</span>
+                        <span>Domain: calculus and Python</span>
+                        <span>Status: completed</span>
+                    </div>
                     <div class="project-artifact calc-artifact" aria-hidden="true">
                         <span class="axis x-axis"></span>
                         <span class="axis y-axis"></span>
@@ -647,6 +688,10 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         Engineering focus: using calculus to explain algorithm growth,
                         not just report runtime numbers after execution.
                     </p>
+                    <ul class="mission-brief" aria-label="Search Algorithm Growth Analysis engineering contribution">
+                        <li><strong>Built</strong> function models, derivative comparisons, threshold reasoning, and Python graphs.</li>
+                        <li><strong>Solved</strong> abstract explanation by making algorithm efficiency visible and measurable.</li>
+                    </ul>
                     <ul class="project-features" aria-label="Search Algorithm Growth Analysis features">
                         <li>Modeled expected comparisons</li>
                         <li>Compared growth rates using derivatives</li>
@@ -694,6 +739,21 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         <p class="terminal-highlight">Score saved to records.txt</p>
                     </div>
                 </div>
+            </div>
+
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Build a reusable quiz application that could load questions externally, manage difficulty, time answers, save records, and support replay.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I designed the menu, split the quiz into functions, managed arrays for question order, handled files for persistence, and kept the flow understandable for users.</p>
+                </article>
+                <article>
+                    <span>Engineering Result</span>
+                    <p>The final system behaved like a complete PF application with input handling, state transitions, score history, quiz logs, and a wrong-answer review loop.</p>
+                </article>
             </div>
 
             <div class="case-study-grid">
@@ -902,6 +962,21 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                 </div>
             </div>
 
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Transform a multi-phase arcade game statement into a playable C++/SFML build with movement, collisions, capture mechanics, dynamic enemies, and a boss encounter.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I worked system by system: first the SFML window and level, then player physics, then capture and release mechanics, then dynamic storage and boss behavior.</p>
+                </article>
+                <article>
+                    <span>Engineering Result</span>
+                    <p>The project became manageable because each feature had a testable responsibility before it was integrated with the rest of the game loop.</p>
+                </article>
+            </div>
+
             <div class="case-study-grid">
                 <article class="case-panel" data-animate>
                     <span class="case-label">Challenge</span>
@@ -1106,6 +1181,21 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                         <span class="log-line"></span>
                     </div>
                 </div>
+            </div>
+
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Use calculus to explain why two search strategies behave differently as input size grows, then verify the reasoning with Python-generated evidence.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I helped model expected comparisons as functions, compare growth rates through derivatives, interpret thresholds, and convert the results into visual graphs.</p>
+                </article>
+                <article>
+                    <span>Engineering Result</span>
+                    <p>The final report connected programming and mathematics in a way that made Binary Search efficiency understandable, measurable, and presentation-ready.</p>
+                </article>
             </div>
 
             <div class="case-study-grid">
@@ -1329,6 +1419,21 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                 </div>
             </div>
 
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Turn PBS price statistics into a graph model that reveals which consumer items move together across cities and fiscal years.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I focused on graph interpretation, centrality findings, year-to-year comparison, persistent item pairs, and presenting the analysis in a professional format.</p>
+                </article>
+                <article>
+                    <span>Engineering Result</span>
+                    <p>The case study shows how discrete structures can explain a real dataset through nodes, edges, similarity thresholds, centrality, and temporal change.</p>
+                </article>
+            </div>
+
             <div class="case-study-grid">
                 <article class="case-panel" data-animate>
                     <span class="case-label">Problem</span>
@@ -1500,15 +1605,15 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                     <span>Problem Statement</span>
                     Original project requirements and deliverables.
                 </a>
-                <a href="https://youtu.be/QzhHWpDYZaY?si=iCB_WoPwstDid6cD">
+                <a href="https://youtu.be/QzhHWpDYZaY?si=iCB_WoPwstDid6cD" target="_blank" rel="noopener noreferrer">
                     <span>YouTube Demo</span>
                     Project explanation video and analysis walkthrough.
                 </a>
-                <a href="https://www.pbs.gov.pk/price-statistics/?authuser=0">
+                <a href="https://www.pbs.gov.pk/price-statistics/?authuser=0" target="_blank" rel="noopener noreferrer">
                     <span>PBS Data Source</span>
                     Price statistics portal used for CPI item price data.
                 </a>
-                <a href="https://snap.stanford.edu/class/cs224w-2018/handouts/15-centrality.pdf">
+                <a href="https://snap.stanford.edu/class/cs224w-2018/handouts/15-centrality.pdf" target="_blank" rel="noopener noreferrer">
                     <span>Centrality Reference</span>
                     Network centrality concepts used for graph interpretation.
                 </a>
@@ -1605,7 +1710,7 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                     </article>
                     <article>
                         <span>LinkedIn</span>
-                        <a href="https://www.linkedin.com/in/usman-khan-a8a88440a">linkedin.com/in/usman-khan-a8a88440a</a>
+                        <a href="https://www.linkedin.com/in/usman-khan-a8a88440a" target="_blank" rel="noopener noreferrer">linkedin.com/in/usman-khan-a8a88440a</a>
                     </article>
                     <article>
                         <span>Phone</span>
@@ -1654,8 +1759,8 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
     </script>
     <script src="assets/vendor/gsap.min.js"></script>
     <script src="assets/vendor/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=phase36-final-audit-3"></script>
+    <script src="script.js?v=phase4-final-audit-4"></script>
     <script src="cursor-glitter.js"></script>
-    <script type="module" src="three-scene.js?v=phase36-final-audit-3"></script>
+    <script type="module" src="three-scene.js?v=phase4-final-audit"></script>
 </body>
 </html>

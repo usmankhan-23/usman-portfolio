@@ -846,7 +846,20 @@ if (renderer) {
             .filter(Boolean);
     }
 
+    function isProjectCaseStudyOpen() {
+        return Boolean(document.querySelector("[data-case-study].is-open"));
+    }
+
+    function applyScrollStage(stage) {
+        setFlightStage(isProjectCaseStudyOpen() ? "projects" : stage);
+    }
+
     function applyNearestStage(stageElements) {
+        if (isProjectCaseStudyOpen()) {
+            setFlightStage("projects");
+            return;
+        }
+
         const viewportCenter = window.innerHeight * 0.52;
         const nearestStage = stageElements.reduce((nearest, candidate) => {
             const rect = candidate.element.getBoundingClientRect();
@@ -884,8 +897,8 @@ if (renderer) {
                     start: "top 66%",
                     end: "bottom 34%",
                     invalidateOnRefresh: true,
-                    onEnter: () => setFlightStage(stage),
-                    onEnterBack: () => setFlightStage(stage),
+                    onEnter: () => applyScrollStage(stage),
+                    onEnterBack: () => applyScrollStage(stage),
                     onRefresh: () => applyNearestStage(stageElements)
                 });
             });

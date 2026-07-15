@@ -234,13 +234,39 @@ skillTabs.forEach((tab) => {
     });
 });
 
-function openCaseStudy(targetId) {
+function isCaseStudyHash(hash = window.location.hash) {
+    return Boolean(hash && document.querySelector(`${hash}[data-case-study]`));
+}
+
+function setCaseStudyUrl(hash) {
+    if (!hash || window.location.hash === hash) {
+        return;
+    }
+
+    window.history.pushState({ caseStudy: hash }, "", hash);
+}
+
+function clearCaseStudyUrl() {
+    if (!isCaseStudyHash()) {
+        return;
+    }
+
+    const cleanUrl = `${window.location.pathname}${window.location.search}#projects`;
+    window.history.pushState({ section: "projects" }, "", cleanUrl);
+}
+
+function openCaseStudy(targetId, options = {}) {
     const target = document.querySelector(targetId);
 
     if (!target) {
         return;
     }
 
+    if (options.updateHistory !== false) {
+        setCaseStudyUrl(targetId);
+    }
+
+    previousFocusedElement = document.activeElement;
     caseStudyTimeline?.kill();
     window.gsap?.killTweensOf?.(caseStudies);
 
@@ -285,10 +311,11 @@ function openCaseStudy(targetId) {
 
     window.setTimeout(() => {
         target.scrollIntoView({ behavior: "smooth", block: "start" });
+        target.querySelector("[data-case-close]")?.focus({ preventScroll: true });
     }, 20);
 }
 
-function closeCaseStudies() {
+function closeCaseStudies(options = {}) {
     caseStudyTimeline?.kill();
     caseStudyTimeline = null;
 
@@ -297,7 +324,51 @@ function closeCaseStudies() {
         section.classList.remove("is-open");
     });
 
-    document.querySelector("#projects").scrollIntoView({ behavior: "smooth", block: "start" });
+    if (options.updateHistory !== false) {
+        clearCaseStudyUrl();
+    }
+
+    const restoreProjectsStage = () => {
+        window.dispatchEvent(new CustomEvent("journey:hash-restored", {
+            detail: { hash: "#projects" }
+        }));
+    };
+    const scrollToProjects = (behavior = "smooth") => {
+        const projects = document.querySelector("#projects");
+        const headerOffset = document.querySelector(".site-header")?.offsetHeight ?? 0;
+
+        if (!projects) {
+            return;
+        }
+
+        window.scrollTo({
+            top: Math.max(0, projects.getBoundingClientRect().top + window.scrollY - headerOffset - 16),
+            behavior: prefersReducedMotion ? "auto" : behavior
+        });
+    };
+
+    scrollToProjects();
+    previousFocusedElement?.focus?.({ preventScroll: true });
+    previousFocusedElement = null;
+    window.ScrollTrigger?.refresh?.();
+    restoreProjectsStage();
+    window.requestAnimationFrame(() => scrollToProjects("auto"));
+    window.setTimeout(restoreProjectsStage, 120);
+    window.setTimeout(() => scrollToProjects("auto"), 180);
+    window.setTimeout(restoreProjectsStage, 520);
+}
+
+function handleCaseStudyKeydown(event) {
+    if (event.key !== "Escape") {
+        return;
+    }
+
+    const openCaseStudySection = Array.from(caseStudies).find((section) => !section.hidden);
+
+    if (openCaseStudySection) {
+        event.preventDefault();
+        closeCaseStudies();
+    }
 }
 
 caseLinks.forEach((link) => {
@@ -309,6 +380,21 @@ caseLinks.forEach((link) => {
 
 caseCloseButtons.forEach((button) => {
     button.addEventListener("click", closeCaseStudies);
+});
+
+document.addEventListener("keydown", handleCaseStudyKeydown);
+
+window.addEventListener("popstate", () => {
+    if (isCaseStudyHash()) {
+        openCaseStudy(window.location.hash, { updateHistory: false });
+        return;
+    }
+
+    const openCaseStudySection = Array.from(caseStudies).find((section) => !section.hidden);
+
+    if (openCaseStudySection) {
+        closeCaseStudies({ updateHistory: false });
+    }
 });
 
 if (contactForm) {
@@ -900,8 +986,8 @@ setupJourneyIntro();
 runPremiumInteractions();
 runActiveNavigation();
 
-if (window.location.hash && document.querySelector(`${window.location.hash}[data-case-study]`)) {
-    openCaseStudy(window.location.hash);
+if (isCaseStudyHash()) {
+    openCaseStudy(window.location.hash, { updateHistory: false });
 }
 
 const statusWords = ["Foundations", "Coursework", "Projects", "Research"];
