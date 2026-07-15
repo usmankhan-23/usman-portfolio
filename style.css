@@ -104,15 +104,17 @@ a {
     inset: 0;
     z-index: 80;
     display: grid;
-    place-items: center;
+    align-items: center;
+    justify-items: start;
     padding: clamp(24px, 5vw, 72px);
-    color: var(--text);
+    color: #efe2c4;
     background:
-        radial-gradient(circle at 72% 38%, rgba(168, 115, 44, 0.18), transparent 34%),
-        radial-gradient(circle at 18% 62%, rgba(72, 107, 88, 0.14), transparent 32%),
-        linear-gradient(90deg, rgba(238, 226, 204, 0.96), rgba(238, 226, 204, 0.82) 54%, rgba(228, 210, 178, 0.9)),
-        var(--paper-deep);
+        radial-gradient(circle at 78% 42%, rgba(161, 113, 52, 0.22), transparent 30%),
+        radial-gradient(circle at 18% 72%, rgba(66, 91, 67, 0.2), transparent 34%),
+        linear-gradient(90deg, rgba(23, 14, 9, 0.98), rgba(38, 25, 16, 0.93) 48%, rgba(31, 21, 14, 0.78)),
+        #160e09;
     overflow: hidden;
+    isolation: isolate;
 }
 
 .journey-intro[hidden] {
@@ -125,38 +127,57 @@ a {
     inset: 0;
     pointer-events: none;
     background:
-        repeating-linear-gradient(0deg, rgba(55, 38, 22, 0.05) 0 1px, transparent 1px 96px),
-        repeating-linear-gradient(90deg, rgba(55, 38, 22, 0.026) 0 1px, transparent 1px 34px);
-    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9), transparent 82%);
+        linear-gradient(115deg, transparent 0 42%, rgba(196, 143, 70, 0.12) 42.1% 42.35%, transparent 42.5%),
+        linear-gradient(155deg, transparent 0 58%, rgba(86, 109, 80, 0.12) 58.1% 58.35%, transparent 58.5%),
+        repeating-linear-gradient(0deg, rgba(239, 226, 196, 0.04) 0 1px, transparent 1px 88px),
+        repeating-linear-gradient(90deg, rgba(239, 226, 196, 0.025) 0 1px, transparent 1px 34px);
+    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.96), rgba(0, 0, 0, 0.72) 58%, transparent 96%);
+    z-index: -1;
+}
+
+.journey-intro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.5;
+    background:
+        repeating-radial-gradient(circle at 32% 42%, rgba(239, 226, 196, 0.045) 0 1px, transparent 1px 5px),
+        linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.26));
+    mix-blend-mode: overlay;
 }
 
 .journey-intro__atmosphere {
     position: absolute;
     inset: -20%;
-    opacity: 0.6;
+    z-index: -1;
+    opacity: 0.72;
     background:
-        radial-gradient(circle at 52% 42%, rgba(255, 249, 235, 0.6), transparent 18%),
-        radial-gradient(circle at 68% 46%, rgba(248, 240, 223, 0.46), transparent 24%),
-        linear-gradient(115deg, transparent 22%, rgba(255, 249, 235, 0.58), transparent 62%);
-    filter: blur(22px);
+        radial-gradient(circle at 62% 44%, rgba(189, 135, 64, 0.2), transparent 18%),
+        radial-gradient(circle at 74% 52%, rgba(233, 212, 168, 0.12), transparent 24%),
+        linear-gradient(118deg, transparent 24%, rgba(226, 193, 132, 0.13), transparent 64%);
+    filter: blur(28px);
     transform: translate3d(0, 0, 0);
 }
 
 .journey-intro__content {
     position: relative;
     z-index: 1;
-    width: min(920px, 100%);
+    width: min(620px, 100%);
+    border-left: 1px solid rgba(196, 143, 70, 0.38);
+    padding-left: clamp(20px, 4vw, 42px);
 }
 
 .journey-intro__eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    margin: 0 0 18px;
-    color: var(--teal);
-    font-size: 0.82rem;
+    margin: 0 0 26px;
+    color: #c9954d;
+    font-size: 0.72rem;
     font-weight: 860;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
 }
 
@@ -168,28 +189,76 @@ a {
 }
 
 .journey-intro__title {
-    max-width: 10ch;
+    max-width: 14ch;
     margin: 0;
     font-family: "Playfair Display", Georgia, serif;
-    font-size: clamp(4rem, 10.8vw, 9.4rem);
-    line-height: 0.82;
-    letter-spacing: 0;
+    font-size: clamp(2.1rem, 5vw, 4.7rem);
+    line-height: 0.96;
+    font-weight: 680;
+    letter-spacing: 0.015em;
 }
 
 .journey-intro__subtitle {
-    max-width: 620px;
-    margin: clamp(22px, 4vw, 34px) 0 0;
-    color: var(--muted);
-    font-size: clamp(1.02rem, 2vw, 1.25rem);
-    line-height: 1.7;
+    max-width: 440px;
+    margin: clamp(16px, 2.6vw, 22px) 0 0;
+    color: rgba(239, 226, 196, 0.78);
+    font-size: clamp(0.92rem, 1.45vw, 1.08rem);
+    font-weight: 780;
+    letter-spacing: 0.16em;
+    line-height: 1.6;
+    text-transform: uppercase;
+}
+
+.journey-intro__manifest {
+    display: grid;
+    gap: 10px;
+    margin-top: clamp(26px, 4vw, 44px);
+    color: rgba(239, 226, 196, 0.62);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.journey-intro__manifest span {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 12px;
+}
+
+.journey-intro__manifest span::before {
+    content: "";
+    width: 18px;
+    height: 1px;
+    background: rgba(196, 143, 70, 0.5);
 }
 
 .journey-intro__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
-    margin-top: 34px;
+    margin-top: clamp(30px, 4vw, 48px);
+}
+
+.journey-intro__actions .btn {
+    min-height: 42px;
+    padding-inline: 18px;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+}
+
+.journey-intro__actions .btn.primary {
+    border-color: rgba(196, 143, 70, 0.5);
+    background: rgba(196, 143, 70, 0.14);
+    color: #f4dfad;
+    box-shadow: none;
+}
+
+.journey-intro__actions .btn.secondary {
+    border-color: transparent;
+    background: transparent;
+    color: rgba(239, 226, 196, 0.62);
 }
 
 body.journey-intro-active {
@@ -439,6 +508,10 @@ h1 {
     color: var(--muted);
     font-size: clamp(1.08rem, 1.7vw, 1.36rem);
     line-height: 1.68;
+}
+
+#hero-title:focus {
+    outline: none;
 }
 
 .hero-actions {
@@ -3163,18 +3236,31 @@ h1 {
 
     .journey-intro {
         align-items: start;
-        padding-top: 18vh;
+        padding-top: 14vh;
     }
 
     .journey-intro__content {
-        width: min(300px, calc(100vw - 96px));
+        width: min(330px, calc(100vw - 62px));
         max-width: none;
         justify-self: start;
+        padding-left: 20px;
     }
 
     .journey-intro__title {
         max-width: 100%;
-        font-size: clamp(2.45rem, 10.5vw, 4rem);
+        font-size: clamp(2.1rem, 9.5vw, 3.45rem);
+        line-height: 1;
+    }
+
+    .journey-intro__subtitle {
+        max-width: 280px;
+        font-size: 0.78rem;
+    }
+
+    .journey-intro__manifest {
+        gap: 8px;
+        margin-top: 22px;
+        font-size: 0.72rem;
     }
 
     .journey-intro__actions {
@@ -3315,6 +3401,55 @@ h1 {
 
     h1 {
         max-width: 12ch;
+    }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+    .journey-intro {
+        align-items: center;
+        padding: 32px 7vw;
+    }
+
+    .journey-intro__content {
+        width: min(560px, calc(100vw - 96px));
+        padding-left: 18px;
+    }
+
+    .journey-intro__eyebrow {
+        font-size: 0.62rem;
+    }
+
+    .journey-intro__title {
+        max-width: none;
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        line-height: 0.96;
+    }
+
+    .journey-intro__subtitle {
+        max-width: 360px;
+        margin-top: 10px;
+        font-size: 0.68rem;
+    }
+
+    .journey-intro__manifest {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        margin-top: 14px;
+        font-size: 0.64rem;
+    }
+
+    .journey-intro__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .journey-intro__actions .btn {
+        width: auto;
+        min-height: 38px;
+        padding-inline: 14px;
     }
 }
 

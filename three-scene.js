@@ -240,27 +240,45 @@ if (renderer) {
 
     const flightStages = {
         opening: {
-            position: { x: 1.38, y: -0.18, z: -0.82 },
-            scale: 1.02,
-            bank: 0.015,
-            pitch: 0.035,
-            rotationSpeed: secondsPerRotation(22),
-            cameraPosition: { x: 0.16, y: 1.08, z: 7.24 },
-            cameraTarget: { x: 0.22, y: -0.08, z: -0.92 },
-            transitionDuration: 1.4,
+            position: { x: 1.96, y: -0.24, z: -1.08 },
+            scale: 0.82,
+            bank: -0.012,
+            pitch: 0.018,
+            rotationSpeed: secondsPerRotation(28),
+            cameraPosition: { x: 0.1, y: 1.02, z: 7.72 },
+            cameraTarget: { x: 0.3, y: -0.12, z: -1.08 },
+            transitionDuration: 1.65,
             transitionEase: "power3.out",
-            floatAmount: 0.055,
-            floatSpeed: 0.72,
-            driftAmount: 0.026,
-            pointerInfluence: 0.65,
-            cameraPointerInfluence: 0.58,
+            floatAmount: 0.036,
+            floatSpeed: 0.62,
+            driftAmount: 0.014,
+            pointerInfluence: 0.34,
+            cameraPointerInfluence: 0.28,
             environment: {
-                fogDensity: 0.044,
-                pathOpacity: 0.08,
-                particleOpacity: 0.28,
-                particleSpeed: 0.035,
-                keyLightIntensity: 2.85,
-                rimLightIntensity: 2.7
+                fogDensity: 0.058,
+                pathOpacity: 0.045,
+                particleOpacity: 0.2,
+                particleSpeed: 0.022,
+                keyLightIntensity: 2.24,
+                rimLightIntensity: 2.05
+            },
+            tablet: {
+                position: { x: 1.16, y: -0.5, z: -1.18 },
+                scale: 0.68,
+                cameraPosition: { x: 0.04, y: 1, z: 7.96 },
+                cameraTarget: { x: 0.12, y: -0.2, z: -1.08 }
+            },
+            mobile: {
+                position: { x: 0.14, y: -1.08, z: -1.58 },
+                scale: 0.42,
+                bank: 0,
+                pitch: 0.01,
+                cameraPosition: { x: 0, y: 1, z: 8.22 },
+                cameraTarget: { x: 0, y: -0.3, z: -1.14 },
+                floatAmount: 0.018,
+                driftAmount: 0.006,
+                pointerInfluence: 0,
+                cameraPointerInfluence: 0
             }
         },
         hero: {
@@ -728,6 +746,7 @@ if (renderer) {
     function setFlightStage(stageName, options = {}) {
         const stage = flightStages[stageName];
         const force = Boolean(options.force);
+        const settleImmediately = Boolean(options.immediate);
 
         if (!stage) {
             console.warn(`Unknown flight stage: ${stageName}`);
@@ -768,6 +787,29 @@ if (renderer) {
         canvas.dataset.rotationDuration = responsiveStage.rotationSpeed
             ? (Math.PI * 2 / responsiveStage.rotationSpeed).toFixed(1)
             : "0";
+
+        if (settleImmediately) {
+            transitionState.active = false;
+            flightState.basePosition.copy(flightState.targetPosition);
+            flightState.baseScale = flightState.targetScale;
+            flightState.bank = flightState.targetBank;
+            flightState.pitch = flightState.targetPitch;
+            flightState.transitionBank = 0;
+            flightState.rotationSpeed = flightState.targetRotationSpeed;
+            flightState.floatAmount = flightState.targetFloatAmount;
+            flightState.floatSpeed = flightState.targetFloatSpeed;
+            flightState.driftAmount = flightState.targetDriftAmount;
+            flightState.pointerInfluence = flightState.targetPointerInfluence;
+            flightState.cameraPointerInfluence = flightState.targetCameraPointerInfluence;
+            flightState.fogDensity = flightState.targetFogDensity;
+            flightState.environmentPathOpacity = flightState.targetEnvironmentPathOpacity;
+            flightState.particleOpacity = flightState.targetParticleOpacity;
+            flightState.particleSpeed = flightState.targetParticleSpeed;
+            flightState.keyLightIntensity = flightState.targetKeyLightIntensity;
+            flightState.rimLightIntensity = flightState.targetRimLightIntensity;
+            flightState.cameraPosition.copy(flightState.targetCameraPosition);
+            flightState.cameraTarget.copy(flightState.targetCameraTarget);
+        }
     }
 
     const sectionStageMap = [
@@ -1207,8 +1249,11 @@ if (renderer) {
         }
     }
 
-    function handleJourneyIntroComplete() {
-        setFlightStage("hero", { force: true });
+    function handleJourneyIntroComplete(event) {
+        setFlightStage("hero", {
+            force: true,
+            immediate: Boolean(event?.detail?.immediate)
+        });
     }
 
     function dampVector(current, target, damping, delta) {

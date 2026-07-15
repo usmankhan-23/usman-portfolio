@@ -354,8 +354,13 @@ function runFallbackReveal() {
 }
 
 function revealHeroContent(options = {}) {
-    if (heroRevealComplete) {
+    if (heroRevealComplete && !options.immediate) {
         return;
+    }
+
+    if (options.immediate) {
+        heroRevealTimeline?.kill();
+        heroRevealTimeline = null;
     }
 
     heroRevealComplete = true;
@@ -575,10 +580,7 @@ function setBackgroundInert(isInert) {
 
 function handleIntroKeydown(event) {
     if (event.key === "Escape") {
-        completeJourneyIntro({
-            skipped: true,
-            immediate: true
-        });
+        skipJourneyIntro();
         return;
     }
 
@@ -607,6 +609,7 @@ function handleIntroKeydown(event) {
 
 function cleanupIntroAccessibility() {
     journeyIntro?.removeEventListener("keydown", handleIntroKeydown);
+    document.removeEventListener("keydown", handleIntroKeydown);
     setBackgroundInert(false);
 }
 
@@ -638,17 +641,81 @@ function setIntroAircraftReady(options = {}) {
 
     isAircraftReadyForIntro = true;
     beginJourneyButton.disabled = false;
-    beginJourneyButton.textContent = options.failed ? "Continue" : "Begin Journey";
+    beginJourneyButton.textContent = options.failed ? "Continue" : "Initialize Flight";
     beginJourneyButton.dataset.ready = options.failed ? "fallback" : "true";
     beginJourneyButton.focus({ preventScroll: true });
 }
 
-function completeJourneyIntro(options = {}) {
+function finishJourneyIntro(options = {}) {
+    introCompleted = true;
+    introCompleting = false;
+    cleanupIntroAccessibility();
+
+    if (journeyIntro) {
+        journeyIntro.hidden = true;
+        journeyIntro.style.opacity = "";
+        journeyIntro.style.visibility = "";
+        journeyIntro.style.transform = "";
+    }
+
+    document.body.classList.remove("journey-intro-active");
+    revealHeroContent({ immediate: Boolean(options.immediate) || prefersReducedMotion });
+    document.querySelector("#hero-title")?.focus({ preventScroll: true });
+    window.ScrollTrigger?.refresh?.();
+    restoreHashNavigation();
+}
+
+function skipJourneyIntro() {
     if (introCompleted) {
         return;
     }
 
-    if (introCompleting && !options.skipped) {
+    introCompleting = true;
+    introStarted = true;
+    beginJourneyButton?.setAttribute("disabled", "");
+    skipIntroButton?.setAttribute("disabled", "");
+    introTimeline?.kill();
+    introRevealTimeline?.kill();
+    heroRevealTimeline?.kill();
+    introTimeline = null;
+    introRevealTimeline = null;
+    heroRevealTimeline = null;
+    cleanupIntroAccessibility();
+
+    if (!journeyIntro || journeyIntro.hidden) {
+        finishJourneyIntro({ immediate: true });
+        return;
+    }
+
+    markIntroComplete();
+    window.dispatchEvent(new CustomEvent("journey:intro-skip", {
+        detail: { immediate: true }
+    }));
+    revealHeroContent({ immediate: true });
+
+    if (!canUseGsap) {
+        finishJourneyIntro({ immediate: true });
+        return;
+    }
+
+    introTimeline = gsap.timeline({
+        defaults: { ease: motionTokens.ease.enter, overwrite: true },
+        onComplete: () => finishJourneyIntro({ immediate: true })
+    })
+        .set(".journey-intro__content > *", { clearProps: "transform" }, 0)
+        .to(".journey-intro__content", {
+            autoAlpha: 0,
+            y: -6,
+            duration: 0.2
+        }, 0)
+        .to(".journey-intro", {
+            autoAlpha: 0,
+            duration: 0.34
+        }, 0.02);
+}
+
+function completeJourneyIntro() {
+    if (introCompleted || introCompleting) {
         return;
     }
 
@@ -656,56 +723,85 @@ function completeJourneyIntro(options = {}) {
     introTimeline?.kill();
     introRevealTimeline?.kill();
     heroRevealTimeline?.kill();
-    cleanupIntroAccessibility();
+    introTimeline = null;
+    introRevealTimeline = null;
+    heroRevealTimeline = null;
 
     if (!journeyIntro || journeyIntro.hidden) {
-        introCompleted = true;
-        introCompleting = false;
-        revealHeroContent({ immediate: options.immediate || prefersReducedMotion });
+        finishJourneyIntro({ immediate: prefersReducedMotion });
         return;
     }
 
     markIntroComplete();
     window.dispatchEvent(new CustomEvent("journey:intro-complete", {
-        detail: { skipped: Boolean(options.skipped) }
+        detail: { skipped: false }
     }));
 
-    const finish = () => {
-        introCompleted = true;
-        introCompleting = false;
-        journeyIntro.hidden = true;
-        journeyIntro.style.opacity = "";
-        journeyIntro.style.visibility = "";
-        journeyIntro.style.transform = "";
-        document.body.classList.remove("journey-intro-active");
-        revealHeroContent({ immediate: Boolean(options.immediate) || prefersReducedMotion });
-        document.querySelector("#hero-title")?.focus({ preventScroll: true });
-        window.ScrollTrigger?.refresh?.();
-        restoreHashNavigation();
-    };
-
-    if (!canUseGsap || options.immediate) {
-        finish();
+    if (!canUseGsap || prefersReducedMotion) {
+        finishJourneyIntro({ immediate: true });
         return;
     }
 
-    const settleDuration = options.skipped ? 0.42 : motionTokens.duration.normal;
+    const compactIntro = window.matchMedia("(max-width: 768px)").matches;
+    const beginTiming = compactIntro
+        ? {
+            statusFadeAt: 0.72,
+            heroRevealAt: 1.05,
+            overlayStart: 0.08,
+            overlayRevealDuration: 0.56,
+            overlayFinishDuration: 2.2,
+            firstOverlayOpacity: 0.64
+        }
+        : {
+            statusFadeAt: 1.08,
+            heroRevealAt: 1.35,
+            overlayStart: 0.12,
+            overlayRevealDuration: 0.85,
+            overlayFinishDuration: 3.05,
+            firstOverlayOpacity: 0.64
+        };
+
     introTimeline = gsap.timeline({
-        defaults: { ease: options.skipped ? motionTokens.ease.enter : motionTokens.ease.move, overwrite: true },
-        onComplete: finish
+        defaults: { ease: motionTokens.ease.move, overwrite: true },
+        onComplete: () => finishJourneyIntro({ immediate: false })
     })
-        .to(".journey-intro__content", {
-            autoAlpha: 0,
-            y: -motionTokens.distance.small,
-            duration: options.skipped ? settleDuration : motionTokens.duration.fast
+        .set("[data-begin-journey]", {
+            display: "none"
         }, 0)
         .call(() => {
-            revealHeroContent({ immediate: Boolean(options.skipped) });
-        }, null, options.skipped ? 0.04 : 0.18)
-        .to(".journey-intro", {
+            const status = journeyIntro?.querySelector(".journey-intro__subtitle");
+
+            if (status) {
+                status.textContent = "Departure sequence initiated";
+            }
+        }, null, 0)
+        .to(".journey-intro__eyebrow, .journey-intro__title, .journey-intro__manifest", {
             autoAlpha: 0,
-            duration: settleDuration
-        }, options.skipped ? 0 : 0.12);
+            y: -motionTokens.distance.small,
+            duration: compactIntro ? 0.48 : 0.64
+        }, 0)
+        .to(".journey-intro__subtitle", {
+            autoAlpha: 0,
+            y: -6,
+            duration: 0.42
+        }, beginTiming.statusFadeAt)
+        .to(".journey-intro", {
+            keyframes: [
+                {
+                    autoAlpha: beginTiming.firstOverlayOpacity,
+                    duration: beginTiming.overlayRevealDuration,
+                    ease: "sine.out"
+                },
+                {
+                    autoAlpha: 0,
+                    duration: beginTiming.overlayFinishDuration,
+                    ease: "sine.inOut"
+                }
+            ]
+        }, beginTiming.overlayStart)
+        .call(() => {
+            revealHeroContent();
+        }, null, beginTiming.heroRevealAt);
 }
 
 function setupJourneyIntro() {
@@ -727,15 +823,17 @@ function setupJourneyIntro() {
     previousFocusedElement = document.activeElement;
     journeyIntro.hidden = false;
     beginJourneyButton.disabled = true;
-    beginJourneyButton.textContent = "Preparing Aircraft";
+    beginJourneyButton.textContent = "Preparing Flight";
     document.body.classList.add("journey-intro-active");
     setBackgroundInert(true);
     journeyIntro.addEventListener("keydown", handleIntroKeydown);
+    document.addEventListener("keydown", handleIntroKeydown);
     window.dispatchEvent(new CustomEvent("journey:intro-ready"));
     window.requestAnimationFrame(() => skipIntroButton?.focus({ preventScroll: true }));
 
     if (canUseGsap) {
         gsap.set(".journey-intro__content > *", { y: motionTokens.distance.small });
+        gsap.set(".journey-intro__manifest span", { autoAlpha: 0, x: -10 });
         gsap.set(".journey-intro__atmosphere", { autoAlpha: 0.28, scale: 1.08 });
         introRevealTimeline = gsap.timeline({ defaults: { ease: "power3.out" } })
             .to(".journey-intro__atmosphere", { autoAlpha: 0.62, scale: 1, duration: motionTokens.duration.cinematic })
@@ -743,7 +841,13 @@ function setupJourneyIntro() {
                 y: 0,
                 duration: motionTokens.duration.normal,
                 stagger: motionTokens.stagger.normal
-            }, "-=0.86");
+            }, "-=0.86")
+            .to(".journey-intro__manifest span", {
+                autoAlpha: 1,
+                x: 0,
+                duration: motionTokens.duration.fast,
+                stagger: motionTokens.stagger.tight
+            }, "-=0.22");
     }
 
     beginJourneyButton?.addEventListener("click", () => {
@@ -755,9 +859,7 @@ function setupJourneyIntro() {
         beginJourneyButton.disabled = true;
         completeJourneyIntro();
     });
-    skipIntroButton?.addEventListener("click", () => completeJourneyIntro({
-        skipped: true
-    }));
+    skipIntroButton?.addEventListener("click", skipJourneyIntro);
 
     window.addEventListener("journey:aircraft-ready", () => setIntroAircraftReady(), { once: true });
     window.addEventListener("journey:aircraft-failed", () => setIntroAircraftReady({ failed: true }), { once: true });
