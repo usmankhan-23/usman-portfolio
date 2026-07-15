@@ -60,6 +60,7 @@ let introCompleted = false;
 let introTimeline = null;
 let introRevealTimeline = null;
 let heroRevealTimeline = null;
+let introSkipFinishTimer = null;
 let caseStudyTimeline = null;
 let skillPanelTimeline = null;
 let previousFocusedElement = null;
@@ -625,12 +626,26 @@ function restoreHashNavigation() {
     }
 
     const scrollToHashTarget = () => {
-        hashTarget.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        const headerOffset = document.querySelector(".site-header")?.offsetHeight ?? 0;
+        const targetTop = hashTarget.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+        window.scrollTo({
+            top: Math.max(0, targetTop),
+            behavior: "auto"
+        });
         window.ScrollTrigger?.refresh?.();
+        window.ScrollTrigger?.update?.();
+        window.dispatchEvent(new Event("scroll"));
+        window.dispatchEvent(new CustomEvent("journey:hash-restored", {
+            detail: { hash: window.location.hash }
+        }));
     };
 
     window.requestAnimationFrame(() => {
         window.requestAnimationFrame(scrollToHashTarget);
+    });
+
+    [180, 520, 900, 1500].forEach((delay) => {
+        window.setTimeout(scrollToHashTarget, delay);
     });
 }
 
@@ -647,6 +662,11 @@ function setIntroAircraftReady(options = {}) {
 }
 
 function finishJourneyIntro(options = {}) {
+    if (introSkipFinishTimer) {
+        window.clearTimeout(introSkipFinishTimer);
+        introSkipFinishTimer = null;
+    }
+
     introCompleted = true;
     introCompleting = false;
     cleanupIntroAccessibility();
@@ -710,8 +730,12 @@ function skipJourneyIntro() {
         }, 0)
         .to(".journey-intro", {
             autoAlpha: 0,
-            duration: 0.34
+            duration: 0.26
         }, 0.02);
+
+    introSkipFinishTimer = window.setTimeout(() => {
+        finishJourneyIntro({ immediate: true });
+    }, 420);
 }
 
 function completeJourneyIntro() {
@@ -749,7 +773,7 @@ function completeJourneyIntro() {
             heroRevealAt: 1.05,
             overlayStart: 0.08,
             overlayRevealDuration: 0.56,
-            overlayFinishDuration: 2.2,
+            overlayFinishDuration: 1.85,
             firstOverlayOpacity: 0.64
         }
         : {

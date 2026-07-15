@@ -180,49 +180,49 @@ if (renderer) {
 
     const dampingProfiles = {
         desktop: {
-            position: 2.78,
-            scale: 4.1,
-            bank: 4.25,
-            routeBank: 4.05,
-            pitch: 2.8,
-            rotationSpeed: 1.35,
-            float: 2.55,
-            drift: 2.65,
+            position: 3.05,
+            scale: 3.35,
+            bank: 4.75,
+            routeBank: 5.05,
+            pitch: 3.15,
+            rotationSpeed: 1.55,
+            float: 3.05,
+            drift: 3.2,
             pointer: 3.45,
-            cameraPosition: 1.98,
-            cameraTarget: 2.42,
-            cameraPointer: 3.55,
-            environment: 1.7
+            cameraPosition: 2.22,
+            cameraTarget: 2.18,
+            cameraPointer: 3.9,
+            environment: 1.95
         },
         tablet: {
-            position: 3.18,
-            scale: 4.45,
-            bank: 4.25,
-            routeBank: 4.2,
-            pitch: 3.05,
-            rotationSpeed: 1.65,
-            float: 2.9,
-            drift: 3,
+            position: 3.35,
+            scale: 3.75,
+            bank: 4.7,
+            routeBank: 5,
+            pitch: 3.25,
+            rotationSpeed: 1.8,
+            float: 3.2,
+            drift: 3.35,
             pointer: 3.9,
-            cameraPosition: 2.48,
-            cameraTarget: 2.9,
-            cameraPointer: 4.05,
-            environment: 2
+            cameraPosition: 2.72,
+            cameraTarget: 2.68,
+            cameraPointer: 4.3,
+            environment: 2.2
         },
         mobile: {
             position: 4.05,
-            scale: 5.15,
-            bank: 4.85,
-            routeBank: 5.2,
-            pitch: 3.75,
+            scale: 4.45,
+            bank: 5.05,
+            routeBank: 5.65,
+            pitch: 3.95,
             rotationSpeed: 2.8,
-            float: 3.65,
-            drift: 3.8,
+            float: 4.1,
+            drift: 4.2,
             pointer: 5.1,
-            cameraPosition: 3.55,
-            cameraTarget: 3.85,
+            cameraPosition: 3.7,
+            cameraTarget: 3.65,
             cameraPointer: 5.1,
-            environment: 2.55
+            environment: 2.75
         }
     };
 
@@ -255,12 +255,12 @@ if (renderer) {
             pointerInfluence: 0.34,
             cameraPointerInfluence: 0.28,
             environment: {
-                fogDensity: 0.058,
-                pathOpacity: 0.045,
-                particleOpacity: 0.2,
+                fogDensity: 0.062,
+                pathOpacity: 0.04,
+                particleOpacity: 0.18,
                 particleSpeed: 0.022,
-                keyLightIntensity: 2.24,
-                rimLightIntensity: 2.05
+                keyLightIntensity: 2.05,
+                rimLightIntensity: 2.35
             },
             tablet: {
                 position: { x: 1.16, y: -0.5, z: -1.18 },
@@ -284,17 +284,17 @@ if (renderer) {
         hero: {
             position: { x: 3.25, y: -0.6, z: -0.66 },
             scale: 1.46,
-            bank: 0.018,
-            pitch: 0.032,
-            routeBankMax: 0.08,
+            bank: 0.012,
+            pitch: 0.024,
+            routeBankMax: 0.065,
             rotationSpeed: secondsPerRotation(20),
             cameraPosition: { x: 0.34, y: 1.04, z: 7.06 },
             cameraTarget: { x: 0.72, y: -0.06, z: -0.78 },
             transitionDuration: 1.55,
             transitionEase: "power3.out",
-            floatAmount: 0.066,
-            floatSpeed: 0.78,
-            driftAmount: 0.042,
+            floatAmount: 0.052,
+            floatSpeed: 0.66,
+            driftAmount: 0.026,
             pointerInfluence: 1,
             cameraPointerInfluence: 1,
             environment: {
@@ -302,8 +302,8 @@ if (renderer) {
                 pathOpacity: 0.16,
                 particleOpacity: 0.23,
                 particleSpeed: 0.08,
-                keyLightIntensity: 3.45,
-                rimLightIntensity: 4.2
+                keyLightIntensity: 3.3,
+                rimLightIntensity: 3.95
             },
             tablet: {
                 position: { x: 2.0, y: -0.72, z: -0.92 },
@@ -314,12 +314,12 @@ if (renderer) {
             mobile: {
                 position: { x: 0.1, y: -2.05, z: -1.42 },
                 scale: 0.36,
-                bank: 0.008,
-                pitch: 0.018,
+                bank: 0.004,
+                pitch: 0.014,
                 cameraPosition: { x: 0.02, y: 1.02, z: 8.05 },
                 cameraTarget: { x: 0, y: -0.18, z: -1.02 },
-                floatAmount: 0.032,
-                driftAmount: 0.014,
+                floatAmount: 0.024,
+                driftAmount: 0.008,
                 pointerInfluence: 0,
                 cameraPointerInfluence: 0
             }
@@ -327,17 +327,17 @@ if (renderer) {
         skills: {
             position: { x: 1.25, y: -0.16, z: -0.86 },
             scale: 0.98,
-            bank: -0.014,
-            pitch: 0.022,
-            routeBankMax: 0.07,
+            bank: -0.01,
+            pitch: 0.018,
+            routeBankMax: 0.058,
             rotationSpeed: secondsPerRotation(25),
             cameraPosition: { x: 0.16, y: 1.01, z: 7.22 },
             cameraTarget: { x: 0.26, y: -0.13, z: -0.92 },
             transitionDuration: 1.8,
             transitionEase: "power3.inOut",
-            floatAmount: 0.035,
-            floatSpeed: 0.52,
-            driftAmount: 0.018,
+            floatAmount: 0.028,
+            floatSpeed: 0.48,
+            driftAmount: 0.012,
             pointerInfluence: 0.52,
             cameraPointerInfluence: 0.42,
             environment: {
@@ -368,17 +368,17 @@ if (renderer) {
         coursework: {
             position: { x: 0.44, y: -0.22, z: -1.04 },
             scale: 0.84,
-            bank: 0.032,
-            pitch: 0.026,
-            routeBankMax: 0.09,
+            bank: 0.024,
+            pitch: 0.02,
+            routeBankMax: 0.072,
             rotationSpeed: secondsPerRotation(31),
             cameraPosition: { x: 0.08, y: 0.98, z: 7.42 },
             cameraTarget: { x: 0.14, y: -0.15, z: -1.02 },
             transitionDuration: 1.9,
             transitionEase: "power2.inOut",
-            floatAmount: 0.04,
-            floatSpeed: 0.62,
-            driftAmount: 0.034,
+            floatAmount: 0.032,
+            floatSpeed: 0.54,
+            driftAmount: 0.02,
             pointerInfluence: 0.44,
             cameraPointerInfluence: 0.36,
             environment: {
@@ -409,9 +409,9 @@ if (renderer) {
         discrete: {
             position: { x: -0.48, y: -0.2, z: -1.18 },
             scale: 0.78,
-            bank: -0.046,
-            pitch: 0.018,
-            routeBankMax: 0.1,
+            bank: -0.032,
+            pitch: 0.014,
+            routeBankMax: 0.076,
             rotationSpeed: secondsPerRotation(32),
             cameraPosition: { x: -0.04, y: 0.94, z: 7.58 },
             cameraTarget: { x: -0.08, y: -0.16, z: -1.1 },
@@ -450,17 +450,17 @@ if (renderer) {
         calculus: {
             position: { x: 0.24, y: -0.06, z: -1.22 },
             scale: 0.8,
-            bank: 0.04,
-            pitch: 0.036,
-            routeBankMax: 0.1,
+            bank: 0.03,
+            pitch: 0.026,
+            routeBankMax: 0.078,
             rotationSpeed: secondsPerRotation(28),
             cameraPosition: { x: 0.04, y: 1.02, z: 7.5 },
             cameraTarget: { x: 0.08, y: -0.12, z: -1.1 },
             transitionDuration: 1.9,
             transitionEase: "power2.inOut",
-            floatAmount: 0.058,
-            floatSpeed: 0.7,
-            driftAmount: 0.032,
+            floatAmount: 0.042,
+            floatSpeed: 0.6,
+            driftAmount: 0.02,
             pointerInfluence: 0.36,
             cameraPointerInfluence: 0.36,
             environment: {
@@ -491,17 +491,17 @@ if (renderer) {
         projects: {
             position: { x: -0.72, y: -0.28, z: -1.12 },
             scale: 0.88,
-            bank: -0.066,
-            pitch: 0.026,
-            routeBankMax: 0.14,
+            bank: -0.046,
+            pitch: 0.02,
+            routeBankMax: 0.095,
             rotationSpeed: secondsPerRotation(24),
             cameraPosition: { x: -0.12, y: 0.9, z: 7.24 },
             cameraTarget: { x: -0.08, y: -0.14, z: -1.02 },
             transitionDuration: 1.6,
             transitionEase: "power3.inOut",
-            floatAmount: 0.052,
-            floatSpeed: 0.78,
-            driftAmount: 0.044,
+            floatAmount: 0.04,
+            floatSpeed: 0.66,
+            driftAmount: 0.026,
             pointerInfluence: 0.58,
             cameraPointerInfluence: 0.5,
             environment: {
@@ -532,9 +532,9 @@ if (renderer) {
         timeline: {
             position: { x: -0.12, y: -0.38, z: -1.52 },
             scale: 0.66,
-            bank: 0.022,
-            pitch: 0.016,
-            routeBankMax: 0.07,
+            bank: 0.014,
+            pitch: 0.012,
+            routeBankMax: 0.05,
             rotationSpeed: secondsPerRotation(34),
             cameraPosition: { x: 0, y: 0.86, z: 7.96 },
             cameraTarget: { x: 0.02, y: -0.2, z: -1.18 },
@@ -573,9 +573,9 @@ if (renderer) {
         contact: {
             position: { x: 0.18, y: -0.6, z: -1.66 },
             scale: 0.64,
-            bank: 0.006,
-            pitch: -0.018,
-            routeBankMax: 0.05,
+            bank: 0.004,
+            pitch: -0.012,
+            routeBankMax: 0.038,
             rotationSpeed: secondsPerRotation(42),
             cameraPosition: { x: 0.04, y: 0.8, z: 8.12 },
             cameraTarget: { x: 0.04, y: -0.28, z: -1.24 },
@@ -731,6 +731,20 @@ if (renderer) {
         vector.set(values.x, values.y, values.z);
     }
 
+    function getHashFlightStageName(hash = window.location.hash) {
+        const hashStageMap = {
+            "#skills": "skills",
+            "#coursework": "coursework",
+            "#discrete": "discrete",
+            "#calculus": "calculus",
+            "#projects": "projects",
+            "#timeline": "timeline",
+            "#contact": "contact"
+        };
+
+        return hashStageMap[hash] ?? null;
+    }
+
     function getInitialFlightStageName() {
         if (
             !prefersReducedMotion &&
@@ -740,7 +754,7 @@ if (renderer) {
             return "opening";
         }
 
-        return "hero";
+        return getHashFlightStageName() ?? "hero";
     }
 
     function setFlightStage(stageName, options = {}) {
@@ -1256,6 +1270,14 @@ if (renderer) {
         });
     }
 
+    function handleHashRestored(event) {
+        const stageName = getHashFlightStageName(event?.detail?.hash);
+
+        if (stageName) {
+            setFlightStage(stageName);
+        }
+    }
+
     function dampVector(current, target, damping, delta) {
         current.x = THREE.MathUtils.damp(current.x, target.x, damping, delta);
         current.y = THREE.MathUtils.damp(current.y, target.y, damping, delta);
@@ -1327,10 +1349,10 @@ if (renderer) {
 
             const remainingX = flightState.targetPosition.x - flightState.basePosition.x;
             const remainingDistanceSq = flightState.basePosition.distanceToSquared(flightState.targetPosition);
-            const routeBankFade = THREE.MathUtils.smoothstep(remainingDistanceSq, 0.008, 0.12);
-            const routeBankTarget = remainingDistanceSq > 0.006
+            const routeBankFade = THREE.MathUtils.smoothstep(remainingDistanceSq, 0.005, 0.105);
+            const routeBankTarget = remainingDistanceSq > 0.0045
                 ? THREE.MathUtils.clamp(
-                    -remainingX * 0.036 * routeBankFade,
+                    -remainingX * 0.03 * routeBankFade,
                     -flightState.targetRouteBankMax,
                     flightState.targetRouteBankMax
                 )
@@ -1391,8 +1413,8 @@ if (renderer) {
         }
 
         tempCameraPosition.copy(flightState.cameraPosition);
-        tempCameraPosition.x += flightState.pointerX * 0.1 * flightState.cameraPointerInfluence;
-        tempCameraPosition.y += flightState.pointerY * 0.045 * flightState.cameraPointerInfluence;
+        tempCameraPosition.x += flightState.pointerX * 0.074 * flightState.cameraPointerInfluence;
+        tempCameraPosition.y += flightState.pointerY * 0.034 * flightState.cameraPointerInfluence;
         tempCameraTarget.copy(flightState.cameraTarget);
 
         camera.position.copy(tempCameraPosition);
@@ -1554,6 +1576,7 @@ if (renderer) {
         window.removeEventListener("journey:intro-ready", handleJourneyIntroReady);
         window.removeEventListener("journey:intro-complete", handleJourneyIntroComplete);
         window.removeEventListener("journey:intro-skip", handleJourneyIntroComplete);
+        window.removeEventListener("journey:hash-restored", handleHashRestored);
         window.removeEventListener("pagehide", cleanupScene);
         stageScrollTriggers.forEach((trigger) => trigger.kill());
         stageScrollTriggers = [];
@@ -1601,6 +1624,7 @@ if (renderer) {
     window.addEventListener("journey:intro-ready", handleJourneyIntroReady);
     window.addEventListener("journey:intro-complete", handleJourneyIntroComplete);
     window.addEventListener("journey:intro-skip", handleJourneyIntroComplete);
+    window.addEventListener("journey:hash-restored", handleHashRestored);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("pagehide", cleanupScene, { once: true });
 
