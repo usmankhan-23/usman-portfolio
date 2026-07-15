@@ -5,12 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Muhammad Usman's portfolio archive: computer science projects, coursework, C++, SFML, Python, and case studies.">
     <title>Muhammad Usman | Portfolio Archive</title>
+    <script>
+        (function () {
+            document.documentElement.classList.add("js");
+
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const shouldReplayIntro = params.get("replayIntro") === "1";
+
+                if (!shouldReplayIntro && (sessionStorage.getItem("usmanJourneyIntroComplete") === "true" || window.location.hash)) {
+                    document.documentElement.classList.add("journey-intro-seen");
+                } else {
+                    document.documentElement.classList.add("journey-intro-pending");
+                }
+            } catch (error) {
+                document.documentElement.classList.add("journey-intro-pending");
+            }
+        }());
+    </script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="scroll-progress" aria-hidden="true"></div>
     <div class="site-noise" aria-hidden="true"></div>
     <canvas class="cursor-glitter" id="cursor-glitter" aria-hidden="true"></canvas>
+    <div class="journey-intro" data-journey-intro role="dialog" aria-modal="true" aria-labelledby="journey-intro-title" hidden>
+        <div class="journey-intro__atmosphere" aria-hidden="true"></div>
+        <div class="journey-intro__content">
+            <p class="journey-intro__eyebrow">Flight Log 001</p>
+            <h1 class="journey-intro__title" id="journey-intro-title">Muhammad Usman</h1>
+            <p class="journey-intro__subtitle">
+                A developer's journey through code, systems, mathematics, and creative engineering.
+            </p>
+            <div class="journey-intro__actions">
+                <button class="btn primary" type="button" data-begin-journey disabled>Preparing Aircraft</button>
+                <button class="btn secondary" type="button" data-skip-intro>Skip Intro</button>
+            </div>
+        </div>
+    </div>
     <div class="page-shell">
         <header class="site-header" data-animate>
             <a class="brand" href="#home" aria-label="Muhammad Usman home">
@@ -45,7 +77,7 @@
 
             <section class="hero-copy" aria-labelledby="hero-title">
                 <p class="eyebrow" data-animate>Computer Science / C++ / Python / SFML</p>
-                <h1 id="hero-title" data-animate>
+                <h1 id="hero-title" data-animate tabindex="-1">
                     Muhammad Usman
                 </h1>
                 <p class="hero-text" data-animate>
@@ -1621,6 +1653,6 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
     <script src="assets/vendor/ScrollTrigger.min.js"></script>
     <script src="script.js"></script>
     <script src="cursor-glitter.js"></script>
-    <script type="module" src="three-scene.js?v=phase2-motion-polish"></script>
+    <script type="module" src="three-scene.js?v=phase3-cinematic-opening"></script>
 </body>
 </html>

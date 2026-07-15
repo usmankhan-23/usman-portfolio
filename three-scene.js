@@ -29,6 +29,9 @@ function setSceneFallback(message, error) {
     canvas.hidden = true;
     setLoaderMessage(message);
     loaderBadge?.classList.add("is-fallback");
+    window.dispatchEvent(new CustomEvent("journey:aircraft-failed", {
+        detail: { message }
+    }));
 }
 
 function clearSceneFallback() {
@@ -237,13 +240,13 @@ if (renderer) {
 
     const flightStages = {
         opening: {
-            position: { x: 2.2, y: -0.26, z: -0.54 },
-            scale: 1.15,
+            position: { x: 1.38, y: -0.18, z: -0.82 },
+            scale: 1.02,
             bank: 0.015,
             pitch: 0.035,
             rotationSpeed: secondsPerRotation(22),
-            cameraPosition: { x: 0.22, y: 1.08, z: 6.9 },
-            cameraTarget: { x: 0.34, y: -0.1, z: -0.78 },
+            cameraPosition: { x: 0.16, y: 1.08, z: 7.24 },
+            cameraTarget: { x: 0.22, y: -0.08, z: -0.92 },
             transitionDuration: 1.4,
             transitionEase: "power3.out",
             floatAmount: 0.055,
@@ -252,12 +255,12 @@ if (renderer) {
             pointerInfluence: 0.65,
             cameraPointerInfluence: 0.58,
             environment: {
-                fogDensity: 0.026,
-                pathOpacity: 0.13,
-                particleOpacity: 0.19,
-                particleSpeed: 0.06,
-                keyLightIntensity: 3.2,
-                rimLightIntensity: 3.7
+                fogDensity: 0.044,
+                pathOpacity: 0.08,
+                particleOpacity: 0.28,
+                particleSpeed: 0.035,
+                keyLightIntensity: 2.85,
+                rimLightIntensity: 2.7
             }
         },
         hero: {
@@ -692,6 +695,18 @@ if (renderer) {
         vector.set(values.x, values.y, values.z);
     }
 
+    function getInitialFlightStageName() {
+        if (
+            !prefersReducedMotion &&
+            document.documentElement.classList.contains("journey-intro-pending") &&
+            document.body.classList.contains("journey-intro-active")
+        ) {
+            return "opening";
+        }
+
+        return "hero";
+    }
+
     function setFlightStage(stageName, options = {}) {
         const stage = flightStages[stageName];
         const force = Boolean(options.force);
@@ -963,6 +978,7 @@ if (renderer) {
         canvas.dataset.aircraftReady = "true";
         canvas.dataset.rotationDuration = "20";
         canvas.dataset.modelMeshCount = String(countAircraftMeshes(model));
+        window.dispatchEvent(new CustomEvent("journey:aircraft-ready"));
     }
 
     function countAircraftMeshes(model) {
@@ -1024,7 +1040,7 @@ if (renderer) {
             "assets/models/stylized_ww1_plane.glb",
             (gltf) => {
                 normalizeAircraftModel(gltf.scene);
-                setFlightStage("hero", { force: true });
+                setFlightStage(getInitialFlightStageName(), { force: true });
                 resizeScene(true);
                 revealAircraftModel();
                 renderSceneOnce();
@@ -1165,6 +1181,16 @@ if (renderer) {
         } else {
             stopRenderLoop();
         }
+    }
+
+    function handleJourneyIntroReady() {
+        if (!prefersReducedMotion) {
+            setFlightStage("opening", { force: true });
+        }
+    }
+
+    function handleJourneyIntroComplete() {
+        setFlightStage("hero", { force: true });
     }
 
     function dampVector(current, target, damping, delta) {
@@ -1456,6 +1482,9 @@ if (renderer) {
         window.removeEventListener("pointerleave", resetPointerTarget);
         window.removeEventListener("load", handleWindowLoadResize);
         document.removeEventListener("visibilitychange", handleVisibilityChange);
+        window.removeEventListener("journey:intro-ready", handleJourneyIntroReady);
+        window.removeEventListener("journey:intro-complete", handleJourneyIntroComplete);
+        window.removeEventListener("journey:intro-skip", handleJourneyIntroComplete);
         window.removeEventListener("pagehide", cleanupScene);
         stageScrollTriggers.forEach((trigger) => trigger.kill());
         stageScrollTriggers = [];
@@ -1491,7 +1520,7 @@ if (renderer) {
     createFlightLines();
     updateResponsiveState();
     createAtmosphere();
-    setFlightStage("hero", { force: true });
+    setFlightStage(getInitialFlightStageName(), { force: true });
     setupFlightStageScrollTriggers();
     scheduleInitialSizing();
     setupResizeObserver();
@@ -1500,6 +1529,9 @@ if (renderer) {
     window.addEventListener("resize", requestResize, { passive: true });
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("pointerleave", resetPointerTarget, { passive: true });
+    window.addEventListener("journey:intro-ready", handleJourneyIntroReady);
+    window.addEventListener("journey:intro-complete", handleJourneyIntroComplete);
+    window.addEventListener("journey:intro-skip", handleJourneyIntroComplete);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("pagehide", cleanupScene, { once: true });
 

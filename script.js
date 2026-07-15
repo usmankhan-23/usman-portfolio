@@ -8,10 +8,35 @@ const contactForm = document.querySelector(".contact-form");
 const caseLinks = document.querySelectorAll("[data-case-link]");
 const caseStudies = document.querySelectorAll("[data-case-study]");
 const caseCloseButtons = document.querySelectorAll("[data-case-close]");
+const journeyIntro = document.querySelector("[data-journey-intro]");
+const beginJourneyButton = document.querySelector("[data-begin-journey]");
+const skipIntroButton = document.querySelector("[data-skip-intro]");
+const pageShell = document.querySelector(".page-shell");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canUseGsap = Boolean(window.gsap && window.ScrollTrigger && !prefersReducedMotion);
+const introStorageKey = "usmanJourneyIntroComplete";
+const urlParams = new URLSearchParams(window.location.search);
+const shouldReplayIntro = urlParams.get("replayIntro") === "1";
+let shouldRunJourneyIntro = false;
+let heroRevealComplete = false;
+let isAircraftReadyForIntro = false;
+let introStarted = false;
+let introCompleting = false;
+let introCompleted = false;
+let introTimeline = null;
+let introRevealTimeline = null;
+let previousFocusedElement = null;
 
 document.body.classList.toggle("has-gsap", canUseGsap);
+
+try {
+    shouldRunJourneyIntro = Boolean(
+        journeyIntro &&
+        (shouldReplayIntro || (sessionStorage.getItem(introStorageKey) !== "true" && !window.location.hash))
+    );
+} catch (error) {
+    shouldRunJourneyIntro = Boolean(journeyIntro && (shouldReplayIntro || !window.location.hash));
+}
 
 function runPremiumInteractions() {
     if (prefersReducedMotion) {
@@ -222,6 +247,39 @@ function runFallbackReveal() {
     });
 }
 
+function revealHeroContent(options = {}) {
+    if (heroRevealComplete) {
+        return;
+    }
+
+    heroRevealComplete = true;
+    const heroItems = [
+        ".site-header",
+        ".hero .eyebrow",
+        "#hero-title",
+        ".hero-text",
+        ".hero-actions",
+        ".hero-stats",
+        ".hero-visual"
+    ];
+
+    if (!canUseGsap || options.immediate) {
+        heroItems.forEach((selector) => {
+            document.querySelectorAll(selector).forEach((item) => {
+                item.classList.add("is-visible");
+                item.style.opacity = "1";
+                item.style.visibility = "visible";
+                item.style.transform = "translateY(0)";
+            });
+        });
+        return;
+    }
+
+    if (!shouldRunJourneyIntro) {
+        revealHeroContent();
+    }
+}
+
 function runGsapMotion() {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -360,12 +418,225 @@ function runGsapMotion() {
     });
 }
 
+function markIntroComplete() {
+    try {
+        sessionStorage.setItem(introStorageKey, "true");
+    } catch (error) {
+        // Session storage may be unavailable in strict browser modes.
+    }
+
+    document.documentElement.classList.remove("journey-intro-pending");
+    document.documentElement.classList.add("journey-intro-seen");
+}
+
+function getIntroFocusableElements() {
+    if (!journeyIntro || journeyIntro.hidden) {
+        return [];
+    }
+
+    return Array.from(journeyIntro.querySelectorAll("button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"))
+        .filter((element) => !element.hidden && element.offsetParent !== null);
+}
+
+function setBackgroundInert(isInert) {
+    if (!pageShell) {
+        return;
+    }
+
+    if ("inert" in pageShell) {
+        pageShell.inert = isInert;
+    }
+
+    pageShell.setAttribute("aria-hidden", String(isInert));
+}
+
+function handleIntroKeydown(event) {
+    if (event.key === "Escape") {
+        completeJourneyIntro({
+            skipped: true,
+            immediate: true
+        });
+        return;
+    }
+
+    if (event.key !== "Tab") {
+        return;
+    }
+
+    const focusable = getIntroFocusableElements();
+
+    if (!focusable.length) {
+        event.preventDefault();
+        return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
+}
+
+function cleanupIntroAccessibility() {
+    journeyIntro?.removeEventListener("keydown", handleIntroKeydown);
+    setBackgroundInert(false);
+}
+
+function restoreHashNavigation() {
+    if (!window.location.hash || window.location.hash === "#home") {
+        return;
+    }
+
+    const hashTarget = document.querySelector(window.location.hash);
+
+    if (!hashTarget) {
+        return;
+    }
+
+    const scrollToHashTarget = () => {
+        hashTarget.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        window.ScrollTrigger?.refresh?.();
+    };
+
+    window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(scrollToHashTarget);
+    });
+}
+
+function setIntroAircraftReady(options = {}) {
+    if (!shouldRunJourneyIntro || introCompleted || !beginJourneyButton) {
+        return;
+    }
+
+    isAircraftReadyForIntro = true;
+    beginJourneyButton.disabled = false;
+    beginJourneyButton.textContent = options.failed ? "Continue" : "Begin Journey";
+    beginJourneyButton.dataset.ready = options.failed ? "fallback" : "true";
+    beginJourneyButton.focus({ preventScroll: true });
+}
+
+function completeJourneyIntro(options = {}) {
+    if (introCompleted) {
+        return;
+    }
+
+    if (introCompleting && !options.skipped) {
+        return;
+    }
+
+    introCompleting = true;
+    introTimeline?.kill();
+    introRevealTimeline?.kill();
+    cleanupIntroAccessibility();
+
+    if (!journeyIntro || journeyIntro.hidden) {
+        introCompleted = true;
+        introCompleting = false;
+        revealHeroContent({ immediate: options.immediate || prefersReducedMotion });
+        return;
+    }
+
+    markIntroComplete();
+    window.dispatchEvent(new CustomEvent("journey:intro-complete", {
+        detail: { skipped: Boolean(options.skipped) }
+    }));
+
+    const finish = () => {
+        introCompleted = true;
+        introCompleting = false;
+        journeyIntro.hidden = true;
+        journeyIntro.style.opacity = "";
+        journeyIntro.style.visibility = "";
+        journeyIntro.style.transform = "";
+        document.body.classList.remove("journey-intro-active");
+        revealHeroContent({ immediate: Boolean(options.immediate) || prefersReducedMotion });
+        document.querySelector("#hero-title")?.focus({ preventScroll: true });
+        window.ScrollTrigger?.refresh?.();
+        restoreHashNavigation();
+    };
+
+    if (!canUseGsap || options.immediate || options.skipped) {
+        finish();
+        return;
+    }
+
+    introTimeline = gsap.timeline({
+        defaults: { ease: "power3.inOut" },
+        onComplete: finish
+    })
+        .to(".journey-intro__content", { autoAlpha: 0, y: -22, duration: 0.45 })
+        .to(".journey-intro", { autoAlpha: 0, duration: 0.58 }, "-=0.18");
+}
+
+function setupJourneyIntro() {
+    if (!journeyIntro) {
+        revealHeroContent({ immediate: !canUseGsap });
+        return;
+    }
+
+    if (!shouldRunJourneyIntro) {
+        journeyIntro.hidden = true;
+        document.body.classList.remove("journey-intro-active");
+        cleanupIntroAccessibility();
+        window.dispatchEvent(new CustomEvent("journey:intro-skip"));
+        revealHeroContent({ immediate: true });
+        restoreHashNavigation();
+        return;
+    }
+
+    previousFocusedElement = document.activeElement;
+    journeyIntro.hidden = false;
+    beginJourneyButton.disabled = true;
+    beginJourneyButton.textContent = "Preparing Aircraft";
+    document.body.classList.add("journey-intro-active");
+    setBackgroundInert(true);
+    journeyIntro.addEventListener("keydown", handleIntroKeydown);
+    window.dispatchEvent(new CustomEvent("journey:intro-ready"));
+    window.requestAnimationFrame(() => skipIntroButton?.focus({ preventScroll: true }));
+
+    if (canUseGsap) {
+        gsap.set(".journey-intro__content > *", { y: 18 });
+        gsap.set(".journey-intro__atmosphere", { autoAlpha: 0.28, scale: 1.08 });
+        introRevealTimeline = gsap.timeline({ defaults: { ease: "power3.out" } })
+            .to(".journey-intro__atmosphere", { autoAlpha: 0.62, scale: 1, duration: 1.4 })
+            .to(".journey-intro__content > *", {
+                y: 0,
+                duration: 0.82,
+                stagger: 0.09
+            }, "-=0.92");
+    }
+
+    beginJourneyButton?.addEventListener("click", () => {
+        if (!isAircraftReadyForIntro || introStarted) {
+            return;
+        }
+
+        introStarted = true;
+        beginJourneyButton.disabled = true;
+        completeJourneyIntro();
+    });
+    skipIntroButton?.addEventListener("click", () => completeJourneyIntro({
+        skipped: true,
+        immediate: true
+    }));
+
+    window.addEventListener("journey:aircraft-ready", () => setIntroAircraftReady(), { once: true });
+    window.addEventListener("journey:aircraft-failed", () => setIntroAircraftReady({ failed: true }), { once: true });
+    window.setTimeout(() => setIntroAircraftReady({ failed: true }), 7000);
+}
+
 if (canUseGsap) {
     runGsapMotion();
 } else {
     runFallbackReveal();
 }
 
+setupJourneyIntro();
 runPremiumInteractions();
 runActiveNavigation();
 
