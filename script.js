@@ -17,6 +17,40 @@ const canUseGsap = Boolean(window.gsap && window.ScrollTrigger && !prefersReduce
 const introStorageKey = "usmanJourneyIntroComplete";
 const urlParams = new URLSearchParams(window.location.search);
 const shouldReplayIntro = urlParams.get("replayIntro") === "1";
+const supportsFinePointer = window.matchMedia("(pointer: fine)").matches;
+const motionTokens = {
+    duration: {
+        instant: 0.18,
+        fast: 0.32,
+        normal: 0.54,
+        slow: 0.82,
+        cinematic: 1.34
+    },
+    ease: {
+        enter: "power3.out",
+        exit: "power2.in",
+        move: "power3.inOut",
+        soft: "sine.inOut"
+    },
+    distance: {
+        small: 10,
+        normal: 22,
+        large: 36
+    },
+    stagger: {
+        tight: 0.045,
+        normal: 0.07
+    }
+};
+const heroRevealSelectors = [
+    ".site-header",
+    ".hero .eyebrow",
+    "#hero-title",
+    ".hero-text",
+    ".hero-actions",
+    ".hero-stats",
+    ".hero-visual"
+];
 let shouldRunJourneyIntro = false;
 let heroRevealComplete = false;
 let isAircraftReadyForIntro = false;
@@ -25,6 +59,9 @@ let introCompleting = false;
 let introCompleted = false;
 let introTimeline = null;
 let introRevealTimeline = null;
+let heroRevealTimeline = null;
+let caseStudyTimeline = null;
+let skillPanelTimeline = null;
 let previousFocusedElement = null;
 
 document.body.classList.toggle("has-gsap", canUseGsap);
@@ -39,7 +76,7 @@ try {
 }
 
 function runPremiumInteractions() {
-    if (prefersReducedMotion) {
+    if (prefersReducedMotion || !supportsFinePointer) {
         return;
     }
 
@@ -129,21 +166,70 @@ navLinks.forEach((link) => {
     });
 });
 
+function selectSkillTab(activeTab) {
+    const activeCategory = activeTab.dataset.skillTab;
+    const nextPanel = Array.from(skillPanels).find((panel) => panel.dataset.skillPanel === activeCategory);
+
+    if (!nextPanel) {
+        return;
+    }
+
+    skillPanelTimeline?.kill();
+    skillPanelTimeline = null;
+    window.gsap?.killTweensOf?.(skillPanels);
+
+    skillTabs.forEach((item) => {
+        const isActive = item === activeTab;
+        item.classList.toggle("is-active", isActive);
+        item.setAttribute("aria-selected", String(isActive));
+    });
+
+    skillPanels.forEach((panel) => {
+        const isActive = panel === nextPanel;
+        panel.hidden = !isActive;
+        panel.classList.toggle("is-active", isActive);
+    });
+
+    if (!canUseGsap) {
+        return;
+    }
+
+    skillPanelTimeline = gsap.timeline({
+        defaults: {
+            ease: motionTokens.ease.enter,
+            overwrite: true
+        },
+        onComplete: () => {
+            nextPanel.style.transform = "";
+            skillPanelTimeline = null;
+        }
+    });
+    skillPanelTimeline.fromTo(nextPanel,
+        { autoAlpha: 0, y: motionTokens.distance.small, scale: 0.996 },
+        {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            duration: motionTokens.duration.normal
+        }
+    );
+}
+
 skillTabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-        const activeCategory = tab.dataset.skillTab;
+    tab.addEventListener("click", () => selectSkillTab(tab));
+    tab.addEventListener("keydown", (event) => {
+        const currentIndex = Array.from(skillTabs).indexOf(tab);
+        const keyOffset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
 
-        skillTabs.forEach((item) => {
-            const isActive = item === tab;
-            item.classList.toggle("is-active", isActive);
-            item.setAttribute("aria-selected", String(isActive));
-        });
+        if (!keyOffset) {
+            return;
+        }
 
-        skillPanels.forEach((panel) => {
-            const isActive = panel.dataset.skillPanel === activeCategory;
-            panel.classList.toggle("is-active", isActive);
-            panel.hidden = !isActive;
-        });
+        event.preventDefault();
+        const nextIndex = (currentIndex + keyOffset + skillTabs.length) % skillTabs.length;
+        const nextTab = skillTabs[nextIndex];
+        nextTab.focus();
+        selectSkillTab(nextTab);
     });
 });
 
@@ -154,6 +240,9 @@ function openCaseStudy(targetId) {
         return;
     }
 
+    caseStudyTimeline?.kill();
+    window.gsap?.killTweensOf?.(caseStudies);
+
     caseStudies.forEach((section) => {
         const isTarget = section === target;
         section.hidden = !isTarget;
@@ -163,15 +252,30 @@ function openCaseStudy(targetId) {
     const targetItems = target.querySelectorAll("[data-animate]");
 
     if (canUseGsap) {
-        gsap.set(targetItems, { autoAlpha: 0, y: 34 });
-        gsap.to(targetItems, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.72,
-            ease: "power3.out",
-            stagger: 0.08
+        gsap.set(target, { autoAlpha: 0, y: motionTokens.distance.small });
+        gsap.set(targetItems, { autoAlpha: 0, y: motionTokens.distance.normal });
+        caseStudyTimeline = gsap.timeline({
+            defaults: {
+                ease: motionTokens.ease.enter,
+                overwrite: true
+            },
+            onComplete: () => {
+                caseStudyTimeline = null;
+                ScrollTrigger.refresh();
+            }
         });
-        ScrollTrigger.refresh();
+        caseStudyTimeline
+            .to(target, {
+                autoAlpha: 1,
+                y: 0,
+                duration: motionTokens.duration.fast
+            })
+            .to(targetItems, {
+                autoAlpha: 1,
+                y: 0,
+                duration: motionTokens.duration.normal,
+                stagger: motionTokens.stagger.tight
+            }, "-=0.1");
     } else {
         targetItems.forEach((item) => {
             item.classList.add("is-visible");
@@ -184,6 +288,9 @@ function openCaseStudy(targetId) {
 }
 
 function closeCaseStudies() {
+    caseStudyTimeline?.kill();
+    caseStudyTimeline = null;
+
     caseStudies.forEach((section) => {
         section.hidden = true;
         section.classList.remove("is-open");
@@ -241,8 +348,7 @@ function runFallbackReveal() {
         }
     );
 
-    animatedItems.forEach((item, index) => {
-        item.style.transitionDelay = `${index * 80}ms`;
+    animatedItems.forEach((item) => {
         revealObserver.observe(item);
     });
 }
@@ -253,18 +359,15 @@ function revealHeroContent(options = {}) {
     }
 
     heroRevealComplete = true;
-    const heroItems = [
-        ".site-header",
-        ".hero .eyebrow",
-        "#hero-title",
-        ".hero-text",
-        ".hero-actions",
-        ".hero-stats",
-        ".hero-visual"
-    ];
+    [".hero-copy", ".flight-chapters"].forEach((selector) => {
+        document.querySelectorAll(selector).forEach((item) => {
+            item.style.opacity = "1";
+            item.style.visibility = "visible";
+        });
+    });
 
     if (!canUseGsap || options.immediate) {
-        heroItems.forEach((selector) => {
+        heroRevealSelectors.forEach((selector) => {
             document.querySelectorAll(selector).forEach((item) => {
                 item.classList.add("is-visible");
                 item.style.opacity = "1";
@@ -275,9 +378,55 @@ function revealHeroContent(options = {}) {
         return;
     }
 
-    if (!shouldRunJourneyIntro) {
-        revealHeroContent();
-    }
+    const heroItems = heroRevealSelectors.flatMap((selector) => Array.from(document.querySelectorAll(selector)));
+    heroRevealTimeline?.kill();
+    heroRevealTimeline = gsap.timeline({
+        defaults: {
+            ease: motionTokens.ease.enter,
+            overwrite: true
+        }
+    });
+
+    heroRevealTimeline
+        .to(".site-header", {
+            autoAlpha: 1,
+            y: 0,
+            duration: motionTokens.duration.fast
+        }, 0)
+        .to(".hero .eyebrow", {
+            autoAlpha: 1,
+            y: 0,
+            duration: motionTokens.duration.normal
+        }, 0.08)
+        .to("#hero-title", {
+            autoAlpha: 1,
+            y: 0,
+            duration: motionTokens.duration.slow
+        }, 0.16)
+        .to(".hero-text", {
+            autoAlpha: 1,
+            y: 0,
+            duration: motionTokens.duration.normal
+        }, 0.32)
+        .to(".hero-actions", {
+            autoAlpha: 1,
+            y: 0,
+            duration: motionTokens.duration.normal
+        }, 0.44)
+        .to(".hero-stats", {
+            autoAlpha: 1,
+            y: 0,
+            duration: motionTokens.duration.normal
+        }, 0.54)
+        .to(".hero-visual", {
+            autoAlpha: 1,
+            y: 0,
+            duration: motionTokens.duration.slow
+        }, 0.38)
+        .eventCallback("onComplete", () => {
+            heroItems.forEach((item) => item.classList.add("is-visible"));
+            heroRevealTimeline = null;
+        });
 }
 
 function runGsapMotion() {
@@ -285,7 +434,7 @@ function runGsapMotion() {
 
     gsap.set(animatedItems, {
         autoAlpha: 0,
-        y: 48
+        y: motionTokens.distance.normal
     });
 
     gsap.to(".scroll-progress", {
@@ -298,15 +447,6 @@ function runGsapMotion() {
         }
     });
 
-    gsap.timeline({ defaults: { ease: "power4.out" } })
-        .to(".site-header", { autoAlpha: 1, y: 0, duration: 0.45 })
-        .to(".hero .eyebrow", { autoAlpha: 1, y: 0, duration: 0.58 }, "-=0.12")
-        .to("#hero-title", { autoAlpha: 1, y: 0, duration: 0.82 }, "-=0.28")
-        .to(".hero-text", { autoAlpha: 1, y: 0, duration: 0.62 }, "-=0.34")
-        .to(".hero-actions", { autoAlpha: 1, y: 0, duration: 0.54 }, "-=0.32")
-        .to(".hero-stats", { autoAlpha: 1, y: 0, duration: 0.54 }, "-=0.28")
-        .to(".hero-visual", { autoAlpha: 1, y: 0, duration: 0.72 }, "-=0.46");
-
     animatedItems.forEach((item) => {
         if (item.closest(".hero") || item.matches(".site-header")) {
             return;
@@ -315,31 +455,14 @@ function runGsapMotion() {
         gsap.to(item, {
             autoAlpha: 1,
             y: 0,
-            duration: 0.84,
-            ease: "power3.out",
+            duration: motionTokens.duration.normal,
+            ease: motionTokens.ease.enter,
+            overwrite: "auto",
             scrollTrigger: {
                 trigger: item,
-                start: "top 84%",
+                start: "top 88%",
                 once: true
             }
-        });
-    });
-
-    gsap.utils.toArray(".stack-showcase article, .skill-card, .project-card, .course-card, .discrete-topic, .calculus-topic, .case-panel, .timeline-placeholder").forEach((card) => {
-        card.addEventListener("mouseenter", () => {
-            gsap.to(card, {
-                y: -8,
-                duration: 0.28,
-                ease: "power2.out"
-            });
-        });
-
-        card.addEventListener("mouseleave", () => {
-            gsap.to(card, {
-                y: 0,
-                duration: 0.34,
-                ease: "power2.out"
-            });
         });
     });
 
@@ -532,6 +655,7 @@ function completeJourneyIntro(options = {}) {
     introCompleting = true;
     introTimeline?.kill();
     introRevealTimeline?.kill();
+    heroRevealTimeline?.kill();
     cleanupIntroAccessibility();
 
     if (!journeyIntro || journeyIntro.hidden) {
@@ -560,17 +684,28 @@ function completeJourneyIntro(options = {}) {
         restoreHashNavigation();
     };
 
-    if (!canUseGsap || options.immediate || options.skipped) {
+    if (!canUseGsap || options.immediate) {
         finish();
         return;
     }
 
+    const settleDuration = options.skipped ? 0.42 : motionTokens.duration.normal;
     introTimeline = gsap.timeline({
-        defaults: { ease: "power3.inOut" },
+        defaults: { ease: options.skipped ? motionTokens.ease.enter : motionTokens.ease.move, overwrite: true },
         onComplete: finish
     })
-        .to(".journey-intro__content", { autoAlpha: 0, y: -22, duration: 0.45 })
-        .to(".journey-intro", { autoAlpha: 0, duration: 0.58 }, "-=0.18");
+        .to(".journey-intro__content", {
+            autoAlpha: 0,
+            y: -motionTokens.distance.small,
+            duration: options.skipped ? settleDuration : motionTokens.duration.fast
+        }, 0)
+        .call(() => {
+            revealHeroContent({ immediate: Boolean(options.skipped) });
+        }, null, options.skipped ? 0.04 : 0.18)
+        .to(".journey-intro", {
+            autoAlpha: 0,
+            duration: settleDuration
+        }, options.skipped ? 0 : 0.12);
 }
 
 function setupJourneyIntro() {
@@ -600,15 +735,15 @@ function setupJourneyIntro() {
     window.requestAnimationFrame(() => skipIntroButton?.focus({ preventScroll: true }));
 
     if (canUseGsap) {
-        gsap.set(".journey-intro__content > *", { y: 18 });
+        gsap.set(".journey-intro__content > *", { y: motionTokens.distance.small });
         gsap.set(".journey-intro__atmosphere", { autoAlpha: 0.28, scale: 1.08 });
         introRevealTimeline = gsap.timeline({ defaults: { ease: "power3.out" } })
-            .to(".journey-intro__atmosphere", { autoAlpha: 0.62, scale: 1, duration: 1.4 })
+            .to(".journey-intro__atmosphere", { autoAlpha: 0.62, scale: 1, duration: motionTokens.duration.cinematic })
             .to(".journey-intro__content > *", {
                 y: 0,
-                duration: 0.82,
-                stagger: 0.09
-            }, "-=0.92");
+                duration: motionTokens.duration.normal,
+                stagger: motionTokens.stagger.normal
+            }, "-=0.86");
     }
 
     beginJourneyButton?.addEventListener("click", () => {
@@ -621,8 +756,7 @@ function setupJourneyIntro() {
         completeJourneyIntro();
     });
     skipIntroButton?.addEventListener("click", () => completeJourneyIntro({
-        skipped: true,
-        immediate: true
+        skipped: true
     }));
 
     window.addEventListener("journey:aircraft-ready", () => setIntroAircraftReady(), { once: true });

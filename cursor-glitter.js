@@ -6,9 +6,10 @@
     }
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
     const ctx = canvas.getContext("2d", { alpha: true });
 
-    if (!ctx || reduceMotion) {
+    if (!ctx || reduceMotion || !finePointer) {
         canvas.style.display = "none";
         return;
     }
@@ -20,7 +21,8 @@
         px: window.innerWidth * 0.68,
         py: window.innerHeight * 0.36,
         active: false,
-        speed: 0
+        speed: 0,
+        lastMoveTime: 0
     };
     const follower = {
         x: pointer.x,
@@ -49,7 +51,7 @@
 
     function createAmbient() {
         ambient.length = 0;
-        const count = Math.min(240, Math.max(90, Math.floor((width * height) / 9400)));
+        const count = Math.min(180, Math.max(72, Math.floor((width * height) / 11800)));
 
         for (let i = 0; i < count; i += 1) {
             ambient.push({
@@ -74,6 +76,7 @@
         pointer.y = y;
         pointer.speed = Math.min(80, Math.hypot(dx, dy));
         pointer.active = true;
+        pointer.lastMoveTime = performance.now();
     }
 
     function addParticle(force = 1) {
@@ -100,10 +103,10 @@
 
     function spawn(dt) {
         const speedBoost = Math.min(7, pointer.speed * 0.08);
-        spawnCarry += dt * (0.028 + speedBoost * 0.026);
+        spawnCarry += dt * (0.021 + speedBoost * 0.02);
 
         if (pointer.active) {
-            spawnCarry += dt * 0.022;
+            spawnCarry += dt * 0.016;
         }
 
         while (spawnCarry >= 1) {
@@ -111,8 +114,8 @@
             spawnCarry -= 1;
         }
 
-        if (particles.length > 360) {
-            particles.splice(0, particles.length - 360);
+        if (particles.length > 260) {
+            particles.splice(0, particles.length - 260);
         }
     }
 
@@ -185,6 +188,10 @@
         const dt = Math.min(32, now - lastTime);
         lastTime = now;
 
+        if (now - pointer.lastMoveTime > 900) {
+            pointer.active = false;
+        }
+
         follower.x += (pointer.x - follower.x) * 0.13;
         follower.y += (pointer.y - follower.y) * 0.13;
         pointer.speed *= 0.9;
@@ -208,12 +215,6 @@
         setPointer(event.clientX, event.clientY);
         for (let i = 0; i < 28; i += 1) {
             addParticle(5);
-        }
-    }, { passive: true });
-
-    window.addEventListener("touchmove", (event) => {
-        if (event.touches.length > 0) {
-            setPointer(event.touches[0].clientX, event.touches[0].clientY);
         }
     }, { passive: true });
 

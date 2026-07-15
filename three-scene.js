@@ -180,49 +180,49 @@ if (renderer) {
 
     const dampingProfiles = {
         desktop: {
-            position: 2.35,
-            scale: 3.85,
-            bank: 3.35,
-            routeBank: 2.95,
-            pitch: 2.85,
-            rotationSpeed: 1.75,
+            position: 2.78,
+            scale: 4.1,
+            bank: 4.25,
+            routeBank: 4.05,
+            pitch: 2.8,
+            rotationSpeed: 1.35,
             float: 2.55,
             drift: 2.65,
-            pointer: 3.25,
-            cameraPosition: 2.05,
-            cameraTarget: 2.45,
-            cameraPointer: 3.35,
-            environment: 1.85
+            pointer: 3.45,
+            cameraPosition: 1.98,
+            cameraTarget: 2.42,
+            cameraPointer: 3.55,
+            environment: 1.7
         },
         tablet: {
-            position: 2.8,
-            scale: 4.2,
-            bank: 3.65,
-            routeBank: 3.25,
-            pitch: 3.1,
-            rotationSpeed: 2,
+            position: 3.18,
+            scale: 4.45,
+            bank: 4.25,
+            routeBank: 4.2,
+            pitch: 3.05,
+            rotationSpeed: 1.65,
             float: 2.9,
             drift: 3,
-            pointer: 3.6,
-            cameraPosition: 2.45,
-            cameraTarget: 2.8,
-            cameraPointer: 3.8,
-            environment: 2.1
+            pointer: 3.9,
+            cameraPosition: 2.48,
+            cameraTarget: 2.9,
+            cameraPointer: 4.05,
+            environment: 2
         },
         mobile: {
-            position: 3.35,
-            scale: 4.8,
-            bank: 4.2,
-            routeBank: 4.1,
-            pitch: 3.8,
-            rotationSpeed: 2.25,
-            float: 3.4,
-            drift: 3.5,
-            pointer: 4.5,
-            cameraPosition: 3.2,
-            cameraTarget: 3.35,
-            cameraPointer: 4.5,
-            environment: 2.5
+            position: 4.05,
+            scale: 5.15,
+            bank: 4.85,
+            routeBank: 5.2,
+            pitch: 3.75,
+            rotationSpeed: 2.8,
+            float: 3.65,
+            drift: 3.8,
+            pointer: 5.1,
+            cameraPosition: 3.55,
+            cameraTarget: 3.85,
+            cameraPointer: 5.1,
+            environment: 2.55
         }
     };
 
@@ -643,6 +643,22 @@ if (renderer) {
             environment
         };
 
+        const tuneMobileStage = () => {
+            nextStage.position.x *= 0.76;
+            nextStage.position.z *= 0.92;
+            nextStage.scale *= 0.96;
+            nextStage.bank *= 0.62;
+            nextStage.pitch *= 0.72;
+            nextStage.routeBankMax = Math.min(nextStage.routeBankMax * 0.68, 0.034);
+            nextStage.cameraPosition.x *= 0.62;
+            nextStage.cameraPosition.y = nextStage.cameraPosition.y * 0.96 + 0.04;
+            nextStage.cameraPosition.z = 7.86 + (nextStage.cameraPosition.z - 7.86) * 0.72;
+            nextStage.cameraTarget.x *= 0.55;
+            nextStage.cameraTarget.y *= 0.86;
+            nextStage.pointerInfluence = 0;
+            nextStage.cameraPointerInfluence = 0;
+        };
+
         if (flightState.isSmallScreen && stage.mobile) {
             nextStage.position = { ...stage.mobile.position };
             nextStage.scale = stage.mobile.scale ?? nextStage.scale;
@@ -656,6 +672,7 @@ if (renderer) {
             nextStage.pointerInfluence = stage.mobile.pointerInfluence ?? 0;
             nextStage.cameraPointerInfluence = stage.mobile.cameraPointerInfluence ?? 0;
             nextStage.routeBankMax = stage.mobile.routeBankMax ?? Math.min(nextStage.routeBankMax, 0.045);
+            tuneMobileStage();
             return nextStage;
         }
 
@@ -686,6 +703,7 @@ if (renderer) {
             nextStage.cameraPosition.y -= 0.04;
             nextStage.cameraPosition.z += 0.72;
             nextStage.cameraTarget.y -= 0.14;
+            tuneMobileStage();
         }
 
         return nextStage;
@@ -1201,11 +1219,12 @@ if (renderer) {
 
     function updatePointer(delta) {
         if (Date.now() - flightState.lastPointerMoveTime > 1100 || prefersReducedMotion) {
-            pointerTarget.lerp(pointerNeutral, 0.035);
+            pointerTarget.x = THREE.MathUtils.damp(pointerTarget.x, pointerNeutral.x, 2.2, delta);
+            pointerTarget.y = THREE.MathUtils.damp(pointerTarget.y, pointerNeutral.y, 2.2, delta);
         }
 
-        pointerCurrent.x = THREE.MathUtils.damp(pointerCurrent.x, pointerTarget.x, 7, delta);
-        pointerCurrent.y = THREE.MathUtils.damp(pointerCurrent.y, pointerTarget.y, 7, delta);
+        pointerCurrent.x = THREE.MathUtils.damp(pointerCurrent.x, pointerTarget.x, 6.4, delta);
+        pointerCurrent.y = THREE.MathUtils.damp(pointerCurrent.y, pointerTarget.y, 6.4, delta);
         flightState.pointerX = pointerCurrent.x;
         flightState.pointerY = pointerCurrent.y;
     }
@@ -1263,8 +1282,13 @@ if (renderer) {
 
             const remainingX = flightState.targetPosition.x - flightState.basePosition.x;
             const remainingDistanceSq = flightState.basePosition.distanceToSquared(flightState.targetPosition);
+            const routeBankFade = THREE.MathUtils.smoothstep(remainingDistanceSq, 0.008, 0.12);
             const routeBankTarget = remainingDistanceSq > 0.006
-                ? THREE.MathUtils.clamp(-remainingX * 0.042, -flightState.targetRouteBankMax, flightState.targetRouteBankMax)
+                ? THREE.MathUtils.clamp(
+                    -remainingX * 0.036 * routeBankFade,
+                    -flightState.targetRouteBankMax,
+                    flightState.targetRouteBankMax
+                )
                 : 0;
             flightState.transitionBank = THREE.MathUtils.damp(
                 flightState.transitionBank,
