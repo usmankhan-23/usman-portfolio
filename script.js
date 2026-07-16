@@ -27,6 +27,7 @@ const flightLogStorageKey = "usmanFlightLogChapter";
 const academicStorageKey = "usmanAcademicCategory";
 const discreteStorageKey = "usmanDiscreteCheckpoint";
 const calculusStorageKey = "usmanCalculusInvestigation";
+const contactDraftStorageKey = "usmanContactDraft";
 const flightLogChapterCount = flightLogEntries.length || 9;
 const flightLogChapterMeta = {
     1: {
@@ -1529,21 +1530,242 @@ window.addEventListener("popstate", () => {
 });
 
 if (contactForm) {
+    const contactFields = {
+        name: {
+            input: contactForm.querySelector("#contact-name"),
+            feedback: contactForm.querySelector("#contact-name-feedback")
+        },
+        email: {
+            input: contactForm.querySelector("#contact-email"),
+            feedback: contactForm.querySelector("#contact-email-feedback")
+        },
+        subject: {
+            input: contactForm.querySelector("#contact-subject"),
+            feedback: contactForm.querySelector("#contact-subject-feedback")
+        },
+        message: {
+            input: contactForm.querySelector("#contact-message"),
+            feedback: contactForm.querySelector("#contact-message-feedback")
+        }
+    };
+    const contactStatus = contactForm.querySelector("#contact-status");
+    const contactClearDraftButton = contactForm.querySelector("[data-contact-clear]");
+    const contactState = {
+        value: "Idle",
+        submitted: false,
+        restored: false,
+        lastStatus: contactStatus?.textContent?.trim() || ""
+    };
+
+    function setContactState(nextState, statusMessage) {
+        contactState.value = nextState;
+        contactForm.dataset.contactState = nextState;
+
+        if (contactStatus && statusMessage && statusMessage !== contactState.lastStatus) {
+            contactStatus.textContent = statusMessage;
+            contactState.lastStatus = statusMessage;
+        }
+    }
+
+    function getContactValues() {
+        return {
+            name: contactFields.name.input?.value || "",
+            email: contactFields.email.input?.value || "",
+            subject: contactFields.subject.input?.value || "",
+            message: contactFields.message.input?.value || ""
+        };
+    }
+
+    function hasContactDraft(values = getContactValues()) {
+        return Object.values(values).some((value) => String(value).trim().length > 0);
+    }
+
+    function isReasonableEmail(value) {
+        const trimmed = value.trim();
+        const atIndex = trimmed.indexOf("@");
+        const lastAtIndex = trimmed.lastIndexOf("@");
+
+        return (
+            atIndex > 0 &&
+            atIndex === lastAtIndex &&
+            lastAtIndex < trimmed.length - 1 &&
+            !/\s/.test(trimmed)
+        );
+    }
+
+    function updateContactFeedback(fieldName, result, shouldShowValid = false, shouldShowError = true) {
+        const field = contactFields[fieldName];
+
+        if (!field?.input || !field.feedback) {
+            return;
+        }
+
+        field.input.setAttribute("aria-invalid", String(!result.valid && shouldShowError));
+        field.feedback.textContent = result.valid && shouldShowValid ? "Looks good." : result.message;
+        field.feedback.classList.toggle("is-error", !result.valid && shouldShowError);
+        field.feedback.classList.toggle("is-valid", result.valid && shouldShowValid);
+    }
+
+    function validateContactField(fieldName, values = getContactValues()) {
+        const value = String(values[fieldName] || "");
+        const trimmed = value.trim();
+
+        if (fieldName === "name") {
+            if (!trimmed) {
+                return { valid: false, message: "Please enter your name." };
+            }
+
+            if (trimmed.length < 2) {
+                return { valid: false, message: "Please enter at least two characters." };
+            }
+
+            return { valid: true, message: "Looks good." };
+        }
+
+        if (fieldName === "email") {
+            if (!trimmed) {
+                return { valid: false, message: "Please enter your email." };
+            }
+
+            if ((contactFields.email.input?.validity?.typeMismatch && !isReasonableEmail(trimmed)) || !isReasonableEmail(trimmed)) {
+                return { valid: false, message: "Please enter a valid email address." };
+            }
+
+            return { valid: true, message: "Looks good." };
+        }
+
+        if (fieldName === "subject") {
+            if (!trimmed) {
+                return { valid: false, message: "Please select a subject." };
+            }
+
+            return { valid: true, message: "Looks good." };
+        }
+
+        if (!trimmed) {
+            return { valid: false, message: "Message cannot be empty." };
+        }
+
+        return { valid: true, message: "Looks good." };
+    }
+
+    function validateContactForm(options = {}) {
+        const values = getContactValues();
+        const fieldNames = Object.keys(contactFields);
+        const results = fieldNames.map((fieldName) => {
+            const result = validateContactField(fieldName, values);
+            const shouldShowField = options.showAll || contactState.submitted || String(values[fieldName] || "").trim().length > 0;
+            updateContactFeedback(fieldName, result, shouldShowField && result.valid, shouldShowField);
+            return { fieldName, ...result };
+        });
+        const firstInvalid = results.find((result) => !result.valid);
+        const hasDraft = hasContactDraft(values);
+
+        contactClearDraftButton.hidden = !hasDraft;
+
+        if (!hasDraft && !contactState.submitted) {
+            setContactState("Idle", "Ready to prepare your email.");
+        } else if (firstInvalid) {
+            setContactState("Invalid", "Please correct the highlighted fields.");
+        } else {
+            setContactState("Valid", "Ready to prepare your email.");
+        }
+
+        return {
+            valid: !firstInvalid,
+            firstInvalid,
+            values
+        };
+    }
+
+    function persistContactDraft() {
+        try {
+            sessionStorage.setItem(contactDraftStorageKey, JSON.stringify(getContactValues()));
+        } catch (error) {
+            // The form remains usable when session storage is unavailable.
+        }
+    }
+
+    function restoreContactDraft() {
+        try {
+            const draft = JSON.parse(sessionStorage.getItem(contactDraftStorageKey) || "null");
+
+            if (!draft || typeof draft !== "object") {
+                return;
+            }
+
+            Object.entries(contactFields).forEach(([fieldName, field]) => {
+                if (field.input && !field.input.value && typeof draft[fieldName] === "string") {
+                    field.input.value = draft[fieldName];
+                }
+            });
+
+            contactState.restored = hasContactDraft();
+        } catch (error) {
+            contactState.restored = false;
+        }
+    }
+
+    function clearContactDraft() {
+        try {
+            sessionStorage.removeItem(contactDraftStorageKey);
+        } catch (error) {
+            // Clearing the visible form is still enough when storage is unavailable.
+        }
+
+        contactForm.reset();
+        contactState.submitted = false;
+        contactState.restored = false;
+        Object.keys(contactFields).forEach((fieldName) => {
+            const result = validateContactField(fieldName, getContactValues());
+            updateContactFeedback(fieldName, result, false);
+            contactFields[fieldName].input?.setAttribute("aria-invalid", "false");
+        });
+        contactClearDraftButton.hidden = true;
+        setContactState("Idle", "Draft cleared. Ready to prepare your email.");
+        contactFields.name.input?.focus({ preventScroll: true });
+    }
+
+    function prepareContactMailto(values) {
+        const name = values.name.trim();
+        const email = values.email.trim();
+        const subject = values.subject.trim();
+        const message = values.message.trim();
+        const mailSubject = encodeURIComponent(`Portfolio contact: ${subject}`);
+        const mailBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\n${message}`);
+
+        return `mailto:usmankhan312007@gmail.com?subject=${mailSubject}&body=${mailBody}`;
+    }
+
+    function handleContactInput() {
+        persistContactDraft();
+        validateContactForm();
+    }
+
+    contactForm.addEventListener("input", handleContactInput);
+    contactForm.addEventListener("change", handleContactInput);
+
+    contactClearDraftButton?.addEventListener("click", clearContactDraft);
+
     contactForm.addEventListener("submit", (event) => {
         event.preventDefault();
+        contactState.submitted = true;
 
-        const formData = new FormData(contactForm);
-        const name = String(formData.get("name")).trim();
-        const email = String(formData.get("email")).trim();
-        const message = String(formData.get("message")).trim();
-        const status = contactForm.querySelector(".form-status");
-        const subject = encodeURIComponent(`Portfolio message from ${name}`);
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+        const validation = validateContactForm({ showAll: true });
 
-        window.location.href = `mailto:usmankhan312007@gmail.com?subject=${subject}&body=${body}`;
-        status.textContent = "Opening your email app with the message ready to send.";
-        contactForm.reset();
+        if (!validation.valid) {
+            contactFields[validation.firstInvalid.fieldName].input?.focus();
+            return;
+        }
+
+        persistContactDraft();
+        setContactState("Preparing", "Opening your email application...");
+        window.location.href = prepareContactMailto(validation.values);
+        setContactState("Ready", "Opening your email application...");
     });
+
+    restoreContactDraft();
+    validateContactForm({ showAll: contactState.restored });
 }
 
 function runFallbackReveal() {
