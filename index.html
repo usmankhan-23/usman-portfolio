@@ -379,82 +379,274 @@
 
         <section class="coursework-section" id="coursework" aria-labelledby="coursework-title">
             <div class="section-heading" data-animate>
-                <p class="eyebrow">Academic Work</p>
-                <h2 id="coursework-title">Semester assignments that built the foundation.</h2>
+                <p class="eyebrow">Stage 03 / Academic Navigation Archive</p>
+                <h2 id="coursework-title">Coursework translated into engineering evidence.</h2>
                 <p>
-                    This section highlights selected Programming Fundamentals assignments that
-                    strengthened my command of C++ syntax, structured logic, debugging discipline,
-                    and the ability to explain my solutions clearly during evaluation.
+                    A recruiter-focused map of the university work that shaped how I solve
+                    problems, write programs, reason mathematically, debug systems, and explain
+                    technical decisions.
                 </p>
+            </div>
+
+            <div class="academic-console" data-animate aria-label="Academic archive status">
+                <span>Archive Status: Evidence Linked</span>
+                <span>6 academic areas</span>
+                <span>Projects, reports, assignments, and case studies</span>
+            </div>
+
+            <div class="academic-category-nav" role="tablist" aria-label="Academic evidence categories" data-animate>
+                <button class="academic-category is-active" type="button" role="tab" aria-selected="true" aria-controls="coursework-pf" id="academic-tab-pf" data-academic-tab="pf">
+                    Programming Fundamentals
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-oop" id="academic-tab-oop" data-academic-tab="oop">
+                    OOP
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-physics" id="academic-tab-physics" data-academic-tab="physics">
+                    Applied Physics
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-calculus" id="academic-tab-calculus" data-academic-tab="calculus">
+                    Calculus
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-discrete" id="academic-tab-discrete" data-academic-tab="discrete">
+                    Discrete
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-communication" id="academic-tab-communication" data-academic-tab="communication">
+                    Communication
+                </button>
+            </div>
+
+            <div class="academic-overview" data-animate>
+                <article class="academic-brief">
+                    <span class="archive-label">Navigation Brief</span>
+                    <h3>How the coursework connects to real work</h3>
+                    <p>
+                        The archive is organized by the engineering ability each subject developed,
+                        not by grades or file names. Programming Fundamentals connects to QuizMaster
+                        and Tumble Pop, mathematics connects to analysis projects, and communication
+                        connects to reports, presentations, and case-study writing.
+                    </p>
+                    <div class="academic-route" aria-label="Coursework route">
+                        <span>PF</span>
+                        <span>OOP</span>
+                        <span>Physics</span>
+                        <span>Calculus</span>
+                        <span>Discrete</span>
+                        <span>Communication</span>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card is-active" id="coursework-pf" role="tabpanel" aria-labelledby="academic-tab-pf" data-academic-panel="pf">
+                    <span class="course-index">01</span>
+                    <h3>Programming Fundamentals</h3>
+                    <p>
+                        Built the base for C++ problem solving: input/output, branching, loops,
+                        functions, arrays, pointers, file handling, validation, and debugging.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>PF assignment briefs, Assignment 3 package, QuizMaster, and Tumble Pop.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to convert problem statements into working systems.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="assets/assignments/assignment-3-package.zip">Assignment Package</a>
+                        <a href="#projects">Related Missions</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-oop" role="tabpanel" aria-labelledby="academic-tab-oop" data-academic-panel="oop" hidden>
+                    <span class="course-index">02</span>
+                    <h3>Object-Oriented Programming</h3>
+                    <p>
+                        Strengthened the move from isolated functions toward responsibility-based
+                        design using classes, objects, constructors, encapsulation, memory, and
+                        cleaner project structure.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Flight Log chapter, Skills concept evidence, and structured project explanations.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows readiness to organize larger codebases with clearer ownership.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#flight-log-4">Flight Log</a>
+                        <a href="#skills">OOP Skill Evidence</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-physics" role="tabpanel" aria-labelledby="academic-tab-physics" data-academic-panel="physics" hidden>
+                    <span class="course-index">03</span>
+                    <h3>Applied Physics</h3>
+                    <p>
+                        Developed disciplined reasoning around vectors, motion, constraints,
+                        graphs, and cause-and-effect thinking that transfers into simulations,
+                        game movement, and mathematical modeling.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Flight Log academic chapter and motion-focused thinking used across interactive work.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows comfort reasoning about systems before turning them into code.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#flight-log-3">Academic Chapter</a>
+                        <a href="#skills">Modeling Concepts</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-calculus" role="tabpanel" aria-labelledby="academic-tab-calculus" data-academic-panel="calculus" hidden>
+                    <span class="course-index">04</span>
+                    <h3>Calculus</h3>
+                    <p>
+                        Practiced functions, limits, derivatives, optimization, integration,
+                        sequences, and analytical modeling, then connected those ideas to
+                        algorithm-growth analysis.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Course outline, four assignments, project statement, report, and Python-backed visuals.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to explain performance and change with measurable reasoning.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#calculus">Course Summary</a>
+                        <a href="#calculus-case-study">Case Study</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-discrete" role="tabpanel" aria-labelledby="academic-tab-discrete" data-academic-panel="discrete" hidden>
+                    <span class="course-index">05</span>
+                    <h3>Discrete Mathematics</h3>
+                    <p>
+                        Developed logic, sets, relations, proof thinking, combinatorics,
+                        induction, graphs, trees, similarity networks, and centrality-based
+                        analysis.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Course outline, PBS project statement, dataset, source package, presentation, and report.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to model real data as structures and extract useful signals.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#discrete">Course Summary</a>
+                        <a href="#discrete-case-study">Case Study</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-communication" role="tabpanel" aria-labelledby="academic-tab-communication" data-academic-panel="communication" hidden>
+                    <span class="course-index">06</span>
+                    <h3>Technical Communication</h3>
+                    <p>
+                        Turned technical work into readable reports, presentations, summaries,
+                        resource links, and case studies that explain objectives, process,
+                        challenges, results, and personal contribution.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Discrete technical report, presentation, calculus report, and portfolio case studies.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to document decisions and make complex work understandable.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="assets/discrete/price-network-technical-report.pdf">Discrete Report</a>
+                        <a href="assets/calculus/search-algorithm-calculus-report.docx">Calculus Report</a>
+                    </div>
+                </article>
             </div>
 
             <div class="coursework-board" data-animate>
                 <article class="course-card featured-course">
                     <div class="course-topline">
-                        <span>Assignment 3</span>
-                        <strong>Interactive Console Systems</strong>
+                        <span>Evidence Flight Path</span>
+                        <strong>From coursework to projects</strong>
                     </div>
-                    <h3>Terminal gameplay, blueprint files, image data, and demo videos.</h3>
+                    <h3>Assignments became the runway for completed systems.</h3>
                     <p>
-                        This assignment combined terminal-based interaction, blueprint-driven layout,
-                        image data interpretation, and recorded demonstrations. It shows how I moved
-                        beyond basic console output into a more interactive system where input handling,
-                        screen rendering, and game-style logic had to work together reliably.
+                        The strongest pattern across the archive is progression: first I practiced
+                        fundamentals in focused assignments, then used the same habits in complete
+                        missions. QuizMaster required reliable file-driven state, Tumble Pop required
+                        interactive C++/SFML logic, and the math projects required reports backed by
+                        reproducible evidence.
                     </p>
                     <div class="course-visual" aria-hidden="true">
-                        <pre>xxxxxxxxxx     xxxxxxxxxxxx
-x                          x
-x          PLAYER          |
-|                          |
-xxxxxx-------xxxxxxxxx  xxxx</pre>
+                        <pre>COURSEWORK -> SKILLS -> MISSIONS
+PF          -> C++    -> QuizMaster
+PF + SFML   -> Loops  -> Tumble Pop
+Discrete    -> Graphs -> PBS Network
+Calculus    -> Models -> Search Analysis</pre>
                     </div>
                     <div class="tech-stack">
-                        <span>C++</span>
-                        <span>Terminal UI</span>
-                        <span>File Data</span>
-                        <span>Game Logic</span>
+                        <span>Problem Solving</span>
+                        <span>Debugging</span>
+                        <span>Analysis</span>
+                        <span>Communication</span>
                     </div>
-                    <a class="btn secondary course-link" href="assets/assignments/assignment-3-package.zip">Download Package</a>
+                    <a class="btn secondary course-link" href="#timeline">Open Flight Log</a>
                 </article>
 
                 <div class="course-list">
                     <article class="course-card">
                         <span class="course-index">01</span>
-                        <h3>PF Assignment 1</h3>
+                        <h3>PF Assignment Evidence</h3>
                         <p>
-                            This assignment built the base of my programming workflow. I practiced
-                            translating problem statements into clear C++ logic, using input/output,
-                            arithmetic expressions, flowcharts, and careful step-by-step reasoning before
-                            writing code.
+                            The PF assignment set documents the earliest programming layer: reading
+                            briefs carefully, designing step-by-step logic, handling conditions, testing
+                            edge cases, and organizing C++ solutions before moving into larger projects.
                         </p>
                         <div class="course-actions">
-                            <a href="assets/assignments/assignment-1-fall-2025.pdf">Fall 2025 Brief</a>
-                            <a href="assets/assignments/assignment-1-spring-2026.pdf">Spring 2026 Brief</a>
+                            <a href="assets/assignments/assignment-1-fall-2025.pdf">Assignment 1</a>
+                            <a href="assets/assignments/assignment-2-fall-2025.pdf">Assignment 2</a>
+                            <a href="assets/assignments/assignment-3-package.zip">Assignment 3</a>
                         </div>
                     </article>
 
                     <article class="course-card">
                         <span class="course-index">02</span>
-                        <h3>PF Assignment 2</h3>
+                        <h3>Math and Analysis Evidence</h3>
                         <p>
-                            This assignment strengthened my ability to handle conditional logic and
-                            operator-based problem solving. I worked with decision structures, arithmetic
-                            operations, branching cases, and bitwise concepts while keeping the code
-                            structured and testable.
+                            Calculus and discrete mathematics added a second layer: modeling systems,
+                            building graphs, choosing metrics, comparing behavior, and explaining why a
+                            result is correct instead of only showing that a program runs.
                         </p>
                         <div class="course-actions">
-                            <a href="assets/assignments/assignment-2-fall-2025.pdf">Fall 2025 Brief</a>
-                            <a href="assets/assignments/assignment-2-spring-2026.pdf">Spring 2026 Brief</a>
+                            <a href="assets/calculus/calculus-course-outline.pdf">Calculus Outline</a>
+                            <a href="assets/discrete/pbs-price-network-data.xlsx">PBS Dataset</a>
+                            <a href="#projects">Project Links</a>
                         </div>
                     </article>
 
                     <article class="course-card">
                         <span class="course-index">03</span>
-                        <h3>Professional Practice</h3>
+                        <h3>Documentation Practice</h3>
                         <p>
-                            Across these submissions, I developed habits that matter in real development:
-                            clean formatting, consistent testing, readable naming, organized files, and
-                            the confidence to explain how each solution works during demos and reviews.
+                            Reports, presentations, and case studies prove the communication side of the
+                            work: describing the objective, method, challenges, results, and personal
+                            contribution in a format another person can review.
                         </p>
                         <div class="progress-lines" aria-hidden="true">
                             <span style="--progress: 92%"></span>
@@ -1805,7 +1997,7 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                     </div>
                 </article>
 
-                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="3">
+                <article class="flight-log-entry" id="flight-log-3" data-flight-log-entry data-flight-log-index="3">
                     <button class="flight-log-trigger" type="button" id="flight-log-trigger-3" aria-expanded="false" aria-controls="flight-log-panel-3">
                         <span class="flight-log-number">Flight Log 003</span>
                         <span class="flight-log-heading">Engineering the Mind</span>
@@ -1827,7 +2019,7 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
                     </div>
                 </article>
 
-                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="4">
+                <article class="flight-log-entry" id="flight-log-4" data-flight-log-entry data-flight-log-index="4">
                     <button class="flight-log-trigger" type="button" id="flight-log-trigger-4" aria-expanded="false" aria-controls="flight-log-panel-4">
                         <span class="flight-log-number">Flight Log 004</span>
                         <span class="flight-log-heading">Software Architecture</span>
@@ -2029,7 +2221,7 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
     </script>
     <script src="assets/vendor/gsap.min.js"></script>
     <script src="assets/vendor/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=phase6-skills-console-audit"></script>
+    <script src="script.js?v=phase7-academic-audit"></script>
     <script src="cursor-glitter.js"></script>
     <script type="module" src="three-scene.js?v=phase5a-flight-log"></script>
 </body>

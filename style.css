@@ -1222,6 +1222,198 @@ h1 {
     font-size: 1.45rem;
 }
 
+.academic-console {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    margin-top: 34px;
+    border: 1px solid rgba(95, 73, 43, 0.22);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background:
+        linear-gradient(90deg, rgba(72, 107, 88, 0.12), transparent 44%),
+        rgba(248, 240, 223, 0.62);
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 780;
+    text-transform: uppercase;
+}
+
+.academic-console span:first-child {
+    color: var(--text);
+}
+
+.academic-category-nav {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 12px;
+    background: rgba(248, 240, 223, 0.58);
+}
+
+.academic-category {
+    min-height: 46px;
+    border: 1px solid rgba(95, 73, 43, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    background: rgba(255, 248, 232, 0.48);
+    color: #5a472e;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 780;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+        transform var(--motion-normal) var(--ease-spring),
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease,
+        color var(--motion-fast) ease;
+}
+
+.academic-category:hover,
+.academic-category:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.42);
+    color: var(--text);
+    outline: none;
+}
+
+.academic-category.is-active {
+    border-color: rgba(168, 115, 44, 0.62);
+    background: rgba(168, 115, 44, 0.13);
+    color: #6a481f;
+}
+
+.academic-overview {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.academic-brief,
+.academic-evidence-card {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 22px;
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.76), rgba(238, 226, 204, 0.4)),
+        rgba(248, 240, 223, 0.76);
+    box-shadow: 0 22px 58px rgba(81, 55, 25, 0.1);
+    transition:
+        transform var(--motion-normal) var(--ease-spring),
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease;
+}
+
+.academic-brief {
+    display: flex;
+    min-height: 420px;
+    flex-direction: column;
+    grid-row: span 2;
+}
+
+.academic-brief::before,
+.academic-evidence-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-top: 2px solid rgba(168, 115, 44, 0.46);
+    pointer-events: none;
+}
+
+.academic-brief:hover,
+.academic-evidence-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(168, 115, 44, 0.42);
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.92), rgba(238, 226, 204, 0.5)),
+        rgba(248, 240, 223, 0.88);
+}
+
+.academic-evidence-card[hidden] {
+    display: none;
+}
+
+.archive-label {
+    display: inline-flex;
+    width: fit-content;
+    min-height: 34px;
+    align-items: center;
+    border: 1px solid rgba(72, 107, 88, 0.3);
+    border-radius: 8px;
+    padding: 0 11px;
+    color: #486b58;
+    font-size: 0.78rem;
+    font-weight: 820;
+    text-transform: uppercase;
+}
+
+.academic-brief h3,
+.academic-evidence-card h3 {
+    margin: 24px 0 0;
+    font-size: clamp(1.25rem, 2.2vw, 1.9rem);
+    line-height: 1.12;
+}
+
+.academic-brief p,
+.academic-evidence-card p {
+    margin: 14px 0 0;
+    color: var(--muted);
+    line-height: 1.66;
+}
+
+.academic-route {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.academic-route span {
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 10px;
+    background: rgba(255, 248, 232, 0.52);
+    color: #5a472e;
+    font-size: 0.78rem;
+    font-weight: 820;
+    text-transform: uppercase;
+}
+
+.academic-proof {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0 0;
+}
+
+.academic-proof div {
+    border-left: 2px solid rgba(168, 115, 44, 0.44);
+    padding-left: 12px;
+}
+
+.academic-proof dt {
+    color: #486b58;
+    font-size: 0.72rem;
+    font-weight: 840;
+    text-transform: uppercase;
+}
+
+.academic-proof dd {
+    margin: 5px 0 0;
+    color: #4f3b25;
+    font-size: 0.9rem;
+    line-height: 1.52;
+}
+
 .coursework-board {
     display: grid;
     grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.05fr);
@@ -1232,6 +1424,7 @@ h1 {
 .course-card {
     border: 1px solid var(--line);
     border-radius: 8px;
+    min-width: 0;
     padding: 22px;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent),
@@ -1314,6 +1507,8 @@ h1 {
     padding: 20px;
     color: var(--teal);
     font: 0.86rem/1.55 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     animation: blueprintScan 4s ease-in-out infinite;
 }
 
@@ -1324,6 +1519,7 @@ h1 {
 
 .course-list {
     display: grid;
+    min-width: 0;
     gap: 18px;
 }
 
@@ -3782,6 +3978,9 @@ h1 {
     .analysis-graphs,
     .quiz-flow,
     .stack-showcase,
+    .academic-console,
+    .academic-category-nav,
+    .academic-overview,
     .coursework-board,
     .discrete-grid,
     .discrete-impact,
@@ -3811,6 +4010,11 @@ h1 {
 
     .featured-course {
         min-height: auto;
+    }
+
+    .academic-brief {
+        min-height: auto;
+        grid-row: auto;
     }
 
     h1 {
@@ -3945,6 +4149,24 @@ h1 {
 
     .skills-panel {
         padding: 14px;
+    }
+
+    .academic-console {
+        align-items: start;
+        font-size: 0.72rem;
+    }
+
+    .academic-category-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .academic-route {
+        grid-template-columns: 1fr;
+    }
+
+    .academic-brief,
+    .academic-evidence-card {
+        padding: 18px;
     }
 
     .skill-card {

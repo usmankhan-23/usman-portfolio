@@ -4,6 +4,8 @@ const animatedItems = document.querySelectorAll("[data-animate]");
 const typedStatus = document.querySelector("#typed-status");
 const skillTabs = document.querySelectorAll("[data-skill-tab]");
 const skillPanels = document.querySelectorAll("[data-skill-panel]");
+const academicTabs = document.querySelectorAll("[data-academic-tab]");
+const academicPanels = document.querySelectorAll("[data-academic-panel]");
 const contactForm = document.querySelector(".contact-form");
 const caseLinks = document.querySelectorAll("[data-case-link]");
 const caseStudies = document.querySelectorAll("[data-case-study]");
@@ -12,6 +14,7 @@ const flightLogRoute = document.querySelector("[data-flight-card]");
 const flightLogEntries = document.querySelectorAll("[data-flight-log-entry]");
 const flightLogTriggers = document.querySelectorAll(".flight-log-trigger");
 const flightLogStorageKey = "usmanFlightLogChapter";
+const academicStorageKey = "usmanAcademicCategory";
 const flightLogChapterCount = flightLogEntries.length || 9;
 const flightLogChapterMeta = {
     1: {
@@ -306,6 +309,109 @@ skillTabs.forEach((tab) => {
         selectSkillTab(nextTab);
     });
 });
+
+function selectAcademicCategory(activeTab, options = {}) {
+    const activeCategory = activeTab.dataset.academicTab;
+    const nextPanel = Array.from(academicPanels).find((panel) => panel.dataset.academicPanel === activeCategory);
+
+    if (!nextPanel) {
+        return;
+    }
+
+    academicTabs.forEach((item) => {
+        const isActive = item === activeTab;
+        item.classList.toggle("is-active", isActive);
+        item.setAttribute("aria-selected", String(isActive));
+    });
+
+    academicPanels.forEach((panel) => {
+        const isActive = panel === nextPanel;
+        panel.hidden = !isActive;
+        panel.classList.toggle("is-active", isActive);
+    });
+
+    try {
+        sessionStorage.setItem(academicStorageKey, activeCategory);
+    } catch (error) {
+        // Session storage can be unavailable in restricted browser modes.
+    }
+
+    if (options.updateHash && nextPanel.id && window.location.hash !== `#${nextPanel.id}`) {
+        history.pushState(null, "", `#${nextPanel.id}`);
+    }
+}
+
+function getAcademicTabFromHash(hash = window.location.hash) {
+    if (!hash) {
+        return null;
+    }
+
+    const panelId = hash.slice(1);
+    const panel = Array.from(academicPanels).find((item) => item.id === panelId);
+
+    if (!panel) {
+        return null;
+    }
+
+    return Array.from(academicTabs).find((tab) => tab.dataset.academicTab === panel.dataset.academicPanel) || null;
+}
+
+function restoreAcademicCategory() {
+    const hashTab = getAcademicTabFromHash();
+
+    if (hashTab) {
+        selectAcademicCategory(hashTab);
+        return;
+    }
+
+    try {
+        const storedCategory = sessionStorage.getItem(academicStorageKey);
+        const storedTab = Array.from(academicTabs).find((tab) => tab.dataset.academicTab === storedCategory);
+
+        if (storedTab) {
+            selectAcademicCategory(storedTab);
+        }
+    } catch (error) {
+        return;
+    }
+}
+
+academicTabs.forEach((tab) => {
+    tab.addEventListener("click", () => selectAcademicCategory(tab, { updateHash: true }));
+    tab.addEventListener("keydown", (event) => {
+        const tabList = Array.from(academicTabs);
+        const currentIndex = tabList.indexOf(tab);
+        const keyOffset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+
+        if (event.key === "Home" || event.key === "End") {
+            event.preventDefault();
+            const nextTab = event.key === "Home" ? tabList[0] : tabList[tabList.length - 1];
+            nextTab.focus();
+            selectAcademicCategory(nextTab, { updateHash: true });
+            return;
+        }
+
+        if (event.key === "Escape") {
+            event.preventDefault();
+            const activeTab = tabList.find((item) => item.getAttribute("aria-selected") === "true") || tab;
+            activeTab.focus({ preventScroll: true });
+            return;
+        }
+
+        if (!keyOffset) {
+            return;
+        }
+
+        event.preventDefault();
+        const nextIndex = (currentIndex + keyOffset + academicTabs.length) % academicTabs.length;
+        const nextTab = tabList[nextIndex];
+        nextTab.focus();
+        selectAcademicCategory(nextTab, { updateHash: true });
+    });
+});
+
+restoreAcademicCategory();
+window.addEventListener("hashchange", restoreAcademicCategory);
 
 function getFlightLogEntryByIndex(index) {
     return Array.from(flightLogEntries).find((entry) => Number(entry.dataset.flightLogIndex) === Number(index));
