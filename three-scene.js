@@ -740,6 +740,9 @@ if (renderer) {
         if (/^#discrete-(relationships|logic|graphs|network|investigation-checkpoint|lessons-checkpoint)$/.test(hash || "")) {
             return "discrete";
         }
+        if (/^#calculus-(rates|motion|optimization|accumulation|models|growth)$/.test(hash || "")) {
+            return "calculus";
+        }
 
         const hashStageMap = {
             "#skills": "skills",

@@ -11,6 +11,11 @@ const discretePanels = document.querySelectorAll("[data-discrete-panel]");
 const discretePrevButton = document.querySelector("[data-discrete-prev]");
 const discreteNextButton = document.querySelector("[data-discrete-next]");
 const discreteStatus = document.querySelector("[data-discrete-status]");
+const calculusTabs = document.querySelectorAll("[data-calculus-tab]");
+const calculusPanels = document.querySelectorAll("[data-calculus-panel]");
+const calculusPrevButton = document.querySelector("[data-calculus-prev]");
+const calculusNextButton = document.querySelector("[data-calculus-next]");
+const calculusStatus = document.querySelector("[data-calculus-status]");
 const contactForm = document.querySelector(".contact-form");
 const caseLinks = document.querySelectorAll("[data-case-link]");
 const caseStudies = document.querySelectorAll("[data-case-study]");
@@ -21,6 +26,7 @@ const flightLogTriggers = document.querySelectorAll(".flight-log-trigger");
 const flightLogStorageKey = "usmanFlightLogChapter";
 const academicStorageKey = "usmanAcademicCategory";
 const discreteStorageKey = "usmanDiscreteCheckpoint";
+const calculusStorageKey = "usmanCalculusInvestigation";
 const flightLogChapterCount = flightLogEntries.length || 9;
 const flightLogChapterMeta = {
     1: {
@@ -131,6 +137,7 @@ const flightLogState = {
     isTimelineInView: false
 };
 let discretePanelTimeline = null;
+let calculusPanelTimeline = null;
 
 document.body.classList.toggle("has-gsap", canUseGsap);
 
@@ -680,6 +687,273 @@ discretePrevButton?.addEventListener("click", () => moveDiscreteCheckpoint(-1));
 discreteNextButton?.addEventListener("click", () => moveDiscreteCheckpoint(1));
 restoreDiscreteCheckpoint();
 window.addEventListener("hashchange", restoreDiscreteCheckpoint);
+
+function getCalculusPanelForTab(tab) {
+    return Array.from(calculusPanels).find((panel) => panel.dataset.calculusPanel === tab?.dataset.calculusTab) || null;
+}
+
+function getCalculusTabFromHash(hash = window.location.hash) {
+    if (!hash) {
+        return null;
+    }
+
+    const panelId = hash.slice(1);
+    const panel = Array.from(calculusPanels).find((item) => item.id === panelId);
+
+    if (!panel) {
+        return null;
+    }
+
+    return Array.from(calculusTabs).find((tab) => tab.dataset.calculusTab === panel.dataset.calculusPanel) || null;
+}
+
+function updateCalculusControls(activeTab) {
+    if (!calculusTabs.length) {
+        return;
+    }
+
+    const tabList = Array.from(calculusTabs);
+    const activeIndex = Math.max(0, tabList.indexOf(activeTab));
+    const activePanel = getCalculusPanelForTab(activeTab);
+    const heading = activePanel?.querySelector("h3")?.textContent?.trim() || "Calculus investigation";
+
+    if (calculusPrevButton) {
+        calculusPrevButton.disabled = activeIndex === 0;
+    }
+
+    if (calculusNextButton) {
+        calculusNextButton.disabled = activeIndex === tabList.length - 1;
+    }
+
+    if (calculusStatus) {
+        calculusStatus.textContent = `Investigation ${String(activeIndex + 1).padStart(2, "0")} of ${String(tabList.length).padStart(2, "0")} - ${heading}`;
+    }
+}
+
+function setCalculusPanelState(activePanel) {
+    calculusPanels.forEach((panel) => {
+        const isActive = panel === activePanel;
+        panel.hidden = !isActive;
+        panel.classList.toggle("is-active", isActive);
+        panel.classList.toggle("is-visible", isActive);
+        panel.removeAttribute("style");
+    });
+}
+
+function selectCalculusInvestigation(activeTab, options = {}) {
+    const activePanel = getCalculusPanelForTab(activeTab);
+
+    if (!activePanel) {
+        return;
+    }
+
+    const currentPanel = Array.from(calculusPanels).find((panel) => !panel.hidden);
+    const isSameInvestigation = currentPanel === activePanel && activeTab.getAttribute("aria-selected") === "true";
+
+    calculusTabs.forEach((tab) => {
+        const isActive = tab === activeTab;
+        tab.classList.toggle("is-active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+    });
+
+    updateCalculusControls(activeTab);
+
+    try {
+        sessionStorage.setItem(calculusStorageKey, activeTab.dataset.calculusTab);
+    } catch (error) {
+        // Session storage is optional; direct hashes still restore the investigation.
+    }
+
+    if (options.updateHash && activePanel.id && window.location.hash !== `#${activePanel.id}`) {
+        history.pushState(null, "", `#${activePanel.id}`);
+    }
+
+    if (options.focusPanel && !isSameInvestigation) {
+        activePanel.scrollIntoView({
+            block: "nearest",
+            behavior: prefersReducedMotion ? "auto" : "smooth"
+        });
+    }
+
+    if (isSameInvestigation) {
+        return;
+    }
+
+    if (calculusPanelTimeline) {
+        calculusPanelTimeline.kill();
+        calculusPanelTimeline = null;
+    }
+
+    if (!canUseGsap || prefersReducedMotion) {
+        setCalculusPanelState(activePanel);
+        return;
+    }
+
+    const calculusJournal = document.querySelector("[data-calculus-journal]");
+    const outgoingPanel = currentPanel && currentPanel !== activePanel ? currentPanel : null;
+    const incomingItems = activePanel.querySelectorAll("span, h3, p, .calculus-evidence-links");
+
+    gsap.killTweensOf(calculusPanels);
+    gsap.killTweensOf(incomingItems);
+    calculusPanels.forEach((panel) => {
+        panel.classList.toggle("is-active", panel === activePanel);
+    });
+    activePanel.hidden = true;
+    activePanel.style.opacity = "0";
+    activePanel.style.transform = "translateY(10px) scale(0.996)";
+
+    calculusPanelTimeline = gsap.timeline({
+        defaults: {
+            ease: "power2.out",
+            overwrite: true
+        },
+        onStart: () => {
+            calculusJournal?.setAttribute("aria-busy", "true");
+        },
+        onComplete: () => {
+            setCalculusPanelState(activePanel);
+            calculusJournal?.removeAttribute("aria-busy");
+            calculusPanelTimeline = null;
+        }
+    });
+
+    if (outgoingPanel) {
+        calculusPanelTimeline.to(outgoingPanel, {
+            autoAlpha: 0,
+            y: -4,
+            scale: 0.996,
+            filter: "blur(0.8px)",
+            duration: 0.16,
+            ease: "power2.in"
+        });
+    }
+
+    calculusPanelTimeline
+        .set(calculusPanels, {
+            clearProps: "filter,scale"
+        })
+        .call(() => {
+            calculusPanels.forEach((panel) => {
+                panel.hidden = true;
+                panel.classList.toggle("is-active", panel === activePanel);
+            });
+            activePanel.hidden = false;
+            activePanel.classList.add("is-visible");
+        })
+        .set(activePanel, {
+            autoAlpha: 0,
+            y: 10,
+            scale: 0.996
+        })
+        .fromTo(incomingItems,
+            { autoAlpha: 0, y: 8 },
+            {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.3,
+                stagger: 0.032,
+                ease: "power2.out"
+            },
+            "<0.02"
+        )
+        .to(activePanel, {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.34,
+            ease: "power2.out"
+        }, "<");
+}
+
+function restoreCalculusInvestigation() {
+    const hashTab = getCalculusTabFromHash();
+
+    if (hashTab) {
+        selectCalculusInvestigation(hashTab, { focusPanel: true });
+        return;
+    }
+
+    if (window.location.hash && window.location.hash !== "#calculus") {
+        return;
+    }
+
+    try {
+        const storedInvestigation = sessionStorage.getItem(calculusStorageKey);
+        const storedTab = Array.from(calculusTabs).find((tab) => tab.dataset.calculusTab === storedInvestigation);
+
+        if (storedTab) {
+            selectCalculusInvestigation(storedTab);
+            return;
+        }
+    } catch (error) {
+        // Keep the default first investigation selected.
+    }
+
+    if (calculusTabs[0]) {
+        updateCalculusControls(calculusTabs[0]);
+    }
+}
+
+function moveCalculusInvestigation(offset) {
+    const tabList = Array.from(calculusTabs);
+    const activeTab = tabList.find((tab) => tab.getAttribute("aria-selected") === "true") || tabList[0];
+    const currentIndex = tabList.indexOf(activeTab);
+    const nextIndex = Math.max(0, Math.min(tabList.length - 1, currentIndex + offset));
+    const nextTab = tabList[nextIndex];
+
+    if (!nextTab || nextTab === activeTab) {
+        return;
+    }
+
+    nextTab.focus({ preventScroll: true });
+    selectCalculusInvestigation(nextTab, { updateHash: true, focusPanel: true });
+}
+
+calculusTabs.forEach((tab) => {
+    tab.addEventListener("click", () => selectCalculusInvestigation(tab, { updateHash: true, focusPanel: true }));
+    tab.addEventListener("keydown", (event) => {
+        const tabList = Array.from(calculusTabs);
+        const currentIndex = tabList.indexOf(tab);
+        const keyOffset = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
+
+        if (event.key === "Home" || event.key === "End") {
+            event.preventDefault();
+            const nextTab = event.key === "Home" ? tabList[0] : tabList[tabList.length - 1];
+            nextTab.focus();
+            selectCalculusInvestigation(nextTab, { updateHash: true, focusPanel: true });
+            return;
+        }
+
+        if (event.key === "Escape") {
+            event.preventDefault();
+            const activeTab = tabList.find((item) => item.getAttribute("aria-selected") === "true") || tab;
+            activeTab.focus({ preventScroll: true });
+            return;
+        }
+
+        if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+            event.preventDefault();
+            tab.focus({ preventScroll: true });
+            selectCalculusInvestigation(tab, { updateHash: true, focusPanel: true });
+            return;
+        }
+
+        if (!keyOffset) {
+            return;
+        }
+
+        event.preventDefault();
+        const nextIndex = (currentIndex + keyOffset + calculusTabs.length) % calculusTabs.length;
+        const nextTab = tabList[nextIndex];
+        nextTab.focus();
+        selectCalculusInvestigation(nextTab, { updateHash: true, focusPanel: true });
+    });
+});
+
+calculusPrevButton?.addEventListener("click", () => moveCalculusInvestigation(-1));
+calculusNextButton?.addEventListener("click", () => moveCalculusInvestigation(1));
+restoreCalculusInvestigation();
+window.addEventListener("hashchange", restoreCalculusInvestigation);
 
 function getFlightLogEntryByIndex(index) {
     return Array.from(flightLogEntries).find((entry) => Number(entry.dataset.flightLogIndex) === Number(index));

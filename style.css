@@ -1089,45 +1089,150 @@ h1 {
     border-top: 1px solid var(--line);
 }
 
+.calculus-record {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    margin-top: 34px;
+    border: 1px solid rgba(95, 73, 43, 0.22);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background:
+        linear-gradient(90deg, rgba(72, 107, 88, 0.12), transparent 44%),
+        rgba(248, 240, 223, 0.62);
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 780;
+    text-transform: uppercase;
+}
+
+.calculus-record span:first-child {
+    color: var(--text);
+}
+
+.calculus-investigation {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+    border: 1px solid rgba(95, 73, 43, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    background:
+        linear-gradient(90deg, rgba(168, 115, 44, 0.1), transparent 48%),
+        rgba(248, 240, 223, 0.62);
+    box-shadow: inset 0 1px 0 rgba(255, 251, 241, 0.56);
+}
+
+.calculus-checkpoint {
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 10px;
+    background: rgba(255, 248, 232, 0.54);
+    color: #5a472e;
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 820;
+    line-height: 1.25;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+        transform var(--motion-fast) ease,
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease,
+        color var(--motion-fast) ease;
+}
+
+.calculus-checkpoint:hover,
+.calculus-checkpoint:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.42);
+    color: var(--text);
+    outline: none;
+}
+
+.calculus-checkpoint.is-active {
+    border-color: rgba(96, 74, 43, 0.46);
+    background:
+        linear-gradient(180deg, rgba(255, 251, 241, 0.78), rgba(168, 115, 44, 0.12)),
+        rgba(255, 248, 232, 0.76);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 251, 241, 0.54),
+        0 12px 28px rgba(81, 55, 25, 0.08);
+    color: #4f3921;
+}
+
 .calculus-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 18px;
-    margin-top: 44px;
+    margin-top: 22px;
+    min-height: 286px;
 }
 
 .calculus-topic {
     position: relative;
     overflow: hidden;
-    min-height: 250px;
-    border: 1px solid var(--line);
+    min-height: 286px;
+    border: 1px solid rgba(95, 73, 43, 0.18);
     border-radius: 8px;
     padding: 22px;
-    background: rgba(14, 15, 20, 0.8);
-    transition: transform 180ms ease, border-color 180ms ease;
+    background:
+        linear-gradient(180deg, rgba(255, 251, 241, 0.72), rgba(238, 222, 194, 0.22)),
+        rgba(248, 240, 223, 0.76);
+    box-shadow: 0 22px 58px rgba(81, 55, 25, 0.1);
+    will-change: transform, opacity;
+    transition:
+        transform var(--motion-fast) ease,
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease;
+}
+
+.calculus-topic[hidden] {
+    display: none;
 }
 
 .calculus-topic:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 209, 102, 0.4);
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.38);
+    background:
+        linear-gradient(180deg, rgba(255, 251, 241, 0.84), rgba(230, 205, 164, 0.28)),
+        rgba(250, 242, 224, 0.9);
+}
+
+.calculus-topic::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(72, 107, 88, 0.32), rgba(168, 115, 44, 0.26), transparent 72%);
+    opacity: 0;
+    transition: opacity var(--motion-fast) ease;
+}
+
+.calculus-topic.is-active::before,
+.calculus-topic:hover::before {
+    opacity: 1;
 }
 
 .calculus-topic span {
     display: grid;
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     place-items: center;
-    border: 1px solid rgba(255, 209, 102, 0.42);
+    border: 1px solid rgba(72, 107, 88, 0.3);
     border-radius: 8px;
-    color: var(--amber);
+    color: #486b58;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-weight: 820;
 }
 
 .calculus-topic h3 {
     margin: 24px 0 0;
-    font-size: 1.24rem;
+    font-size: 1.28rem;
+    line-height: 1.22;
 }
 
 .calculus-topic p,
@@ -1136,21 +1241,89 @@ h1 {
     line-height: 1.65;
 }
 
+.calculus-evidence-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.calculus-evidence-links a {
+    border: 1px solid rgba(95, 73, 43, 0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: rgba(255, 248, 232, 0.52);
+    color: #5a472e;
+    font-size: 0.86rem;
+    font-weight: 760;
+    transition:
+        transform var(--motion-fast) ease,
+        border-color var(--motion-fast) ease,
+        color var(--motion-fast) ease;
+}
+
+.calculus-evidence-links a:hover,
+.calculus-evidence-links a:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.42);
+    color: var(--text);
+    outline: none;
+}
+
+.calculus-investigation-controls {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    margin-top: 18px;
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 16px;
+    background: rgba(248, 240, 223, 0.62);
+}
+
+.calculus-investigation-controls p {
+    margin: 0;
+    color: #665239;
+    font-size: 0.78rem;
+    font-weight: 820;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.calculus-investigation-controls .btn:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .calculus-impact {
     display: grid;
-    grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(240px, 0.34fr) minmax(0, 1fr);
     gap: 20px;
     align-items: center;
     margin-top: 22px;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(95, 73, 43, 0.26);
     border-radius: 8px;
-    padding: 22px;
-    background: rgba(14, 15, 20, 0.8);
+    padding: clamp(22px, 3vw, 30px);
+    background:
+        linear-gradient(135deg, rgba(168, 115, 44, 0.12), transparent 52%),
+        rgba(248, 240, 223, 0.72);
+    box-shadow: 0 24px 64px rgba(81, 55, 25, 0.12);
 }
 
 .calculus-impact h3 {
     margin: 12px 0 0;
-    font-size: 1.45rem;
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    line-height: 1.12;
+}
+
+.calculus-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    grid-column: 2;
 }
 
 .discrete-investigation {
@@ -4190,6 +4363,9 @@ h1 {
     .academic-category-nav,
     .academic-overview,
     .coursework-board,
+    .calculus-record,
+    .calculus-investigation,
+    .calculus-investigation-controls,
     .discrete-investigation,
     .discrete-investigation-controls,
     .discrete-journal,
@@ -4230,6 +4406,10 @@ h1 {
     }
 
     .investigation-actions {
+        grid-column: auto;
+    }
+
+    .calculus-actions {
         grid-column: auto;
     }
 
