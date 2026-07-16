@@ -737,6 +737,10 @@ if (renderer) {
             return "timeline";
         }
 
+        if (/^#discrete-(relationships|logic|graphs|network|investigation-checkpoint|lessons-checkpoint)$/.test(hash || "")) {
+            return "discrete";
+        }
+
         const hashStageMap = {
             "#skills": "skills",
             "#coursework": "coursework",

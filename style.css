@@ -1153,73 +1153,280 @@ h1 {
     font-size: 1.45rem;
 }
 
-.discrete-grid {
+.discrete-investigation {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 44px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 34px;
+    border: 1px solid rgba(95, 73, 43, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    background:
+        linear-gradient(90deg, rgba(72, 107, 88, 0.12), transparent 48%),
+        rgba(248, 240, 223, 0.62);
+    box-shadow: inset 0 1px 0 rgba(255, 251, 241, 0.58);
 }
 
-.discrete-topic {
+.discrete-checkpoint {
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 10px;
+    background: rgba(255, 248, 232, 0.54);
+    color: #5a472e;
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 820;
+    line-height: 1.25;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+        transform var(--motion-fast) ease,
+        box-shadow var(--motion-fast) ease,
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease,
+        color var(--motion-fast) ease;
+}
+
+.discrete-checkpoint:hover,
+.discrete-checkpoint:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.42);
+    color: var(--text);
+    outline: none;
+    box-shadow: 0 10px 24px rgba(81, 55, 25, 0.08);
+}
+
+.discrete-checkpoint.is-active {
+    border-color: rgba(96, 74, 43, 0.46);
+    background:
+        linear-gradient(180deg, rgba(255, 251, 241, 0.78), rgba(168, 115, 44, 0.12)),
+        rgba(255, 248, 232, 0.76);
+    color: #4f3921;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 251, 241, 0.8),
+        0 12px 30px rgba(81, 55, 25, 0.1);
+}
+
+.discrete-journal {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.discrete-chapter {
     position: relative;
     overflow: hidden;
-    min-height: 250px;
-    border: 1px solid var(--line);
+    min-width: 0;
+    min-height: 310px;
+    border: 1px solid rgba(95, 73, 43, 0.18);
     border-radius: 8px;
-    padding: 22px;
-    background: rgba(14, 15, 20, 0.8);
-    transition: transform 180ms ease, border-color 180ms ease;
+    padding: clamp(22px, 3vw, 30px);
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.78), rgba(238, 226, 204, 0.42)),
+        rgba(248, 240, 223, 0.78);
+    box-shadow: 0 22px 58px rgba(81, 55, 25, 0.1);
+    transition:
+        transform var(--motion-normal) var(--ease-spring),
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease;
 }
 
-.discrete-topic:hover {
-    transform: translateY(-4px);
-    border-color: rgba(122, 168, 255, 0.4);
+.discrete-chapter::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-top: 2px solid rgba(72, 107, 88, 0.42);
+    pointer-events: none;
 }
 
-.discrete-topic span,
+.discrete-chapter:hover {
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.38);
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.94), rgba(238, 226, 204, 0.52)),
+        rgba(248, 240, 223, 0.9);
+}
+
+.discrete-chapter[hidden] {
+    display: none;
+}
+
+.discrete-chapter span,
 .pipeline-step span {
-    display: grid;
-    width: 40px;
-    height: 40px;
-    place-items: center;
-    border: 1px solid rgba(122, 168, 255, 0.38);
+    display: inline-flex;
+    width: fit-content;
+    min-height: 34px;
+    align-items: center;
+    border: 1px solid rgba(72, 107, 88, 0.3);
     border-radius: 8px;
-    color: var(--blue);
+    padding: 0 11px;
+    color: #486b58;
     font-size: 0.78rem;
     font-weight: 820;
+    text-transform: uppercase;
 }
 
-.discrete-topic h3,
+.discrete-chapter h3,
 .pipeline-step h3 {
-    margin: 24px 0 0;
-    font-size: 1.24rem;
+    margin: 22px 0 0;
+    font-size: 1.28rem;
+    line-height: 1.22;
 }
 
-.discrete-topic p,
+.discrete-chapter p,
 .pipeline-step p,
-.discrete-impact p,
+.pbs-investigation p,
+.discrete-lessons p,
 .challenge-list p {
     color: var(--muted);
     line-height: 1.65;
 }
 
-.discrete-impact {
-    display: grid;
-    grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr) auto;
-    gap: 20px;
-    align-items: center;
-    margin-top: 18px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 22px;
-    background:
-        linear-gradient(90deg, rgba(78, 225, 193, 0.09), transparent),
-        var(--panel);
+.discrete-chapter p + p {
+    margin-top: 14px;
 }
 
-.discrete-impact h3 {
+.discrete-evidence-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.discrete-evidence-links a {
+    border: 1px solid rgba(95, 73, 43, 0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: rgba(255, 248, 232, 0.52);
+    color: #5a472e;
+    font-size: 0.86rem;
+    font-weight: 760;
+    transition:
+        transform var(--motion-fast) ease,
+        box-shadow var(--motion-fast) ease,
+        border-color var(--motion-fast) ease,
+        color var(--motion-fast) ease;
+}
+
+.discrete-evidence-links a:hover,
+.discrete-evidence-links a:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.42);
+    color: var(--text);
+    outline: none;
+    box-shadow: 0 10px 24px rgba(81, 55, 25, 0.08);
+}
+
+.discrete-investigation-controls {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    margin-top: 18px;
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 16px;
+    background: rgba(248, 240, 223, 0.62);
+}
+
+.discrete-investigation-controls p {
+    margin: 0;
+    color: #665239;
+    font-size: 0.78rem;
+    font-weight: 820;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.discrete-investigation-controls .btn {
+    border-color: rgba(95, 73, 43, 0.24);
+    background: rgba(255, 248, 232, 0.6);
+    transition:
+        transform var(--motion-fast) ease,
+        border-color var(--motion-fast) ease,
+        box-shadow var(--motion-fast) ease,
+        background var(--motion-fast) ease;
+}
+
+.discrete-investigation-controls .btn:hover,
+.discrete-investigation-controls .btn:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(72, 107, 88, 0.42);
+    box-shadow: 0 12px 28px rgba(81, 55, 25, 0.1);
+}
+
+.discrete-investigation-controls .btn:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.discrete-section .pbs-investigation {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.36fr) minmax(0, 1fr);
+    gap: 24px;
+    margin-top: 26px;
+    border: 1px solid rgba(95, 73, 43, 0.3);
+    border-radius: 8px;
+    padding: clamp(24px, 3.2vw, 34px);
+    background:
+        linear-gradient(135deg, rgba(72, 107, 88, 0.14), transparent 46%),
+        linear-gradient(180deg, rgba(255, 251, 241, 0.64), rgba(238, 226, 204, 0.2)),
+        rgba(248, 240, 223, 0.78);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 251, 241, 0.65),
+        0 28px 72px rgba(81, 55, 25, 0.14);
+}
+
+.pbs-investigation h3,
+.discrete-lessons h3 {
     margin: 12px 0 0;
-    font-size: 1.45rem;
+    font-size: clamp(1.5rem, 3vw, 2.4rem);
+    line-height: 1.08;
+}
+
+.investigation-path {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.investigation-path article {
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 16px;
+    background: rgba(255, 248, 232, 0.55);
+}
+
+.investigation-path span {
+    color: #486b58;
+    font-size: 0.72rem;
+    font-weight: 840;
+    text-transform: uppercase;
+}
+
+.investigation-path p {
+    margin: 8px 0 0;
+    font-size: 0.92rem;
+}
+
+.investigation-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    grid-column: 2;
+}
+
+.discrete-lessons {
+    margin-top: 22px;
+    border: 1px solid rgba(95, 73, 43, 0.22);
+    border-radius: 8px;
+    padding: clamp(22px, 3vw, 30px);
+    background:
+        linear-gradient(90deg, rgba(168, 115, 44, 0.12), transparent 52%),
+        rgba(248, 240, 223, 0.72);
 }
 
 .academic-console {
@@ -3522,9 +3729,10 @@ h1 {
 .stack-showcase article,
 .skill-card,
 .course-card,
-.discrete-topic,
+.discrete-chapter,
 .calculus-topic,
-.discrete-impact,
+.pbs-investigation,
+.discrete-lessons,
 .calculus-impact,
 .project-card,
 .case-panel,
@@ -3548,7 +3756,7 @@ h1 {
 .skill-card:hover,
 .stack-showcase article:hover,
 .course-card:hover,
-.discrete-topic:hover,
+.discrete-chapter:hover,
 .calculus-topic:hover {
     background:
         linear-gradient(180deg, rgba(255, 251, 241, 0.82), rgba(230, 205, 164, 0.28)),
@@ -3982,8 +4190,12 @@ h1 {
     .academic-category-nav,
     .academic-overview,
     .coursework-board,
-    .discrete-grid,
-    .discrete-impact,
+    .discrete-investigation,
+    .discrete-investigation-controls,
+    .discrete-journal,
+    .pbs-investigation,
+    .discrete-section .pbs-investigation,
+    .investigation-path,
     .calculus-grid,
     .calculus-impact,
     .calculus-showcase,
@@ -4015,6 +4227,10 @@ h1 {
     .academic-brief {
         min-height: auto;
         grid-row: auto;
+    }
+
+    .investigation-actions {
+        grid-column: auto;
     }
 
     h1 {
@@ -4300,7 +4516,7 @@ h1 {
     .stack-showcase article:hover,
     .skill-card:hover,
     .course-card:hover,
-    .discrete-topic:hover,
+    .discrete-chapter:hover,
     .calculus-topic:hover,
     .project-card:hover,
     .quiz-flow article:hover,

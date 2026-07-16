@@ -6,6 +6,11 @@ const skillTabs = document.querySelectorAll("[data-skill-tab]");
 const skillPanels = document.querySelectorAll("[data-skill-panel]");
 const academicTabs = document.querySelectorAll("[data-academic-tab]");
 const academicPanels = document.querySelectorAll("[data-academic-panel]");
+const discreteTabs = document.querySelectorAll("[data-discrete-tab]");
+const discretePanels = document.querySelectorAll("[data-discrete-panel]");
+const discretePrevButton = document.querySelector("[data-discrete-prev]");
+const discreteNextButton = document.querySelector("[data-discrete-next]");
+const discreteStatus = document.querySelector("[data-discrete-status]");
 const contactForm = document.querySelector(".contact-form");
 const caseLinks = document.querySelectorAll("[data-case-link]");
 const caseStudies = document.querySelectorAll("[data-case-study]");
@@ -15,6 +20,7 @@ const flightLogEntries = document.querySelectorAll("[data-flight-log-entry]");
 const flightLogTriggers = document.querySelectorAll(".flight-log-trigger");
 const flightLogStorageKey = "usmanFlightLogChapter";
 const academicStorageKey = "usmanAcademicCategory";
+const discreteStorageKey = "usmanDiscreteCheckpoint";
 const flightLogChapterCount = flightLogEntries.length || 9;
 const flightLogChapterMeta = {
     1: {
@@ -124,6 +130,7 @@ const flightLogState = {
     relatedMission: flightLogChapterMeta[1]?.context ?? null,
     isTimelineInView: false
 };
+let discretePanelTimeline = null;
 
 document.body.classList.toggle("has-gsap", canUseGsap);
 
@@ -412,6 +419,267 @@ academicTabs.forEach((tab) => {
 
 restoreAcademicCategory();
 window.addEventListener("hashchange", restoreAcademicCategory);
+
+function getDiscretePanelForTab(tab) {
+    return Array.from(discretePanels).find((panel) => panel.dataset.discretePanel === tab?.dataset.discreteTab) || null;
+}
+
+function getDiscreteTabFromHash(hash = window.location.hash) {
+    if (!hash) {
+        return null;
+    }
+
+    const panelId = hash.slice(1);
+    const panel = Array.from(discretePanels).find((item) => item.id === panelId);
+
+    if (!panel) {
+        return null;
+    }
+
+    return Array.from(discreteTabs).find((tab) => tab.dataset.discreteTab === panel.dataset.discretePanel) || null;
+}
+
+function updateDiscreteControls(activeTab) {
+    if (!discreteTabs.length) {
+        return;
+    }
+
+    const tabList = Array.from(discreteTabs);
+    const activeIndex = Math.max(0, tabList.indexOf(activeTab));
+    const activePanel = getDiscretePanelForTab(activeTab);
+    const heading = activePanel?.querySelector("h3")?.textContent?.trim() || "Discrete investigation";
+
+    if (discretePrevButton) {
+        discretePrevButton.disabled = activeIndex === 0;
+    }
+
+    if (discreteNextButton) {
+        discreteNextButton.disabled = activeIndex === tabList.length - 1;
+    }
+
+    if (discreteStatus) {
+        discreteStatus.textContent = `Observation ${String(activeIndex + 1).padStart(2, "0")} of ${String(tabList.length).padStart(2, "0")} - ${heading}`;
+    }
+}
+
+function setDiscretePanelState(activePanel) {
+    discretePanels.forEach((panel) => {
+        const isActive = panel === activePanel;
+        panel.hidden = !isActive;
+        panel.classList.toggle("is-active", isActive);
+        panel.classList.toggle("is-visible", isActive);
+        panel.removeAttribute("style");
+    });
+}
+
+function selectDiscreteCheckpoint(activeTab, options = {}) {
+    const activePanel = getDiscretePanelForTab(activeTab);
+
+    if (!activePanel) {
+        return;
+    }
+
+    const currentPanel = Array.from(discretePanels).find((panel) => !panel.hidden);
+    const isSameCheckpoint = currentPanel === activePanel && activeTab.getAttribute("aria-selected") === "true";
+
+    discreteTabs.forEach((tab) => {
+        const isActive = tab === activeTab;
+        tab.classList.toggle("is-active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+    });
+
+    updateDiscreteControls(activeTab);
+
+    try {
+        sessionStorage.setItem(discreteStorageKey, activeTab.dataset.discreteTab);
+    } catch (error) {
+        // Session storage is optional; direct hashes still restore the checkpoint.
+    }
+
+    if (options.updateHash && activePanel.id && window.location.hash !== `#${activePanel.id}`) {
+        history.pushState(null, "", `#${activePanel.id}`);
+    }
+
+    if (options.focusPanel) {
+        activePanel.scrollIntoView({
+            block: "nearest",
+            behavior: prefersReducedMotion ? "auto" : "smooth"
+        });
+    }
+
+    if (isSameCheckpoint) {
+        return;
+    }
+
+    if (discretePanelTimeline) {
+        discretePanelTimeline.kill();
+        discretePanelTimeline = null;
+    }
+
+    if (!canUseGsap || prefersReducedMotion) {
+        setDiscretePanelState(activePanel);
+        return;
+    }
+
+    const outgoingPanel = currentPanel && currentPanel !== activePanel ? currentPanel : null;
+    const incomingItems = activePanel.querySelectorAll("span, h3, p, .discrete-evidence-links");
+
+    gsap.killTweensOf(discretePanels);
+    gsap.killTweensOf(incomingItems);
+    activePanel.hidden = true;
+    activePanel.classList.add("is-active");
+    activePanel.style.opacity = "0";
+    activePanel.style.transform = "translateY(8px)";
+
+    discretePanelTimeline = gsap.timeline({
+        defaults: {
+            ease: "power2.out",
+            overwrite: true
+        },
+        onStart: () => {
+            document.querySelector("[data-discrete-journal]")?.setAttribute("aria-busy", "true");
+        },
+        onComplete: () => {
+            setDiscretePanelState(activePanel);
+            document.querySelector("[data-discrete-journal]")?.removeAttribute("aria-busy");
+            discretePanelTimeline = null;
+        }
+    });
+
+    if (outgoingPanel) {
+        discretePanelTimeline.to(outgoingPanel, {
+            autoAlpha: 0,
+            y: -6,
+            filter: "blur(1px)",
+            duration: 0.16,
+            ease: "power2.in"
+        });
+    }
+
+    discretePanelTimeline
+        .set(discretePanels, {
+            clearProps: "filter"
+        })
+        .call(() => {
+            discretePanels.forEach((panel) => {
+                panel.hidden = true;
+                panel.classList.toggle("is-active", panel === activePanel);
+            });
+            activePanel.hidden = false;
+            activePanel.classList.add("is-visible");
+        })
+        .set(activePanel, {
+            autoAlpha: 0,
+            y: 8
+        })
+        .fromTo(incomingItems,
+            { autoAlpha: 0, y: 8 },
+            {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.32,
+                stagger: 0.035,
+                ease: "power2.out"
+            },
+            "<0.02"
+        )
+        .to(activePanel, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.34,
+            ease: "power2.out"
+        }, "<");
+}
+
+function restoreDiscreteCheckpoint() {
+    const hashTab = getDiscreteTabFromHash();
+
+    if (hashTab) {
+        selectDiscreteCheckpoint(hashTab, { focusPanel: true });
+        return;
+    }
+
+    if (window.location.hash && window.location.hash !== "#discrete") {
+        return;
+    }
+
+    try {
+        const storedCheckpoint = sessionStorage.getItem(discreteStorageKey);
+        const storedTab = Array.from(discreteTabs).find((tab) => tab.dataset.discreteTab === storedCheckpoint);
+
+        if (storedTab) {
+            selectDiscreteCheckpoint(storedTab);
+            return;
+        }
+    } catch (error) {
+        // Keep the default first checkpoint selected.
+    }
+
+    if (discreteTabs[0]) {
+        updateDiscreteControls(discreteTabs[0]);
+    }
+}
+
+function moveDiscreteCheckpoint(offset) {
+    const tabList = Array.from(discreteTabs);
+    const activeTab = tabList.find((tab) => tab.getAttribute("aria-selected") === "true") || tabList[0];
+    const currentIndex = tabList.indexOf(activeTab);
+    const nextIndex = Math.max(0, Math.min(tabList.length - 1, currentIndex + offset));
+    const nextTab = tabList[nextIndex];
+
+    if (!nextTab || nextTab === activeTab) {
+        return;
+    }
+
+    nextTab.focus({ preventScroll: true });
+    selectDiscreteCheckpoint(nextTab, { updateHash: true, focusPanel: true });
+}
+
+discreteTabs.forEach((tab) => {
+    tab.addEventListener("click", () => selectDiscreteCheckpoint(tab, { updateHash: true, focusPanel: true }));
+    tab.addEventListener("keydown", (event) => {
+        const tabList = Array.from(discreteTabs);
+        const currentIndex = tabList.indexOf(tab);
+        const keyOffset = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
+
+        if (event.key === "Home" || event.key === "End") {
+            event.preventDefault();
+            const nextTab = event.key === "Home" ? tabList[0] : tabList[tabList.length - 1];
+            nextTab.focus();
+            selectDiscreteCheckpoint(nextTab, { updateHash: true, focusPanel: true });
+            return;
+        }
+
+        if (event.key === "Escape") {
+            event.preventDefault();
+            const activeTab = tabList.find((item) => item.getAttribute("aria-selected") === "true") || tab;
+            activeTab.focus({ preventScroll: true });
+            return;
+        }
+
+        if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+            event.preventDefault();
+            tab.focus({ preventScroll: true });
+            selectDiscreteCheckpoint(tab, { updateHash: true, focusPanel: true });
+            return;
+        }
+
+        if (!keyOffset) {
+            return;
+        }
+
+        event.preventDefault();
+        const nextIndex = (currentIndex + keyOffset + discreteTabs.length) % discreteTabs.length;
+        const nextTab = tabList[nextIndex];
+        nextTab.focus();
+        selectDiscreteCheckpoint(nextTab, { updateHash: true, focusPanel: true });
+    });
+});
+
+discretePrevButton?.addEventListener("click", () => moveDiscreteCheckpoint(-1));
+discreteNextButton?.addEventListener("click", () => moveDiscreteCheckpoint(1));
+restoreDiscreteCheckpoint();
+window.addEventListener("hashchange", restoreDiscreteCheckpoint);
 
 function getFlightLogEntryByIndex(index) {
     return Array.from(flightLogEntries).find((entry) => Number(entry.dataset.flightLogIndex) === Number(index));
