@@ -11,6 +11,53 @@ const caseCloseButtons = document.querySelectorAll("[data-case-close]");
 const flightLogRoute = document.querySelector("[data-flight-card]");
 const flightLogEntries = document.querySelectorAll("[data-flight-log-entry]");
 const flightLogTriggers = document.querySelectorAll(".flight-log-trigger");
+const flightLogStorageKey = "usmanFlightLogChapter";
+const flightLogChapterCount = flightLogEntries.length || 9;
+const flightLogChapterMeta = {
+    1: {
+        context: "launch",
+        actions: [{ label: "Review Launch Point", target: "#home" }]
+    },
+    2: {
+        context: "programming-fundamentals",
+        actions: [{ label: "Open Coursework", target: "#coursework" }]
+    },
+    3: {
+        context: "mathematical-thinking",
+        actions: [
+            { label: "Discrete Structure", target: "#discrete" },
+            { label: "Calculus Project", target: "#calculus" }
+        ]
+    },
+    4: {
+        context: "software-architecture",
+        actions: [{ label: "Review Concepts", target: "#skills" }]
+    },
+    5: {
+        context: "mission-archive",
+        actions: [
+            { label: "Open Mission Archive", target: "#projects" },
+            { label: "QuizMaster Case Study", target: "#quizmaster-case-study" },
+            { label: "Tumble Pop Case Study", target: "#tumble-pop-case-study" }
+        ]
+    },
+    6: {
+        context: "interactive-portfolio",
+        actions: [{ label: "Inspect Skill Stack", target: "#skills" }]
+    },
+    7: {
+        context: "communication",
+        actions: [{ label: "Start a Conversation", target: "#contact" }]
+    },
+    8: {
+        context: "current-stack",
+        actions: [{ label: "View Current Skills", target: "#skills" }]
+    },
+    9: {
+        context: "next-destination",
+        actions: [{ label: "Contact Muhammad", target: "#contact" }]
+    }
+};
 const journeyIntro = document.querySelector("[data-journey-intro]");
 const beginJourneyButton = document.querySelector("[data-begin-journey]");
 const skipIntroButton = document.querySelector("[data-skip-intro]");
@@ -67,6 +114,13 @@ let introSkipFinishTimer = null;
 let caseStudyTimeline = null;
 let skillPanelTimeline = null;
 let previousFocusedElement = null;
+const flightLogState = {
+    activeChapter: 1,
+    expandedChapter: 1,
+    lastTimelineChapter: 1,
+    relatedMission: flightLogChapterMeta[1]?.context ?? null,
+    isTimelineInView: false
+};
 
 document.body.classList.toggle("has-gsap", canUseGsap);
 
@@ -237,7 +291,40 @@ skillTabs.forEach((tab) => {
     });
 });
 
-function setFlightLogRouteProgress() {
+function getFlightLogEntryByIndex(index) {
+    return Array.from(flightLogEntries).find((entry) => Number(entry.dataset.flightLogIndex) === Number(index));
+}
+
+function getFlightLogChapterFromHash(hash = window.location.hash) {
+    const match = /^#flight-log-(\d+)$/.exec(hash || "");
+    const chapter = match ? Number(match[1]) : null;
+
+    return chapter >= 1 && chapter <= flightLogChapterCount ? chapter : null;
+}
+
+function getStoredFlightLogChapter() {
+    try {
+        const storedChapter = Number(sessionStorage.getItem(flightLogStorageKey));
+
+        if (storedChapter >= 1 && storedChapter <= flightLogChapterCount) {
+            return storedChapter;
+        }
+    } catch (error) {
+        return null;
+    }
+
+    return null;
+}
+
+function storeFlightLogChapter(index) {
+    try {
+        sessionStorage.setItem(flightLogStorageKey, String(index));
+    } catch (error) {
+        // Session storage is optional; the Flight Log remains fully usable without it.
+    }
+}
+
+function setFlightLogRouteProgress(options = {}) {
     if (!flightLogRoute) {
         return;
     }
@@ -245,9 +332,47 @@ function setFlightLogRouteProgress() {
     const rect = flightLogRoute.getBoundingClientRect();
     const viewportPoint = window.innerHeight * 0.58;
     const travel = rect.height + window.innerHeight * 0.22;
-    const progress = Math.max(0, Math.min(1, (viewportPoint - rect.top) / travel));
+    const scrollProgress = Math.max(0, Math.min(1, (viewportPoint - rect.top) / travel));
+    const chapterProgress = flightLogChapterCount > 1
+        ? (flightLogState.activeChapter - 1) / (flightLogChapterCount - 1)
+        : 0;
+    const progress = options.scrollOnly ? scrollProgress : Math.max(scrollProgress, chapterProgress);
 
     flightLogRoute.style.setProperty("--flight-log-progress", `${(progress * 100).toFixed(1)}%`);
+    flightLogRoute.dataset.activeChapter = String(flightLogState.activeChapter);
+    flightLogRoute.dataset.relatedMission = flightLogState.relatedMission || "";
+}
+
+function setFlightLogHistoryState(index, mode = "replace") {
+    if (window.location.hash !== "#timeline" && !getFlightLogChapterFromHash()) {
+        return;
+    }
+
+    const nextState = {
+        ...(window.history.state || {}),
+        section: "timeline",
+        flightLogChapter: index
+    };
+
+    const nextHash = `#flight-log-${index}`;
+
+    if (mode === "push" && window.location.hash !== nextHash) {
+        window.history.pushState(nextState, "", nextHash);
+        return;
+    }
+
+    window.history.replaceState(nextState, "", nextHash);
+}
+
+function dispatchFlightLogChapter(index, source = "interaction") {
+    window.dispatchEvent(new CustomEvent("flight-log:chapter", {
+        detail: {
+            index,
+            source,
+            context: flightLogState.relatedMission,
+            inTimeline: flightLogState.isTimelineInView
+        }
+    }));
 }
 
 function activateFlightLog(entry, options = {}) {
@@ -256,6 +381,12 @@ function activateFlightLog(entry, options = {}) {
     }
 
     const selectedIndex = Number(entry.dataset.flightLogIndex || 1);
+    const chapterMeta = flightLogChapterMeta[selectedIndex] || {};
+
+    flightLogState.activeChapter = selectedIndex;
+    flightLogState.expandedChapter = selectedIndex;
+    flightLogState.lastTimelineChapter = selectedIndex;
+    flightLogState.relatedMission = chapterMeta.context || null;
 
     flightLogEntries.forEach((item) => {
         const isSelected = item === entry;
@@ -266,16 +397,32 @@ function activateFlightLog(entry, options = {}) {
         item.classList.toggle("is-expanded", isSelected);
         item.classList.toggle("is-complete", itemIndex < selectedIndex);
         item.classList.toggle("is-future", itemIndex > selectedIndex);
+        item.toggleAttribute("data-current-flight-log", isSelected);
         trigger?.setAttribute("aria-expanded", String(isSelected));
+        trigger?.setAttribute("aria-current", isSelected ? "step" : "false");
 
         if (panel) {
             panel.hidden = !isSelected;
         }
     });
 
-    window.dispatchEvent(new CustomEvent("flight-log:chapter", {
-        detail: { index: selectedIndex }
-    }));
+    if (options.persist !== false) {
+        storeFlightLogChapter(selectedIndex);
+    }
+
+    if (options.syncHistory !== false) {
+        const historyMode = options.historyMode || (options.source ? "replace" : "push");
+        setFlightLogHistoryState(selectedIndex, historyMode);
+    }
+
+    setFlightLogRouteProgress();
+    dispatchFlightLogChapter(selectedIndex, options.source || "interaction");
+
+    if (window.location.hash === "#timeline" || getFlightLogChapterFromHash()) {
+        window.dispatchEvent(new CustomEvent("journey:hash-restored", {
+            detail: { hash: "#timeline" }
+        }));
+    }
 
     if (options.focus) {
         entry.querySelector(".flight-log-trigger")?.focus({ preventScroll: true });
@@ -288,12 +435,132 @@ function collapseFlightLog() {
         const panel = entry.querySelector(".flight-log-panel");
 
         entry.classList.remove("is-expanded");
+        entry.removeAttribute("data-current-flight-log");
         trigger?.setAttribute("aria-expanded", "false");
 
         if (panel) {
             panel.hidden = true;
         }
     });
+
+    flightLogState.expandedChapter = null;
+    setFlightLogRouteProgress();
+}
+
+function createFlightLogActions(entry) {
+    const index = Number(entry.dataset.flightLogIndex || 1);
+    const meta = flightLogChapterMeta[index];
+    const panel = entry.querySelector(".flight-log-panel");
+
+    if (!panel || !meta?.actions?.length || panel.querySelector(".flight-log-actions")) {
+        return;
+    }
+
+    const actionGroup = document.createElement("div");
+    actionGroup.className = "flight-log-actions";
+    actionGroup.setAttribute("aria-label", `Related destinations for Flight Log ${String(index).padStart(3, "0")}`);
+
+    meta.actions.forEach((action) => {
+        if (action.target === "#projects" && panel.querySelector(".flight-log-mission-link")) {
+            return;
+        }
+
+        const link = document.createElement("a");
+        link.className = "flight-log-action";
+        link.href = action.target;
+        link.dataset.flightLogTarget = action.target;
+        link.textContent = action.label;
+        actionGroup.append(link);
+    });
+
+    panel.append(actionGroup);
+}
+
+function scrollToFlightLogChapter(index, options = {}) {
+    const entry = getFlightLogEntryByIndex(index);
+    const timeline = document.querySelector("#timeline");
+    const headerOffset = document.querySelector(".site-header")?.offsetHeight ?? 0;
+    const target = entry || timeline;
+
+    if (!target) {
+        return;
+    }
+
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset - 18;
+    window.scrollTo({
+        top: Math.max(0, top),
+        behavior: prefersReducedMotion || options.immediate ? "auto" : "smooth"
+    });
+}
+
+function scheduleFlightLogChapterScroll(index, options = {}) {
+    scrollToFlightLogChapter(index, options);
+    window.requestAnimationFrame(() => scrollToFlightLogChapter(index, { immediate: true }));
+
+    [160, 420, 900, 1600, 2400].forEach((delay) => {
+        window.setTimeout(() => scrollToFlightLogChapter(index, { immediate: true }), delay);
+    });
+}
+
+function restoreFlightLogContext(options = {}) {
+    const hashChapter = getFlightLogChapterFromHash();
+    const historyChapter = Number(window.history.state?.flightLogChapter);
+    const storedChapter = getStoredFlightLogChapter();
+    const chapter = hashChapter || historyChapter || storedChapter || flightLogState.lastTimelineChapter || 1;
+    const entry = getFlightLogEntryByIndex(chapter);
+
+    if (!entry) {
+        return;
+    }
+
+    activateFlightLog(entry, {
+        focus: Boolean(options.focus),
+        persist: true,
+        source: options.source || "restore",
+        syncHistory: window.location.hash === "#timeline"
+    });
+
+    if (options.scroll) {
+        scheduleFlightLogChapterScroll(chapter, { immediate: options.immediate });
+    }
+}
+
+function navigateFromFlightLog(targetHash, options = {}) {
+    if (!targetHash || !targetHash.startsWith("#")) {
+        return;
+    }
+
+    const target = document.querySelector(targetHash);
+    const activeChapter = flightLogState.activeChapter;
+
+    if (!target) {
+        return;
+    }
+
+    storeFlightLogChapter(activeChapter);
+
+    if (target.matches("[data-case-study]")) {
+        window.history.replaceState({
+            ...(window.history.state || {}),
+            section: "timeline",
+            flightLogChapter: activeChapter
+        }, "", `#flight-log-${activeChapter}`);
+        openCaseStudy(targetHash);
+        return;
+    }
+
+    const headerOffset = document.querySelector(".site-header")?.offsetHeight ?? 0;
+    window.history.pushState({
+        section: targetHash.slice(1),
+        fromFlightLogChapter: activeChapter
+    }, "", targetHash);
+    window.scrollTo({
+        top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerOffset - 16),
+        behavior: prefersReducedMotion || options.immediate ? "auto" : "smooth"
+    });
+    window.dispatchEvent(new CustomEvent("journey:hash-restored", {
+        detail: { hash: targetHash }
+    }));
 }
 
 function setupFlightLog() {
@@ -301,7 +568,20 @@ function setupFlightLog() {
         return;
     }
 
-    activateFlightLog(flightLogEntries[0]);
+    flightLogEntries.forEach((entry) => {
+        const index = Number(entry.dataset.flightLogIndex || 1);
+
+        if (!entry.id) {
+            entry.id = `flight-log-${index}`;
+        }
+
+        createFlightLogActions(entry);
+    });
+    restoreFlightLogContext({
+        source: "initial",
+        scroll: window.location.hash === "#timeline",
+        immediate: true
+    });
     setFlightLogRouteProgress();
 
     flightLogTriggers.forEach((trigger, index) => {
@@ -357,21 +637,18 @@ function setupFlightLog() {
 
     document.querySelector(".flight-log-mission-link")?.addEventListener("click", (event) => {
         event.preventDefault();
-        const projects = document.querySelector("#projects");
-        const headerOffset = document.querySelector(".site-header")?.offsetHeight ?? 0;
+        navigateFromFlightLog("#projects");
+    });
 
-        if (!projects) {
+    flightLogRoute?.addEventListener("click", (event) => {
+        const link = event.target.closest("[data-flight-log-target]");
+
+        if (!link || link.classList.contains("flight-log-mission-link")) {
             return;
         }
 
-        window.history.pushState({ section: "projects" }, "", "#projects");
-        window.scrollTo({
-            top: Math.max(0, projects.getBoundingClientRect().top + window.scrollY - headerOffset - 16),
-            behavior: prefersReducedMotion ? "auto" : "smooth"
-        });
-        window.dispatchEvent(new CustomEvent("journey:hash-restored", {
-            detail: { hash: "#projects" }
-        }));
+        event.preventDefault();
+        navigateFromFlightLog(link.dataset.flightLogTarget);
     });
 
     let routeProgressFrame = null;
@@ -388,6 +665,38 @@ function setupFlightLog() {
 
     window.addEventListener("scroll", requestRouteProgress, { passive: true });
     window.addEventListener("resize", requestRouteProgress, { passive: true });
+    window.addEventListener("popstate", () => {
+        if (window.location.hash === "#timeline" || getFlightLogChapterFromHash() || window.history.state?.flightLogChapter) {
+            restoreFlightLogContext({
+                source: "popstate",
+                scroll: window.location.hash === "#timeline" || Boolean(getFlightLogChapterFromHash()),
+                immediate: true
+            });
+        }
+    });
+
+    if ("IntersectionObserver" in window) {
+        const timeline = document.querySelector("#timeline");
+
+        if (timeline) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    const isVisible = entries.some((entry) => entry.isIntersecting);
+                    flightLogState.isTimelineInView = isVisible;
+
+                    if (isVisible) {
+                        restoreFlightLogContext({ source: "timeline-return" });
+                    }
+                },
+                {
+                    rootMargin: "-24% 0px -46% 0px",
+                    threshold: 0.08
+                }
+            );
+
+            observer.observe(timeline);
+        }
+    }
 }
 
 function isCaseStudyHash(hash = window.location.hash) {
@@ -863,7 +1172,11 @@ function restoreHashNavigation() {
         return;
     }
 
-    const hashTarget = document.querySelector(window.location.hash);
+    const flightLogChapter = getFlightLogChapterFromHash();
+    const hashTarget = flightLogChapter
+        ? getFlightLogEntryByIndex(flightLogChapter)
+        : document.querySelector(window.location.hash);
+    const stageHash = flightLogChapter ? "#timeline" : window.location.hash;
 
     if (!hashTarget) {
         return;
@@ -879,8 +1192,17 @@ function restoreHashNavigation() {
         window.ScrollTrigger?.refresh?.();
         window.ScrollTrigger?.update?.();
         window.dispatchEvent(new Event("scroll"));
+
+        if (flightLogChapter) {
+            restoreFlightLogContext({
+                source: "hash",
+                scroll: false,
+                immediate: true
+            });
+        }
+
         window.dispatchEvent(new CustomEvent("journey:hash-restored", {
-            detail: { hash: window.location.hash }
+            detail: { hash: stageHash }
         }));
     };
 

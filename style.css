@@ -2858,6 +2858,21 @@ h1 {
     box-shadow: 0 26px 70px rgba(81, 55, 25, 0.16);
 }
 
+.flight-log-entry[data-current-flight-log] {
+    background:
+        linear-gradient(120deg, rgba(255, 251, 241, 0.92), rgba(236, 219, 188, 0.54)),
+        rgba(248, 240, 223, 0.86);
+}
+
+.flight-log-entry[data-current-flight-log]::after {
+    content: "";
+    position: absolute;
+    inset: 10px auto 10px 0;
+    width: 3px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(168, 115, 44, 0.92), rgba(72, 107, 88, 0.62));
+}
+
 .flight-log-entry.is-expanded::before,
 .flight-log-entry.is-complete::before {
     border-color: rgba(168, 115, 44, 0.82);
@@ -2974,6 +2989,38 @@ h1 {
 .flight-log-mission-link {
     width: fit-content;
     margin-top: 18px;
+}
+
+.flight-log-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 18px;
+}
+
+.flight-log-action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    border: 1px solid rgba(72, 107, 88, 0.26);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(255, 248, 232, 0.62);
+    color: #4a3a27;
+    font-size: 0.78rem;
+    font-weight: 820;
+    text-decoration: none;
+    transition:
+        border-color 180ms ease,
+        background 180ms ease,
+        transform 180ms var(--ease-spring);
+}
+
+.flight-log-action:hover,
+.flight-log-action:focus-visible {
+    border-color: rgba(168, 115, 44, 0.72);
+    background: rgba(255, 251, 241, 0.94);
+    transform: translateY(-1px);
 }
 
 .contact-section {
@@ -3887,6 +3934,15 @@ h1 {
 
     .flight-log-details span {
         padding: 10px;
+    }
+
+    .flight-log-actions {
+        gap: 7px;
+    }
+
+    .flight-log-action {
+        min-height: 40px;
+        padding: 9px 11px;
     }
 
     .case-study-visual {

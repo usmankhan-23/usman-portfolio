@@ -733,6 +733,10 @@ if (renderer) {
     }
 
     function getHashFlightStageName(hash = window.location.hash) {
+        if (/^#flight-log-\d+$/.test(hash || "")) {
+            return "timeline";
+        }
+
         const hashStageMap = {
             "#skills": "skills",
             "#coursework": "coursework",
