@@ -276,8 +276,24 @@ function selectSkillTab(activeTab) {
 skillTabs.forEach((tab) => {
     tab.addEventListener("click", () => selectSkillTab(tab));
     tab.addEventListener("keydown", (event) => {
-        const currentIndex = Array.from(skillTabs).indexOf(tab);
+        const tabList = Array.from(skillTabs);
+        const currentIndex = tabList.indexOf(tab);
         const keyOffset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+
+        if (event.key === "Home" || event.key === "End") {
+            event.preventDefault();
+            const nextTab = event.key === "Home" ? tabList[0] : tabList[tabList.length - 1];
+            nextTab.focus();
+            selectSkillTab(nextTab);
+            return;
+        }
+
+        if (event.key === "Escape") {
+            event.preventDefault();
+            const activeTab = tabList.find((item) => item.getAttribute("aria-selected") === "true") || tab;
+            activeTab.focus({ preventScroll: true });
+            return;
+        }
 
         if (!keyOffset) {
             return;
@@ -285,7 +301,7 @@ skillTabs.forEach((tab) => {
 
         event.preventDefault();
         const nextIndex = (currentIndex + keyOffset + skillTabs.length) % skillTabs.length;
-        const nextTab = skillTabs[nextIndex];
+        const nextTab = tabList[nextIndex];
         nextTab.focus();
         selectSkillTab(nextTab);
     });

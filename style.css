@@ -859,8 +859,28 @@ h1 {
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 20px;
-    background: rgba(12, 13, 17, 0.86);
-    box-shadow: var(--shadow);
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.76), rgba(222, 207, 178, 0.42)),
+        rgba(248, 240, 223, 0.82);
+    box-shadow: 0 22px 58px rgba(81, 55, 25, 0.12);
+}
+
+.console-status {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.console-status span {
+    border: 1px solid rgba(95, 73, 43, 0.18);
+    border-radius: 8px;
+    padding: 12px;
+    background: rgba(255, 248, 232, 0.58);
+    color: #5a472e;
+    font-size: 0.78rem;
+    font-weight: 840;
+    text-transform: uppercase;
 }
 
 .stack-showcase {
@@ -874,27 +894,29 @@ h1 {
     position: relative;
     overflow: hidden;
     min-height: 246px;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(95, 73, 43, 0.18);
     border-radius: 8px;
     padding: 26px;
-    background: rgba(12, 13, 17, 0.82);
-    box-shadow: 0 22px 58px rgba(0, 0, 0, 0.24);
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.74), rgba(238, 226, 204, 0.34)),
+        rgba(248, 240, 223, 0.76);
+    box-shadow: 0 22px 58px rgba(81, 55, 25, 0.11);
     transition: transform var(--motion-normal) var(--ease-spring), border-color var(--motion-fast) ease;
 }
 
 .stack-showcase article:hover {
     transform: translateY(-4px);
-    border-color: rgba(78, 225, 193, 0.4);
+    border-color: rgba(168, 115, 44, 0.46);
 }
 
 .stack-showcase span {
     display: inline-flex;
     min-height: 34px;
     align-items: center;
-    border: 1px solid rgba(78, 225, 193, 0.38);
+    border: 1px solid rgba(72, 107, 88, 0.3);
     border-radius: 8px;
     padding: 0 11px;
-    color: var(--teal);
+    color: #486b58;
     font-size: 0.78rem;
     font-weight: 820;
     text-transform: uppercase;
@@ -911,20 +933,35 @@ h1 {
     line-height: 1.65;
 }
 
+.evidence-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.evidence-strip span {
+    min-height: 30px;
+    border-color: rgba(168, 115, 44, 0.24);
+    background: rgba(255, 248, 232, 0.58);
+    color: #5a472e;
+    font-size: 0.72rem;
+}
+
 .skill-tabs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid rgba(95, 73, 43, 0.18);
     padding-bottom: 18px;
 }
 
 .skill-tab {
     min-height: 48px;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(95, 73, 43, 0.2);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--muted);
+    background: rgba(255, 248, 232, 0.48);
+    color: #5a472e;
     font: inherit;
     font-size: 0.95rem;
     font-weight: 760;
@@ -939,15 +976,15 @@ h1 {
 .skill-tab:hover,
 .skill-tab:focus-visible {
     transform: translateY(-2px);
-    border-color: rgba(78, 225, 193, 0.45);
+    border-color: rgba(72, 107, 88, 0.42);
     color: var(--text);
     outline: none;
 }
 
 .skill-tab.is-active {
-    border-color: rgba(78, 225, 193, 0.7);
-    background: rgba(78, 225, 193, 0.14);
-    color: var(--teal);
+    border-color: rgba(168, 115, 44, 0.62);
+    background: rgba(168, 115, 44, 0.13);
+    color: #6a481f;
 }
 
 .skill-category {
@@ -969,11 +1006,13 @@ h1 {
 .skill-card {
     position: relative;
     overflow: hidden;
-    min-height: 232px;
-    border: 1px solid var(--line);
+    min-height: 300px;
+    border: 1px solid rgba(95, 73, 43, 0.18);
     border-radius: 8px;
     padding: 22px;
-    background: rgba(18, 20, 26, 0.72);
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.76), rgba(238, 226, 204, 0.38)),
+        rgba(248, 240, 223, 0.74);
     transition:
         transform var(--motion-normal) var(--ease-spring),
         border-color var(--motion-fast) ease,
@@ -982,8 +1021,10 @@ h1 {
 
 .skill-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(78, 225, 193, 0.38);
-    background: rgba(25, 28, 35, 0.92);
+    border-color: rgba(168, 115, 44, 0.42);
+    background:
+        linear-gradient(135deg, rgba(255, 251, 241, 0.94), rgba(238, 226, 204, 0.52)),
+        rgba(248, 240, 223, 0.9);
 }
 
 .skill-icon {
@@ -991,9 +1032,9 @@ h1 {
     width: 42px;
     height: 42px;
     place-items: center;
-    border: 1px solid rgba(78, 225, 193, 0.32);
+    border: 1px solid rgba(72, 107, 88, 0.28);
     border-radius: 8px;
-    color: var(--teal);
+    color: #486b58;
     font-size: 0.82rem;
     font-weight: 820;
 }
@@ -1007,6 +1048,33 @@ h1 {
     margin: 12px 0 0;
     color: var(--muted);
     line-height: 1.65;
+}
+
+.skill-evidence {
+    display: grid;
+    gap: 8px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.skill-evidence li {
+    position: relative;
+    padding-left: 18px;
+    color: #4f3b25;
+    font-size: 0.88rem;
+    line-height: 1.52;
+}
+
+.skill-evidence li::before {
+    content: "";
+    position: absolute;
+    top: 0.65em;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(168, 115, 44, 0.78);
 }
 
 .coursework-section {
@@ -3686,6 +3754,10 @@ h1 {
         grid-template-columns: 1fr;
     }
 
+    .console-status {
+        grid-template-columns: 1fr;
+    }
+
     .project-grid {
         grid-template-columns: 1fr;
     }
@@ -3876,8 +3948,12 @@ h1 {
     }
 
     .skill-card {
-        min-height: 190px;
+        min-height: auto;
         padding: 18px;
+    }
+
+    .stack-showcase article {
+        min-height: auto;
     }
 
     .project-card {
