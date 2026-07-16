@@ -1665,30 +1665,213 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
 
         <section class="timeline-section" id="timeline" aria-labelledby="timeline-title">
             <div class="section-heading" data-animate>
-                <p class="eyebrow">Flight Log</p>
-                <h2 id="timeline-title">Every milestone added a new system and direction.</h2>
+                <p class="eyebrow">Stage 07 / Flight Log</p>
+                <h2 id="timeline-title">How curiosity became engineering.</h2>
                 <p>
-                    Every milestone added a new system, challenge, and direction to my
-                    journey as a computer science student.
+                    This is the route behind the portfolio: nine logs that show how each
+                    milestone changed the way I think, build, explain, and keep moving.
                 </p>
             </div>
 
-            <div class="timeline-placeholder" data-animate data-flight-card>
-                <div>
-                    <span>Prepared for future phase</span>
-                    <h3>The Flight Log</h3>
-                    <p>
-                        This section will become the detailed semester-by-semester journey.
-                        For Phase 2, it acts as the waypoint where the aircraft shifts into a
-                        wider, calmer tracking path before the final approach.
-                    </p>
-                </div>
-                <ol aria-label="Portfolio journey waypoints">
-                    <li>Programming Fundamentals</li>
-                    <li>Discrete Structures</li>
-                    <li>Calculus Modeling</li>
-                    <li>Featured Projects</li>
-                </ol>
+            <div class="flight-log-route" data-animate data-flight-card style="--flight-log-progress: 0%">
+                <div class="flight-route-line" aria-hidden="true"></div>
+
+                <article class="flight-log-entry is-expanded" data-flight-log-entry data-flight-log-index="1">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-1" aria-expanded="true" aria-controls="flight-log-panel-1">
+                        <span class="flight-log-number">Flight Log 001</span>
+                        <span class="flight-log-heading">Takeoff</span>
+                        <span class="flight-log-next">Destination Selected</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-1" role="region" aria-labelledby="flight-log-trigger-1">
+                        <p>
+                            The route began when I selected FAST National University and committed to BS Computer Science.
+                            It was the first serious decision that turned curiosity about technology into a direction I could follow.
+                        </p>
+                        <div class="flight-log-details">
+                            <span><strong>Skills</strong> Academic discipline, computer science foundations, long-term planning</span>
+                            <span><strong>Biggest Lesson</strong> A clear destination makes difficult work easier to accept.</span>
+                            <span><strong>Why It Mattered</strong> It gave my learning a runway instead of leaving it as scattered interest.</span>
+                            <span><strong>Next Heading</strong> Learning to Think</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="2">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-2" aria-expanded="false" aria-controls="flight-log-panel-2">
+                        <span class="flight-log-number">Flight Log 002</span>
+                        <span class="flight-log-heading">Learning to Think</span>
+                        <span class="flight-log-next">Programming Fundamentals</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-2" role="region" aria-labelledby="flight-log-trigger-2" hidden>
+                        <p>
+                            Programming Fundamentals taught me that code is not about typing fast. It is about understanding
+                            the problem, breaking it into smaller pieces, and checking every assumption before moving forward.
+                        </p>
+                        <div class="flight-log-skills" aria-label="Programming fundamentals topics">
+                            <span>Variables</span><span>Loops</span><span>Functions</span><span>Arrays</span><span>Pointers</span><span>File Handling</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Large problems become manageable when they are divided into smaller decisions.</span>
+                            <span><strong>Why It Mattered</strong> This mindset became the base for every assignment, project, and debugging session after it.</span>
+                            <span><strong>Next Heading</strong> Engineering the Mind</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="3">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-3" aria-expanded="false" aria-controls="flight-log-panel-3">
+                        <span class="flight-log-number">Flight Log 003</span>
+                        <span class="flight-log-heading">Engineering the Mind</span>
+                        <span class="flight-log-next">Physics, Calculus, Discrete Mathematics</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-3" role="region" aria-labelledby="flight-log-trigger-3" hidden>
+                        <p>
+                            Applied Physics, Calculus, and Discrete Mathematics trained me to look for structure. Vectors,
+                            graphs, logic, and mathematical models made problem solving feel less like guessing and more like reasoning.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Vectors</span><span>Graphs</span><span>Logic</span><span>Mathematics</span><span>Problem Solving</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Good engineering starts with clear thinking before implementation.</span>
+                            <span><strong>Why It Mattered</strong> These subjects improved how I explain systems, growth, relationships, and tradeoffs.</span>
+                            <span><strong>Next Heading</strong> Software Architecture</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="4">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-4" aria-expanded="false" aria-controls="flight-log-panel-4">
+                        <span class="flight-log-number">Flight Log 004</span>
+                        <span class="flight-log-heading">Software Architecture</span>
+                        <span class="flight-log-next">Object-Oriented Programming</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-4" role="region" aria-labelledby="flight-log-trigger-4" hidden>
+                        <p>
+                            Object-Oriented Programming changed the way I saw software. I started moving from writing isolated
+                            code toward designing systems with responsibilities, relationships, and reusable structure.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Classes</span><span>Objects</span><span>Constructors</span><span>Memory</span><span>Inheritance</span><span>Projects</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Code becomes easier to grow when responsibilities are clear.</span>
+                            <span><strong>Why It Mattered</strong> It prepared me to think about architecture instead of only solving the current line of code.</span>
+                            <span><strong>Next Heading</strong> Engineering Missions</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="5">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-5" aria-expanded="false" aria-controls="flight-log-panel-5">
+                        <span class="flight-log-number">Flight Log 005</span>
+                        <span class="flight-log-heading">Engineering Missions</span>
+                        <span class="flight-log-next">QuizMaster, Tumble Pop, PBS</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-5" role="region" aria-labelledby="flight-log-trigger-5" hidden>
+                        <p>
+                            The projects became completed missions. QuizMaster taught me reliable user flow and files,
+                            Tumble Pop taught me system-by-system game building, and the PBS project taught me how to explain real data through graphs.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>QuizMaster</span><span>Tumble Pop</span><span>PBS</span><span>C++</span><span>SFML</span><span>Python</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> A finished project is proof that planning, debugging, and communication worked together.</span>
+                            <span><strong>Why It Mattered</strong> These missions turned classroom concepts into evidence recruiters can inspect.</span>
+                            <span><strong>Next Heading</strong> Building Experiences</span>
+                        </div>
+                        <a class="btn secondary flight-log-mission-link" href="#projects">View Mission Archive</a>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="6">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-6" aria-expanded="false" aria-controls="flight-log-panel-6">
+                        <span class="flight-log-number">Flight Log 006</span>
+                        <span class="flight-log-heading">Building Experiences</span>
+                        <span class="flight-log-next">Three.js, GSAP, UI Architecture</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-6" role="region" aria-labelledby="flight-log-trigger-6" hidden>
+                        <p>
+                            This portfolio became another learning project. I used Three.js, GSAP, UI structure,
+                            accessibility, and performance decisions to make the site feel like one connected experience.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Three.js</span><span>GSAP</span><span>UI Architecture</span><span>Animation</span><span>Accessibility</span><span>Performance</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Interaction design matters most when it supports the story instead of distracting from it.</span>
+                            <span><strong>Why It Mattered</strong> It helped me connect frontend engineering with motion, layout, and user experience.</span>
+                            <span><strong>Next Heading</strong> Sharing Knowledge</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="7">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-7" aria-expanded="false" aria-controls="flight-log-panel-7">
+                        <span class="flight-log-number">Flight Log 007</span>
+                        <span class="flight-log-heading">Sharing Knowledge</span>
+                        <span class="flight-log-next">Teaching strengthened understanding</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-7" role="region" aria-labelledby="flight-log-trigger-7" hidden>
+                        <p>
+                            Helping other students made my own understanding stronger. Explaining notes, creating tests,
+                            and tutoring forced me to simplify ideas until the logic became clear.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Tutoring</span><span>Notes</span><span>Tests</span><span>Explaining Concepts</span><span>Revision Systems</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> If I cannot explain a concept simply, I do not understand it deeply enough yet.</span>
+                            <span><strong>Why It Mattered</strong> Teaching improved my debugging, communication, and patience as an engineer.</span>
+                            <span><strong>Next Heading</strong> Today</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="8">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-8" aria-expanded="false" aria-controls="flight-log-panel-8">
+                        <span class="flight-log-number">Flight Log 008</span>
+                        <span class="flight-log-heading">Today</span>
+                        <span class="flight-log-next">Current Stack and Focus</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-8" role="region" aria-labelledby="flight-log-trigger-8" hidden>
+                        <p>
+                            Today I am focused on frontend engineering, interactive experiences, and practical problem solving.
+                            My current stack is built around C++, JavaScript, Three.js, HTML, CSS, GSAP, Git, and GitHub.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>C++</span><span>JavaScript</span><span>Three.js</span><span>HTML</span><span>CSS</span><span>GSAP</span><span>Git</span><span>GitHub</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Tools matter, but the stronger skill is choosing the right tool for the problem.</span>
+                            <span><strong>Why It Mattered</strong> It defines who I am right now: a student building toward polished, useful software.</span>
+                            <span><strong>Next Heading</strong> Destination Ahead</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="9">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-9" aria-expanded="false" aria-controls="flight-log-panel-9">
+                        <span class="flight-log-number">Flight Log 009</span>
+                        <span class="flight-log-heading">Destination Ahead</span>
+                        <span class="flight-log-next">The horizon keeps moving</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-9" role="region" aria-labelledby="flight-log-trigger-9" hidden>
+                        <p>
+                            The next destination is not a finish line. I want to grow through internships,
+                            artificial intelligence, cloud systems, open source, research, and the habit of never stopping my learning.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Internship</span><span>Artificial Intelligence</span><span>Cloud</span><span>Open Source</span><span>Research</span><span>Never Stop Learning</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> A good engineer keeps the route open and keeps improving the aircraft.</span>
+                            <span><strong>Why It Mattered</strong> It keeps the portfolio honest: this is progress, not completion.</span>
+                            <span><strong>Next Heading</strong> Continue the flight</span>
+                        </div>
+                    </div>
+                </article>
             </div>
         </section>
 
@@ -1759,8 +1942,8 @@ xxxxxx-------xxxxxxxxx  xxxx</pre>
     </script>
     <script src="assets/vendor/gsap.min.js"></script>
     <script src="assets/vendor/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=phase4-final-audit-4"></script>
+    <script src="script.js?v=phase5a-flight-log-3"></script>
     <script src="cursor-glitter.js"></script>
-    <script type="module" src="three-scene.js?v=phase4-final-audit"></script>
+    <script type="module" src="three-scene.js?v=phase5a-flight-log"></script>
 </body>
 </html>

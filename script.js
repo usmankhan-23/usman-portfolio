@@ -8,6 +8,9 @@ const contactForm = document.querySelector(".contact-form");
 const caseLinks = document.querySelectorAll("[data-case-link]");
 const caseStudies = document.querySelectorAll("[data-case-study]");
 const caseCloseButtons = document.querySelectorAll("[data-case-close]");
+const flightLogRoute = document.querySelector("[data-flight-card]");
+const flightLogEntries = document.querySelectorAll("[data-flight-log-entry]");
+const flightLogTriggers = document.querySelectorAll(".flight-log-trigger");
 const journeyIntro = document.querySelector("[data-journey-intro]");
 const beginJourneyButton = document.querySelector("[data-begin-journey]");
 const skipIntroButton = document.querySelector("[data-skip-intro]");
@@ -234,6 +237,159 @@ skillTabs.forEach((tab) => {
     });
 });
 
+function setFlightLogRouteProgress() {
+    if (!flightLogRoute) {
+        return;
+    }
+
+    const rect = flightLogRoute.getBoundingClientRect();
+    const viewportPoint = window.innerHeight * 0.58;
+    const travel = rect.height + window.innerHeight * 0.22;
+    const progress = Math.max(0, Math.min(1, (viewportPoint - rect.top) / travel));
+
+    flightLogRoute.style.setProperty("--flight-log-progress", `${(progress * 100).toFixed(1)}%`);
+}
+
+function activateFlightLog(entry, options = {}) {
+    if (!entry) {
+        return;
+    }
+
+    const selectedIndex = Number(entry.dataset.flightLogIndex || 1);
+
+    flightLogEntries.forEach((item) => {
+        const isSelected = item === entry;
+        const itemIndex = Number(item.dataset.flightLogIndex || 1);
+        const trigger = item.querySelector(".flight-log-trigger");
+        const panel = item.querySelector(".flight-log-panel");
+
+        item.classList.toggle("is-expanded", isSelected);
+        item.classList.toggle("is-complete", itemIndex < selectedIndex);
+        item.classList.toggle("is-future", itemIndex > selectedIndex);
+        trigger?.setAttribute("aria-expanded", String(isSelected));
+
+        if (panel) {
+            panel.hidden = !isSelected;
+        }
+    });
+
+    window.dispatchEvent(new CustomEvent("flight-log:chapter", {
+        detail: { index: selectedIndex }
+    }));
+
+    if (options.focus) {
+        entry.querySelector(".flight-log-trigger")?.focus({ preventScroll: true });
+    }
+}
+
+function collapseFlightLog() {
+    flightLogEntries.forEach((entry) => {
+        const trigger = entry.querySelector(".flight-log-trigger");
+        const panel = entry.querySelector(".flight-log-panel");
+
+        entry.classList.remove("is-expanded");
+        trigger?.setAttribute("aria-expanded", "false");
+
+        if (panel) {
+            panel.hidden = true;
+        }
+    });
+}
+
+function setupFlightLog() {
+    if (!flightLogEntries.length) {
+        return;
+    }
+
+    activateFlightLog(flightLogEntries[0]);
+    setFlightLogRouteProgress();
+
+    flightLogTriggers.forEach((trigger, index) => {
+        trigger.addEventListener("click", () => {
+            const entry = trigger.closest("[data-flight-log-entry]");
+            const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+
+            if (isExpanded) {
+                return;
+            }
+
+            activateFlightLog(entry);
+        });
+
+        trigger.addEventListener("keydown", (event) => {
+            const keyMap = {
+                ArrowDown: 1,
+                ArrowRight: 1,
+                ArrowUp: -1,
+                ArrowLeft: -1
+            };
+
+            if (event.key === "Escape") {
+                event.preventDefault();
+                collapseFlightLog();
+                trigger.focus({ preventScroll: true });
+                return;
+            }
+
+            if (event.key === "Home") {
+                event.preventDefault();
+                activateFlightLog(flightLogEntries[0], { focus: true });
+                return;
+            }
+
+            if (event.key === "End") {
+                event.preventDefault();
+                activateFlightLog(flightLogEntries[flightLogEntries.length - 1], { focus: true });
+                return;
+            }
+
+            const offset = keyMap[event.key];
+
+            if (!offset) {
+                return;
+            }
+
+            event.preventDefault();
+            const nextIndex = (index + offset + flightLogEntries.length) % flightLogEntries.length;
+            activateFlightLog(flightLogEntries[nextIndex], { focus: true });
+        });
+    });
+
+    document.querySelector(".flight-log-mission-link")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        const projects = document.querySelector("#projects");
+        const headerOffset = document.querySelector(".site-header")?.offsetHeight ?? 0;
+
+        if (!projects) {
+            return;
+        }
+
+        window.history.pushState({ section: "projects" }, "", "#projects");
+        window.scrollTo({
+            top: Math.max(0, projects.getBoundingClientRect().top + window.scrollY - headerOffset - 16),
+            behavior: prefersReducedMotion ? "auto" : "smooth"
+        });
+        window.dispatchEvent(new CustomEvent("journey:hash-restored", {
+            detail: { hash: "#projects" }
+        }));
+    });
+
+    let routeProgressFrame = null;
+    const requestRouteProgress = () => {
+        if (routeProgressFrame !== null) {
+            return;
+        }
+
+        routeProgressFrame = window.requestAnimationFrame(() => {
+            routeProgressFrame = null;
+            setFlightLogRouteProgress();
+        });
+    };
+
+    window.addEventListener("scroll", requestRouteProgress, { passive: true });
+    window.addEventListener("resize", requestRouteProgress, { passive: true });
+}
+
 function isCaseStudyHash(hash = window.location.hash) {
     return Boolean(hash && document.querySelector(`${hash}[data-case-study]`));
 }
@@ -395,6 +551,8 @@ window.addEventListener("popstate", () => {
     if (openCaseStudySection) {
         closeCaseStudies({ updateHistory: false });
     }
+
+    restoreHashNavigation();
 });
 
 if (contactForm) {
@@ -983,6 +1141,7 @@ if (canUseGsap) {
 }
 
 setupJourneyIntro();
+setupFlightLog();
 runPremiumInteractions();
 runActiveNavigation();
 

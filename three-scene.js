@@ -625,6 +625,7 @@ if (renderer) {
     let stageScrollTriggers = [];
     let stageScrollFallback = null;
     let isDisposed = false;
+    let activeFlightLogChapter = 1;
     const transitionState = {
         active: false,
         fromStage: "hero",
@@ -798,9 +799,11 @@ if (renderer) {
         flightState.targetRimLightIntensity = responsiveStage.environment.rimLightIntensity;
         setVectorFromObject(flightState.targetCameraPosition, responsiveStage.cameraPosition);
         setVectorFromObject(flightState.targetCameraTarget, responsiveStage.cameraTarget);
+        applyFlightLogChapter(stageName, { immediate: settleImmediately });
         canvas.dataset.rotationDuration = responsiveStage.rotationSpeed
             ? (Math.PI * 2 / responsiveStage.rotationSpeed).toFixed(1)
             : "0";
+        canvas.dataset.flightLogChapter = String(activeFlightLogChapter);
 
         if (settleImmediately) {
             transitionState.active = false;
@@ -852,6 +855,47 @@ if (renderer) {
 
     function applyScrollStage(stage) {
         setFlightStage(isProjectCaseStudyOpen() ? "projects" : stage);
+    }
+
+    function getFlightLogChapterAdjustment(chapterIndex = activeFlightLogChapter) {
+        const adjustments = [
+            { position: { x: 0.04, y: 0.08, z: 0.05 }, scale: 0.02, bank: 0.004, pitch: 0.006, cameraZ: -0.04 },
+            { position: { x: -0.03, y: 0.04, z: 0.02 }, scale: 0, bank: -0.004, pitch: 0.002, cameraZ: 0 },
+            { position: { x: -0.08, y: 0.02, z: -0.02 }, scale: 0, bank: -0.006, pitch: 0.004, cameraZ: 0.02 },
+            { position: { x: -0.02, y: 0, z: -0.04 }, scale: 0.015, bank: 0.006, pitch: 0.002, cameraZ: -0.02 },
+            { position: { x: -0.12, y: -0.02, z: -0.04 }, scale: 0.025, bank: -0.012, pitch: 0.004, cameraZ: -0.04 },
+            { position: { x: 0.04, y: 0.02, z: -0.1 }, scale: 0.055, bank: 0.004, pitch: 0.006, cameraZ: -0.12 },
+            { position: { x: 0.02, y: -0.01, z: 0 }, scale: 0.01, bank: 0.002, pitch: 0, cameraZ: 0.02 },
+            { position: { x: 0.08, y: -0.02, z: -0.02 }, scale: 0.025, bank: 0.004, pitch: -0.002, cameraZ: -0.02 },
+            { position: { x: 0.14, y: 0.02, z: -0.08 }, scale: 0.01, bank: 0.008, pitch: 0.004, cameraZ: 0.06 }
+        ];
+
+        return adjustments[Math.max(0, Math.min(adjustments.length - 1, chapterIndex - 1))];
+    }
+
+    function applyFlightLogChapter(stageName = flightState.currentStage, options = {}) {
+        if (stageName !== "timeline") {
+            return;
+        }
+
+        const adjustment = getFlightLogChapterAdjustment();
+        const damping = Boolean(options.immediate) || prefersReducedMotion;
+
+        flightState.targetPosition.x += adjustment.position.x;
+        flightState.targetPosition.y += adjustment.position.y;
+        flightState.targetPosition.z += adjustment.position.z;
+        flightState.targetScale += adjustment.scale;
+        flightState.targetBank += adjustment.bank;
+        flightState.targetPitch += adjustment.pitch;
+        flightState.targetCameraPosition.z += adjustment.cameraZ;
+
+        if (damping) {
+            flightState.basePosition.copy(flightState.targetPosition);
+            flightState.baseScale = flightState.targetScale;
+            flightState.bank = flightState.targetBank;
+            flightState.pitch = flightState.targetPitch;
+            flightState.cameraPosition.copy(flightState.targetCameraPosition);
+        }
     }
 
     function applyNearestStage(stageElements) {
@@ -1291,6 +1335,15 @@ if (renderer) {
         }
     }
 
+    function handleFlightLogChapter(event) {
+        activeFlightLogChapter = Math.max(1, Math.min(9, Number(event?.detail?.index) || 1));
+        canvas.dataset.flightLogChapter = String(activeFlightLogChapter);
+
+        if (flightState.currentStage === "timeline") {
+            setFlightStage("timeline", { force: true });
+        }
+    }
+
     function dampVector(current, target, damping, delta) {
         current.x = THREE.MathUtils.damp(current.x, target.x, damping, delta);
         current.y = THREE.MathUtils.damp(current.y, target.y, damping, delta);
@@ -1590,6 +1643,7 @@ if (renderer) {
         window.removeEventListener("journey:intro-complete", handleJourneyIntroComplete);
         window.removeEventListener("journey:intro-skip", handleJourneyIntroComplete);
         window.removeEventListener("journey:hash-restored", handleHashRestored);
+        window.removeEventListener("flight-log:chapter", handleFlightLogChapter);
         window.removeEventListener("pagehide", cleanupScene);
         stageScrollTriggers.forEach((trigger) => trigger.kill());
         stageScrollTriggers = [];
@@ -1638,6 +1692,7 @@ if (renderer) {
     window.addEventListener("journey:intro-complete", handleJourneyIntroComplete);
     window.addEventListener("journey:intro-skip", handleJourneyIntroComplete);
     window.addEventListener("journey:hash-restored", handleHashRestored);
+    window.addEventListener("flight-log:chapter", handleFlightLogChapter);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("pagehide", cleanupScene, { once: true });
 
