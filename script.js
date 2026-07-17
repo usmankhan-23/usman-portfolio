@@ -508,6 +508,21 @@ function selectDiscreteCheckpoint(activeTab, options = {}) {
         history.pushState(null, "", `#${activePanel.id}`);
     }
 
+    if (options.immediate) {
+        discretePanelTimeline?.kill();
+        discretePanelTimeline = null;
+        setDiscretePanelState(activePanel);
+
+        if (options.focusPanel) {
+            activePanel.scrollIntoView({
+                block: "nearest",
+                behavior: "auto"
+            });
+        }
+
+        return;
+    }
+
     if (options.focusPanel) {
         activePanel.scrollIntoView({
             block: "nearest",
@@ -603,7 +618,7 @@ function restoreDiscreteCheckpoint() {
     const hashTab = getDiscreteTabFromHash();
 
     if (hashTab) {
-        selectDiscreteCheckpoint(hashTab, { focusPanel: true });
+        selectDiscreteCheckpoint(hashTab, { focusPanel: true, immediate: true });
         return;
     }
 
@@ -769,6 +784,21 @@ function selectCalculusInvestigation(activeTab, options = {}) {
         history.pushState(null, "", `#${activePanel.id}`);
     }
 
+    if (options.immediate) {
+        calculusPanelTimeline?.kill();
+        calculusPanelTimeline = null;
+        setCalculusPanelState(activePanel);
+
+        if (options.focusPanel) {
+            activePanel.scrollIntoView({
+                block: "nearest",
+                behavior: "auto"
+            });
+        }
+
+        return;
+    }
+
     if (options.focusPanel && !isSameInvestigation) {
         activePanel.scrollIntoView({
             block: "nearest",
@@ -864,13 +894,21 @@ function selectCalculusInvestigation(activeTab, options = {}) {
             duration: 0.34,
             ease: "power2.out"
         }, "<");
+
+    window.setTimeout(() => {
+        if (activeTab.getAttribute("aria-selected") === "true" && activePanel.hidden) {
+            setCalculusPanelState(activePanel);
+            calculusJournal?.removeAttribute("aria-busy");
+            calculusPanelTimeline = null;
+        }
+    }, 700);
 }
 
 function restoreCalculusInvestigation() {
     const hashTab = getCalculusTabFromHash();
 
     if (hashTab) {
-        selectCalculusInvestigation(hashTab, { focusPanel: true });
+        selectCalculusInvestigation(hashTab, { focusPanel: true, immediate: true });
         return;
     }
 
@@ -2053,10 +2091,33 @@ function cleanupIntroAccessibility() {
     setBackgroundInert(false);
 }
 
+function normalizeHashPanelState(hash = window.location.hash) {
+    const target = hash ? document.querySelector(hash) : null;
+
+    if (target?.matches("[data-discrete-panel]")) {
+        const hashTab = getDiscreteTabFromHash();
+
+        if (hashTab) {
+            selectDiscreteCheckpoint(hashTab, { immediate: true });
+        }
+    }
+
+    if (target?.matches("[data-calculus-panel]")) {
+        const hashTab = getCalculusTabFromHash();
+
+        if (hashTab) {
+            selectCalculusInvestigation(hashTab, { immediate: true });
+        }
+    }
+}
+
 function restoreHashNavigation() {
     if (!window.location.hash || window.location.hash === "#home") {
+        revealHeroContent({ immediate: true });
         return;
     }
+
+    normalizeHashPanelState();
 
     const flightLogChapter = getFlightLogChapterFromHash();
     const hashTarget = flightLogChapter
@@ -2069,6 +2130,8 @@ function restoreHashNavigation() {
     }
 
     const scrollToHashTarget = () => {
+        normalizeHashPanelState(stageHash);
+
         const headerOffset = document.querySelector(".site-header")?.offsetHeight ?? 0;
         const targetTop = hashTarget.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
         window.scrollTo({
@@ -2078,6 +2141,7 @@ function restoreHashNavigation() {
         window.ScrollTrigger?.refresh?.();
         window.ScrollTrigger?.update?.();
         window.dispatchEvent(new Event("scroll"));
+        revealHashTargetContent(stageHash, hashTarget);
 
         if (flightLogChapter) {
             restoreFlightLogContext({
@@ -2098,6 +2162,38 @@ function restoreHashNavigation() {
 
     [180, 520, 900, 1500].forEach((delay) => {
         window.setTimeout(scrollToHashTarget, delay);
+    });
+}
+
+function revealHashTargetContent(stageHash = window.location.hash, hashTarget = document.querySelector(stageHash)) {
+    if (stageHash === "#home") {
+        revealHeroContent({ immediate: true });
+        return;
+    }
+
+    const scope = stageHash === "#timeline"
+        ? document.querySelector("#timeline")
+        : hashTarget?.closest("section, main, [data-case-study]") || hashTarget;
+
+    if (!scope) {
+        return;
+    }
+
+    const revealItems = [
+        ...(scope.matches("[data-animate]") ? [scope] : []),
+        ...scope.querySelectorAll("[data-animate]")
+    ];
+
+    revealItems.forEach((item) => {
+        item.classList.add("is-visible");
+        item.style.opacity = "1";
+        item.style.visibility = "visible";
+        item.style.transform = "translateY(0)";
+    });
+
+    window.gsap?.set?.(revealItems, {
+        autoAlpha: 1,
+        y: 0
     });
 }
 
