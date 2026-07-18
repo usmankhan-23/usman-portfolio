@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Muhammad Usman is a Computer Science student at NUCES building C++, Python, SFML, analytical computing, and interactive frontend portfolio projects.">
+    <meta name="author" content="Muhammad Usman">
+    <meta name="robots" content="index, follow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="theme-color" content="#2b2118">
+    <meta name="color-scheme" content="dark light">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Muhammad Usman | CS Student Portfolio">
+    <meta property="og:description" content="Computer Science student portfolio featuring C++, Python, SFML, analytical computing, interactive frontend work, and project case studies.">
+    <meta property="og:site_name" content="Muhammad Usman Portfolio">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://usmankhan-23.github.io/usman-portfolio/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Muhammad Usman | CS Student Portfolio">
+    <meta name="twitter:description" content="Computer Science student portfolio featuring C++, Python, SFML, analytical computing, interactive frontend work, and project case studies.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://usmankhan-23.github.io/usman-portfolio/">
+    <title>Muhammad Usman | CS Student Portfolio</title>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "Person",
+                    "@id": "https://usmankhan-23.github.io/usman-portfolio/#person",
+                    "name": "Muhammad Usman",
+                    "url": "https://usmankhan-23.github.io/usman-portfolio/",
+                    "description": "Computer Science student at NUCES building C++, Python, SFML, analytical computing, and interactive frontend portfolio projects.",
+                    "sameAs": [
+                        "https://github.com/usmankhan-23",
+                        "https://www.linkedin.com/in/usman-khan-a8a88440a"
+                    ],
+                    "affiliation": {
+                        "@type": "CollegeOrUniversity",
+                        "name": "National University of Computer and Emerging Sciences (NUCES)"
+                    },
+                    "knowsAbout": [
+                        "C++",
+                        "Python",
+                        "SFML",
+                        "JavaScript",
+                        "HTML",
+                        "CSS",
+                        "Three.js",
+                        "GSAP",
+                        "Discrete Mathematics",
+                        "Calculus",
+                        "Graph Theory",
+                        "Algorithm Analysis",
+                        "Interactive Frontend Development"
+                    ]
+                },
+                {
+                    "@type": "WebSite",
+                    "@id": "https://usmankhan-23.github.io/usman-portfolio/#website",
+                    "name": "Muhammad Usman Portfolio",
+                    "url": "https://usmankhan-23.github.io/usman-portfolio/",
+                    "publisher": {
+                        "@id": "https://usmankhan-23.github.io/usman-portfolio/#person"
+                    }
+                }
+            ]
+        }
+    </script>
+    <script>
+        (function () {
+            document.documentElement.classList.add("js");
+
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const shouldReplayIntro = params.get("replayIntro") === "1";
+
+                if (!shouldReplayIntro && (sessionStorage.getItem("usmanJourneyIntroComplete") === "true" || window.location.hash)) {
+                    document.documentElement.classList.add("journey-intro-seen");
+                } else {
+                    document.documentElement.classList.add("journey-intro-pending");
+                }
+            } catch (error) {
+                document.documentElement.classList.add("journey-intro-pending");
+            }
+        }());
+    </script>
+    <link rel="stylesheet" href="style.css?v=phase11-module3">
+</head>
+<body>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <div class="site-noise" aria-hidden="true"></div>
+    <canvas class="cursor-glitter" id="cursor-glitter" aria-hidden="true"></canvas>
+    <div class="journey-intro" data-journey-intro role="dialog" aria-modal="true" aria-labelledby="journey-intro-title" hidden>
+        <div class="journey-intro__atmosphere" aria-hidden="true"></div>
+        <div class="journey-intro__content">
+            <p class="journey-intro__eyebrow">Flight Log // 001</p>
+            <p class="journey-intro__title" id="journey-intro-title">Muhammad Usman</p>
+            <p class="journey-intro__subtitle">Developer's Flight Journey</p>
+            <div class="journey-intro__manifest" aria-label="Journey disciplines">
+                <span>CS Student @ NUCES</span>
+                <span>C++ / SFML / Python</span>
+                <span>Systems Thinking</span>
+            </div>
+            <div class="journey-intro__actions">
+                <button class="btn primary" type="button" data-begin-journey disabled>Initialize Flight</button>
+                <button class="btn secondary" type="button" data-skip-intro>Skip -></button>
+            </div>
+        </div>
+    </div>
+    <div class="page-shell">
+        <header class="site-header" data-animate>
+            <a class="brand" href="#home" aria-label="Muhammad Usman home">
+                <span class="brand-mark">MU</span>
+                <span>Muhammad Usman</span>
+            </a>
+
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="#home">Home</a>
+                <a href="#skills">Skills</a>
+                <a href="#coursework">Coursework</a>
+                <a href="#discrete">Discrete</a>
+                <a href="#calculus">Calculus</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </header>
+
+        <main id="home" class="hero cinematic-hero">
+            <div class="cinematic-stage" aria-hidden="true">
+                <canvas id="portfolio-scene"></canvas>
+                <div class="scene-loader" data-scene-loader>
+                    <span>Preparing flight systems</span>
+                </div>
+            </div>
+
+            <section class="hero-copy" aria-labelledby="hero-title">
+                <p class="eyebrow" data-animate>CS Student at NUCES / C++ / Python / SFML</p>
+                <h1 id="hero-title" data-animate tabindex="-1">
+                    Muhammad Usman
+                </h1>
+                <p class="hero-text" data-animate>
+                    Computer Science student building C++/SFML projects, Python analysis workflows,
+                    and interactive frontend systems with a careful, production-quality mindset.
+                </p>
+
+                <div class="hero-actions" data-animate>
+                    <a class="btn primary" href="#projects">View Project Evidence</a>
+                    <a class="btn secondary" href="assets/resume.pdf" aria-label="Download Muhammad Usman's resume PDF">Download Resume</a>
+                    <a class="btn secondary" href="https://github.com/usmankhan-23" target="_blank" rel="noopener noreferrer" aria-label="Open Muhammad Usman's GitHub profile in a new tab">GitHub</a>
+                    <a class="btn secondary" href="https://www.linkedin.com/in/usman-khan-a8a88440a" target="_blank" rel="noopener noreferrer" aria-label="Open Muhammad Usman's LinkedIn profile in a new tab">LinkedIn</a>
+                    <a class="btn secondary" href="#contact">Contact</a>
+                </div>
+
+                <dl class="hero-stats" data-animate>
+                    <div>
+                        <dt>04</dt>
+                        <dd>Featured case studies</dd>
+                    </div>
+                    <div>
+                        <dt>03</dt>
+                        <dd>Core technical stacks</dd>
+                    </div>
+                    <div>
+                        <dt>NUCES</dt>
+                        <dd>Computer Science student</dd>
+                    </div>
+                </dl>
+
+                <p class="hero-note" data-animate>
+                    Strongest evidence: QuizMaster, Tumble Pop, PBS price-network analysis,
+                    and calculus-based search analysis.
+                </p>
+            </section>
+
+            <section class="hero-visual flight-console" aria-label="Portfolio archive profile" data-animate>
+                <p class="console-kicker">Portfolio Ledger</p>
+                <pre class="flight-code" aria-label="Portfolio archive preview"><code><span class="muted">const</span> archive = {
+  student: "Muhammad Usman",
+  discipline: "Computer Science Student",
+  university: "NUCES / FAST",
+  craft: ["C++", "SFML", "Python", "Analysis"],
+  chapter: "<span id="typed-status">Foundations</span>"
+};</code></pre>
+                <div class="flight-readout">
+                    <span>PROJECT EVIDENCE</span>
+                    <span>RESUME READY</span>
+                    <span>GITHUB VERIFIED</span>
+                </div>
+            </section>
+        </main>
+
+        <section class="flight-chapters" aria-label="Portfolio archive chapters">
+            <article data-flight-card data-animate>
+                <span>01</span>
+                <h2>Foundations</h2>
+                <p>C++ foundations, Programming Fundamentals, clean logic, file handling, and problem breakdown.</p>
+            </article>
+            <article data-flight-card data-animate>
+                <span>02</span>
+                <h2>Workshop</h2>
+                <p>SFML game systems, sprites, texture loading, player movement, collision, enemies, and boss behavior.</p>
+            </article>
+            <article data-flight-card data-animate>
+                <span>03</span>
+                <h2>Research</h2>
+                <p>Python-backed calculus, discrete structures, graph analysis, datasets, and report-driven case studies.</p>
+            </article>
+        </section>
+
+        <section class="skills-section" id="skills" aria-labelledby="skills-title">
+            <div class="section-heading" data-animate>
+                <p class="eyebrow">Stage 02 / Engineering Systems Console</p>
+                <h2 id="skills-title">Skills proven through shipped work.</h2>
+                <p>
+                    A recruiter-friendly view of the languages, concepts, and tools I have
+                    used in completed projects, assignments, reports, game systems, and data analysis.
+                </p>
+            </div>
+
+            <div class="stack-showcase" data-animate>
+                <article>
+                    <span>Primary System</span>
+                    <h3>C++ project delivery</h3>
+                    <p>Used across Programming Fundamentals, QuizMaster, and Tumble Pop for modular logic, arrays, functions, file handling, pointers, and dynamic memory.</p>
+                    <div class="evidence-strip" aria-label="C++ evidence">
+                        <span>QuizMaster</span><span>Tumble Pop</span><span>PF Assignments</span>
+                    </div>
+                </article>
+                <article>
+                    <span>Interactive System</span>
+                    <h3>SFML game mechanics</h3>
+                    <p>Used for sprite rendering, texture loading, keyboard input, movement, collision, enemy capture, projectile release, audio, and boss behavior.</p>
+                    <div class="evidence-strip" aria-label="SFML evidence">
+                        <span>Sprites</span><span>Collision</span><span>Game Loop</span>
+                    </div>
+                </article>
+                <article>
+                    <span>Analysis System</span>
+                    <h3>Python research workflows</h3>
+                    <p>Used for calculus verification, PBS CPI data processing, graph construction, centrality analysis, plotting, and report-backed project results.</p>
+                    <div class="evidence-strip" aria-label="Python evidence">
+                        <span>NetworkX</span><span>Matplotlib</span><span>Data Cleaning</span>
+                    </div>
+                </article>
+            </div>
+
+            <div class="skills-panel" data-animate>
+                <div class="console-status" aria-label="Engineering systems status">
+                    <span>Console Status: Evidence Based</span>
+                    <span>4 project missions</span>
+                    <span>9 flight logs connected</span>
+                </div>
+
+                <div class="skill-tabs" role="tablist" aria-label="Skill categories">
+                    <button class="skill-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="languages-panel" id="languages-tab" data-skill-tab="languages">
+                        Languages
+                    </button>
+                    <button class="skill-tab" type="button" role="tab" aria-selected="false" aria-controls="concepts-panel" id="concepts-tab" data-skill-tab="concepts">
+                        Concepts
+                    </button>
+                    <button class="skill-tab" type="button" role="tab" aria-selected="false" aria-controls="tools-panel" id="tools-tab" data-skill-tab="tools">
+                        Tools
+                    </button>
+                </div>
+
+                <div class="skill-category is-active" id="languages-panel" role="tabpanel" aria-labelledby="languages-tab" data-skill-panel="languages">
+                    <article class="skill-card">
+                        <span class="skill-icon">01</span>
+                        <h3>C++</h3>
+                        <p>Strong foundation through PF projects: functions, arrays, pointers, file handling, modular code, and dynamic memory.</p>
+                        <ul class="skill-evidence">
+                            <li>QuizMaster question files, scoring, logs, and replay flow.</li>
+                            <li>Tumble Pop gameplay systems, collisions, and enemy behavior.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">02</span>
+                        <h3>Python</h3>
+                        <p>Used for mathematical verification, data cleaning, plotting, graph analysis, and project result generation.</p>
+                        <ul class="skill-evidence">
+                            <li>PBS price network analysis with graph metrics.</li>
+                            <li>Calculus project graphs and algorithm-growth comparisons.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">03</span>
+                        <h3>HTML, CSS, JavaScript</h3>
+                        <p>Used to build this responsive portfolio with animated sections, interactive tabs, case studies, and contact form behavior.</p>
+                        <ul class="skill-evidence">
+                            <li>Flight Log deep links, keyboard navigation, and browser history.</li>
+                            <li>Responsive case studies and recruiter-facing project sections.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">04</span>
+                        <h3>JavaScript</h3>
+                        <p>Interactive UI behavior, DOM updates, events, and browser-based logic.</p>
+                        <ul class="skill-evidence">
+                            <li>GSAP reveal coordination and tab state management.</li>
+                            <li>Flight Log chapter events connected to the aircraft scene.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">05</span>
+                        <h3>CSS</h3>
+                        <p>Responsive layouts, warm editorial interfaces, hover states, animations, and reusable visual systems.</p>
+                        <ul class="skill-evidence">
+                            <li>Aviation archive theme, command surfaces, and mobile layouts.</li>
+                            <li>Reduced-motion friendly UI states and focus styling.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">06</span>
+                        <h3>SFML</h3>
+                        <p>Applied C++ graphics/audio concepts for sprites, textures, windows, keyboard controls, music, and game rendering.</p>
+                        <ul class="skill-evidence">
+                            <li>Tumble Pop rendering, movement, collision, and boss systems.</li>
+                            <li>Arcade-style input and sprite-state coordination.</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <div class="skill-category" id="concepts-panel" role="tabpanel" aria-labelledby="concepts-tab" data-skill-panel="concepts" hidden>
+                    <article class="skill-card">
+                        <span class="skill-icon">01</span>
+                        <h3>Programming Fundamentals</h3>
+                        <p>Completed PF through assignments and projects covering logic building, loops, arrays, functions, files, input validation, and modular code.</p>
+                        <ul class="skill-evidence">
+                            <li>Converted assignment briefs into working console programs.</li>
+                            <li>Used file-driven data and validation in QuizMaster.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">02</span>
+                        <h3>Data Structures</h3>
+                        <p>Arrays, stacks, queues, dynamic storage, records, and practical data modeling across quiz, game, and analysis projects.</p>
+                        <ul class="skill-evidence">
+                            <li>Question order arrays, records, dynamic entities, and datasets.</li>
+                            <li>Structured data for game state and analysis outputs.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">03</span>
+                        <h3>Algorithms</h3>
+                        <p>Sorting, searching, recursion, complexity thinking, and step-by-step optimization.</p>
+                        <ul class="skill-evidence">
+                            <li>Linear vs Binary Search growth modeled with calculus.</li>
+                            <li>Problem decomposition used across PF and OOP assignments.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">04</span>
+                        <h3>OOP</h3>
+                        <p>Classes, objects, encapsulation, inheritance, and maintainable code organization.</p>
+                        <ul class="skill-evidence">
+                            <li>Shifted from isolated functions toward responsibility-based systems.</li>
+                            <li>Used structure to keep larger projects understandable.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">05</span>
+                        <h3>File Handling</h3>
+                        <p>Reading and writing records, logs, question banks, datasets, and structured project output files.</p>
+                        <ul class="skill-evidence">
+                            <li>Quiz question banks, high scores, logs, and review records.</li>
+                            <li>Dataset preparation for graph and calculus analysis.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">06</span>
+                        <h3>Mathematical Modeling</h3>
+                        <p>Using calculus and discrete structures to convert real problems into functions, graphs, thresholds, and measurable results.</p>
+                        <ul class="skill-evidence">
+                            <li>Price co-movement graphs built from PBS data.</li>
+                            <li>Algorithm efficiency explained with functions and derivatives.</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <div class="skill-category" id="tools-panel" role="tabpanel" aria-labelledby="tools-tab" data-skill-panel="tools" hidden>
+                    <article class="skill-card">
+                        <span class="skill-icon">01</span>
+                        <h3>Git</h3>
+                        <p>Version control basics, clear commits, branches, and project history tracking.</p>
+                        <ul class="skill-evidence">
+                            <li>Used to track portfolio checkpoints and project evolution.</li>
+                            <li>Supports cleaner collaboration and rollback decisions.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">02</span>
+                        <h3>VS Code</h3>
+                        <p>Efficient coding workflow with extensions, formatting, terminal use, and debugging.</p>
+                        <ul class="skill-evidence">
+                            <li>Used for frontend editing, JavaScript checks, and asset organization.</li>
+                            <li>Supports fast iteration on responsive layouts.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">03</span>
+                        <h3>Visual Studio</h3>
+                        <p>Professional C++ development environment used for project coding, debugging, build checks, and structured source work.</p>
+                        <ul class="skill-evidence">
+                            <li>Useful for C++ project debugging and build validation.</li>
+                            <li>Applied across coursework-style structured programming work.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">04</span>
+                        <h3>Ubuntu</h3>
+                        <p>Linux workflow for compiling, terminal commands, package-based setup, and running C++/SFML style projects.</p>
+                        <ul class="skill-evidence">
+                            <li>Terminal workflow for compiling and environment setup.</li>
+                            <li>Build confidence across non-Windows development contexts.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">05</span>
+                        <h3>Chrome DevTools</h3>
+                        <p>Inspecting layout, testing responsive views, debugging JavaScript, and checking performance.</p>
+                        <ul class="skill-evidence">
+                            <li>Used for viewport testing, console checks, and layout inspection.</li>
+                            <li>Supports accessibility and responsive debugging.</li>
+                        </ul>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-icon">06</span>
+                        <h3>Python Libraries</h3>
+                        <p>Practical work with pandas, NumPy, NetworkX, Matplotlib, and symbolic/plotting workflows for analysis projects.</p>
+                        <ul class="skill-evidence">
+                            <li>NetworkX for graph structure and centrality analysis.</li>
+                            <li>Matplotlib and numerical tools for report-ready visuals.</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="coursework-section" id="coursework" aria-labelledby="coursework-title">
+            <div class="section-heading" data-animate>
+                <p class="eyebrow">Stage 03 / Academic Navigation Archive</p>
+                <h2 id="coursework-title">Coursework translated into engineering evidence.</h2>
+                <p>
+                    A recruiter-focused map of the university work that shaped how I solve
+                    problems, write programs, reason mathematically, debug systems, and explain
+                    technical decisions.
+                </p>
+            </div>
+
+            <div class="academic-console" data-animate aria-label="Academic archive status">
+                <span>Archive Status: Evidence Linked</span>
+                <span>6 academic areas</span>
+                <span>Projects, reports, assignments, and case studies</span>
+            </div>
+
+            <div class="academic-category-nav" role="tablist" aria-label="Academic evidence categories" data-animate>
+                <button class="academic-category is-active" type="button" role="tab" aria-selected="true" aria-controls="coursework-pf" id="academic-tab-pf" data-academic-tab="pf">
+                    Programming Fundamentals
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-oop" id="academic-tab-oop" data-academic-tab="oop">
+                    OOP
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-physics" id="academic-tab-physics" data-academic-tab="physics">
+                    Applied Physics
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-calculus" id="academic-tab-calculus" data-academic-tab="calculus">
+                    Calculus
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-discrete" id="academic-tab-discrete" data-academic-tab="discrete">
+                    Discrete
+                </button>
+                <button class="academic-category" type="button" role="tab" aria-selected="false" aria-controls="coursework-communication" id="academic-tab-communication" data-academic-tab="communication">
+                    Communication
+                </button>
+            </div>
+
+            <div class="academic-overview" data-animate>
+                <article class="academic-brief">
+                    <span class="archive-label">Navigation Brief</span>
+                    <h3>How the coursework connects to real work</h3>
+                    <p>
+                        The archive is organized by the engineering ability each subject developed,
+                        not by grades or file names. Programming Fundamentals connects to QuizMaster
+                        and Tumble Pop, mathematics connects to analysis projects, and communication
+                        connects to reports, presentations, and case-study writing.
+                    </p>
+                    <div class="academic-route" aria-label="Coursework route">
+                        <span>PF</span>
+                        <span>OOP</span>
+                        <span>Physics</span>
+                        <span>Calculus</span>
+                        <span>Discrete</span>
+                        <span>Communication</span>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card is-active" id="coursework-pf" role="tabpanel" aria-labelledby="academic-tab-pf" data-academic-panel="pf">
+                    <span class="course-index">01</span>
+                    <h3>Programming Fundamentals</h3>
+                    <p>
+                        Built the base for C++ problem solving: input/output, branching, loops,
+                        functions, arrays, pointers, file handling, validation, and debugging.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>PF assignment briefs, Assignment 3 package, QuizMaster, and Tumble Pop.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to convert problem statements into working systems.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="assets/assignments/assignment-3-package.zip">Assignment Package</a>
+                        <a href="#projects">Related Missions</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-oop" role="tabpanel" aria-labelledby="academic-tab-oop" data-academic-panel="oop" hidden>
+                    <span class="course-index">02</span>
+                    <h3>Object-Oriented Programming</h3>
+                    <p>
+                        Strengthened the move from isolated functions toward responsibility-based
+                        design using classes, objects, constructors, encapsulation, memory, and
+                        cleaner project structure.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Flight Log chapter, Skills concept evidence, and structured project explanations.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows readiness to organize larger codebases with clearer ownership.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#flight-log-4">Flight Log</a>
+                        <a href="#skills">OOP Skill Evidence</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-physics" role="tabpanel" aria-labelledby="academic-tab-physics" data-academic-panel="physics" hidden>
+                    <span class="course-index">03</span>
+                    <h3>Applied Physics</h3>
+                    <p>
+                        Developed disciplined reasoning around vectors, motion, constraints,
+                        graphs, and cause-and-effect thinking that transfers into simulations,
+                        game movement, and mathematical modeling.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Flight Log academic chapter and motion-focused thinking used across interactive work.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows comfort reasoning about systems before turning them into code.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#flight-log-3">Academic Chapter</a>
+                        <a href="#skills">Modeling Concepts</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-calculus" role="tabpanel" aria-labelledby="academic-tab-calculus" data-academic-panel="calculus" hidden>
+                    <span class="course-index">04</span>
+                    <h3>Calculus</h3>
+                    <p>
+                        Practiced functions, limits, derivatives, optimization, integration,
+                        sequences, and analytical modeling, then connected those ideas to
+                        algorithm-growth analysis.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Course outline, four assignments, project statement, report, and Python-backed visuals.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to explain performance and change with measurable reasoning.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#calculus">Course Summary</a>
+                        <a href="#calculus-case-study">Case Study</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-discrete" role="tabpanel" aria-labelledby="academic-tab-discrete" data-academic-panel="discrete" hidden>
+                    <span class="course-index">05</span>
+                    <h3>Discrete Mathematics</h3>
+                    <p>
+                        Developed logic, sets, relations, proof thinking, combinatorics,
+                        induction, graphs, trees, similarity networks, and centrality-based
+                        analysis.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Course outline, PBS project statement, dataset, source package, presentation, and report.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to model real data as structures and extract useful signals.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="#discrete">Course Summary</a>
+                        <a href="#discrete-case-study">Case Study</a>
+                    </div>
+                </article>
+
+                <article class="academic-evidence-card" id="coursework-communication" role="tabpanel" aria-labelledby="academic-tab-communication" data-academic-panel="communication" hidden>
+                    <span class="course-index">06</span>
+                    <h3>Technical Communication</h3>
+                    <p>
+                        Turned technical work into readable reports, presentations, summaries,
+                        resource links, and case studies that explain objectives, process,
+                        challenges, results, and personal contribution.
+                    </p>
+                    <dl class="academic-proof">
+                        <div>
+                            <dt>Evidence</dt>
+                            <dd>Discrete technical report, presentation, calculus report, and portfolio case studies.</dd>
+                        </div>
+                        <div>
+                            <dt>Recruiter value</dt>
+                            <dd>Shows the ability to document decisions and make complex work understandable.</dd>
+                        </div>
+                    </dl>
+                    <div class="course-actions">
+                        <a href="assets/discrete/price-network-technical-report.pdf">Discrete Report</a>
+                        <a href="assets/calculus/search-algorithm-calculus-report.docx">Calculus Report</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="coursework-board" data-animate>
+                <article class="course-card featured-course">
+                    <div class="course-topline">
+                        <span>Evidence Flight Path</span>
+                        <strong>From coursework to projects</strong>
+                    </div>
+                    <h3>Assignments became the runway for completed systems.</h3>
+                    <p>
+                        The strongest pattern across the archive is progression: first I practiced
+                        fundamentals in focused assignments, then used the same habits in complete
+                        missions. QuizMaster required reliable file-driven state, Tumble Pop required
+                        interactive C++/SFML logic, and the math projects required reports backed by
+                        reproducible evidence.
+                    </p>
+                    <div class="course-visual" aria-hidden="true">
+                        <pre>COURSEWORK -> SKILLS -> MISSIONS
+PF          -> C++    -> QuizMaster
+PF + SFML   -> Loops  -> Tumble Pop
+Discrete    -> Graphs -> PBS Network
+Calculus    -> Models -> Search Analysis</pre>
+                    </div>
+                    <div class="tech-stack">
+                        <span>Problem Solving</span>
+                        <span>Debugging</span>
+                        <span>Analysis</span>
+                        <span>Communication</span>
+                    </div>
+                    <a class="btn secondary course-link" href="#timeline">Open Flight Log</a>
+                </article>
+
+                <div class="course-list">
+                    <article class="course-card">
+                        <span class="course-index">01</span>
+                        <h3>PF Assignment Evidence</h3>
+                        <p>
+                            The PF assignment set documents the earliest programming layer: reading
+                            briefs carefully, designing step-by-step logic, handling conditions, testing
+                            edge cases, and organizing C++ solutions before moving into larger projects.
+                        </p>
+                        <div class="course-actions">
+                            <a href="assets/assignments/assignment-1-fall-2025.pdf">Assignment 1</a>
+                            <a href="assets/assignments/assignment-2-fall-2025.pdf">Assignment 2</a>
+                            <a href="assets/assignments/assignment-3-package.zip">Assignment 3</a>
+                        </div>
+                    </article>
+
+                    <article class="course-card">
+                        <span class="course-index">02</span>
+                        <h3>Math and Analysis Evidence</h3>
+                        <p>
+                            Calculus and discrete mathematics added a second layer: modeling systems,
+                            building graphs, choosing metrics, comparing behavior, and explaining why a
+                            result is correct instead of only showing that a program runs.
+                        </p>
+                        <div class="course-actions">
+                            <a href="assets/calculus/calculus-course-outline.pdf">Calculus Outline</a>
+                            <a href="assets/discrete/pbs-price-network-data.xlsx">PBS Dataset</a>
+                            <a href="#projects">Project Links</a>
+                        </div>
+                    </article>
+
+                    <article class="course-card">
+                        <span class="course-index">03</span>
+                        <h3>Documentation Practice</h3>
+                        <p>
+                            Reports, presentations, and case studies prove the communication side of the
+                            work: describing the objective, method, challenges, results, and personal
+                            contribution in a format another person can review.
+                        </p>
+                        <div class="progress-lines" aria-hidden="true">
+                            <span style="--progress: 92%"></span>
+                            <span style="--progress: 84%"></span>
+                            <span style="--progress: 96%"></span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="discrete-section" id="discrete" aria-labelledby="discrete-title">
+            <div class="section-heading" data-animate>
+                <p class="eyebrow">Stage 04</p>
+                <h2 id="discrete-title">Discrete Mathematics Experience</h2>
+                <p>
+                    Where relationships became systems, and systems became engineering decisions.
+                    Discrete Mathematics changed how I think about information: instead of seeing
+                    isolated facts, I started looking for structure, connection, rules, and hidden
+                    patterns that can be modeled.
+                </p>
+            </div>
+
+            <div class="discrete-investigation" role="tablist" data-animate aria-label="Discrete mathematics investigation checkpoints">
+                <button class="discrete-checkpoint is-active" type="button" role="tab" aria-selected="true" aria-controls="discrete-relationships" id="discrete-tab-relationships" data-discrete-tab="relationships">Relationships</button>
+                <button class="discrete-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="discrete-logic" id="discrete-tab-logic" data-discrete-tab="logic">Logic</button>
+                <button class="discrete-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="discrete-graphs" id="discrete-tab-graphs" data-discrete-tab="graphs">Graphs</button>
+                <button class="discrete-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="discrete-network" id="discrete-tab-network" data-discrete-tab="network">Networks</button>
+                <button class="discrete-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="discrete-investigation-checkpoint" id="discrete-tab-investigation" data-discrete-tab="investigation">Investigation</button>
+                <button class="discrete-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="discrete-lessons-checkpoint" id="discrete-tab-lessons" data-discrete-tab="lessons">Lessons</button>
+            </div>
+
+            <div class="discrete-journal" data-discrete-journal>
+                <article class="discrete-chapter is-active" id="discrete-relationships" role="tabpanel" aria-labelledby="discrete-tab-relationships" data-discrete-panel="relationships" data-animate>
+                    <span>Observation 01</span>
+                    <h3>Thinking in Relationships</h3>
+                    <p>
+                        The first shift was learning that useful information rarely stands alone.
+                        A value, object, item, or decision becomes more meaningful when I understand
+                        what it is connected to and how those connections behave.
+                    </p>
+                    <p>
+                        This changed how I approached programs and datasets. I began asking which
+                        parts depend on each other, which cases are related, and which rules explain
+                        the behavior.
+                    </p>
+                    <div class="discrete-evidence-links" aria-label="Relationship thinking evidence">
+                        <a href="#coursework-discrete">Coursework Evidence</a>
+                        <a href="#flight-log-3">Flight Log Context</a>
+                    </div>
+                </article>
+
+                <article class="discrete-chapter" id="discrete-logic" role="tabpanel" aria-labelledby="discrete-tab-logic" data-discrete-panel="logic" data-animate hidden>
+                    <span>Observation 02</span>
+                    <h3>Logical Systems</h3>
+                    <p>
+                        Logic trained me to be more precise before writing code. It made me slow
+                        down and check whether a condition is true, whether a rule covers every case,
+                        and whether an assumption can break under a different input.
+                    </p>
+                    <p>
+                        That matters in engineering because bugs often come from unclear reasoning,
+                        not from syntax. Better logic means cleaner validation, safer decisions, and
+                        more reliable implementations.
+                    </p>
+                    <div class="discrete-evidence-links" aria-label="Logical systems evidence">
+                        <a href="#skills">Skills Console</a>
+                        <a href="#flight-log-3">Academic Flight Log</a>
+                    </div>
+                </article>
+
+                <article class="discrete-chapter" id="discrete-graphs" role="tabpanel" aria-labelledby="discrete-tab-graphs" data-discrete-panel="graphs" data-animate hidden>
+                    <span>Observation 03</span>
+                    <h3>Graph Thinking</h3>
+                    <p>
+                        Graphs gave me a practical language for systems. A node can represent an
+                        item, person, concept, or process. An edge can represent dependency,
+                        similarity, movement, or influence.
+                    </p>
+                    <p>
+                        Once I saw problems this way, complex information became easier to inspect.
+                        I could look for important nodes, weak connections, clusters, and paths
+                        through the system.
+                    </p>
+                    <div class="discrete-evidence-links" aria-label="Graph thinking evidence">
+                        <a href="#discrete-case-study" data-case-link aria-label="Read graph thinking case study evidence">PBS Case Study</a>
+                        <a href="assets/discrete/pbs-price-network-data.xlsx">Dataset</a>
+                    </div>
+                </article>
+
+                <article class="discrete-chapter" id="discrete-network" role="tabpanel" aria-labelledby="discrete-tab-network" data-discrete-panel="network" data-animate hidden>
+                    <span>Observation 04</span>
+                    <h3>Network Analysis</h3>
+                    <p>
+                        Network analysis moved the course from theory into engineering thinking.
+                        Instead of only asking whether two things are connected, I learned to ask
+                        how strong the connection is, how often it appears, and whether it changes
+                        over time.
+                    </p>
+                    <p>
+                        This helped me think about data as a living system rather than a static
+                        table. The important question became: what pattern does the structure reveal?
+                    </p>
+                    <div class="discrete-evidence-links" aria-label="Network analysis evidence">
+                        <a href="#projects">Mission Archive</a>
+                        <a href="assets/discrete/price-network-technical-report.pdf">Technical Report</a>
+                    </div>
+                </article>
+
+                <article class="discrete-chapter" id="discrete-investigation-checkpoint" role="tabpanel" aria-labelledby="discrete-tab-investigation" data-discrete-panel="investigation" data-animate hidden>
+                    <span>Observation 05</span>
+                    <h3>Engineering Investigation</h3>
+                    <p>
+                        The PBS price investigation became the point where the subject felt real.
+                        Consumer items were no longer just rows in a dataset. They became parts of
+                        a system where price movements could be compared, connected, and analyzed.
+                    </p>
+                    <p>
+                        The work connected mathematical structure with a real question: which items
+                        move together, and what does that say about the behavior of the wider market?
+                    </p>
+                    <div class="discrete-evidence-links" aria-label="Engineering investigation evidence">
+                        <a href="#discrete-case-study" data-case-link aria-label="Open PBS engineering investigation case study">Investigation Case Study</a>
+                        <a href="#flight-log-5">Mission Flight Log</a>
+                    </div>
+                </article>
+
+                <article class="discrete-chapter" id="discrete-lessons-checkpoint" role="tabpanel" aria-labelledby="discrete-tab-lessons" data-discrete-panel="lessons" data-animate hidden>
+                    <span>Observation 06</span>
+                    <h3>What Changed My Thinking</h3>
+                    <p>
+                        The biggest change was learning to search for systems inside complex
+                        information. When a problem looks messy, I now look for objects,
+                        relationships, constraints, and signals before trying to solve it directly.
+                    </p>
+                    <p>
+                        That mindset carries into programming, debugging, data analysis, and
+                        technical communication because it makes the work easier to explain and test.
+                    </p>
+                    <div class="discrete-evidence-links" aria-label="Engineering lessons evidence">
+                        <a href="#coursework">Academic Archive</a>
+                        <a href="#contact">Discuss the Work</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="discrete-investigation-controls" data-animate aria-label="Discrete investigation controls">
+                <button class="btn secondary" type="button" data-discrete-prev>Previous Observation</button>
+                <p data-discrete-status aria-live="polite">Observation 01 of 06 - Thinking in Relationships</p>
+                <button class="btn secondary" type="button" data-discrete-next>Next Observation</button>
+            </div>
+
+            <div class="pbs-investigation" data-animate>
+                <div>
+                    <p class="case-label">Engineering Investigation</p>
+                    <h3>PBS Price Co-Movement Network</h3>
+                    <p>
+                        The investigation asked a practical engineering question: can national price
+                        data reveal groups of consumer items that move together across cities and
+                        fiscal years?
+                    </p>
+                </div>
+                <div class="investigation-path" aria-label="PBS investigation process">
+                    <article>
+                        <span>Question</span>
+                        <p>Which items show similar price-change behavior?</p>
+                    </article>
+                    <article>
+                        <span>Observation</span>
+                        <p>Raw CPI data contains items, cities, months, and fiscal years.</p>
+                    </article>
+                    <article>
+                        <span>Relationships</span>
+                        <p>Item pairs can be compared by how their monthly changes move.</p>
+                    </article>
+                    <article>
+                        <span>Graph Model</span>
+                        <p>Items become nodes, and strong co-movement becomes an edge.</p>
+                    </article>
+                    <article>
+                        <span>Analysis</span>
+                        <p>Centrality, density, and yearly comparison reveal the structure.</p>
+                    </article>
+                    <article>
+                        <span>Insight</span>
+                        <p>The graph exposes patterns that are difficult to see in rows alone.</p>
+                    </article>
+                </div>
+                <div class="investigation-actions">
+                    <a class="btn secondary" href="#discrete-case-study" data-case-link aria-label="Read PBS price network investigation case study">Read Investigation Case Study</a>
+                    <a class="btn secondary" href="assets/discrete/discrete-structures-course-outline.docx">View Course Outline</a>
+                </div>
+            </div>
+
+            <div class="discrete-lessons" data-animate>
+                <p class="case-label">Engineering Lessons</p>
+                <h3>The strongest lesson was not proving theorems.</h3>
+                <p>
+                    It was learning to recognize systems inside complex information. Discrete
+                    Mathematics gave me a way to move from observation to structure, from structure
+                    to analysis, and from analysis to better engineering decisions.
+                </p>
+            </div>
+        </section>
+
+        <section class="calculus-section" id="calculus" aria-labelledby="calculus-title">
+            <div class="section-heading" data-animate>
+                <p class="eyebrow">Stage 05</p>
+                <h2 id="calculus-title">Calculus Experience</h2>
+                <p>
+                    Calculus became a way to reason about changing systems. It trained me to study
+                    motion, rates, thresholds, accumulation, and optimization before making an
+                    engineering decision.
+                </p>
+            </div>
+
+            <div class="calculus-record" data-animate aria-label="Calculus engineering record">
+                <span>FLIGHT ANALYSIS RECORD</span>
+                <span>Change / Motion / Optimization</span>
+                <span>Evidence: MT-1003 project and coursework</span>
+            </div>
+
+            <div class="calculus-investigation" role="tablist" data-animate aria-label="Calculus change and optimization investigations">
+                <button class="calculus-checkpoint is-active" type="button" role="tab" aria-selected="true" aria-controls="calculus-rates" id="calculus-tab-rates" data-calculus-tab="rates">Rates</button>
+                <button class="calculus-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="calculus-motion" id="calculus-tab-motion" data-calculus-tab="motion">Motion</button>
+                <button class="calculus-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="calculus-optimization" id="calculus-tab-optimization" data-calculus-tab="optimization">Optimization</button>
+                <button class="calculus-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="calculus-accumulation" id="calculus-tab-accumulation" data-calculus-tab="accumulation">Accumulation</button>
+                <button class="calculus-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="calculus-models" id="calculus-tab-models" data-calculus-tab="models">Models</button>
+                <button class="calculus-checkpoint" type="button" role="tab" aria-selected="false" aria-controls="calculus-growth" id="calculus-tab-growth" data-calculus-tab="growth">Growth</button>
+            </div>
+
+            <div class="calculus-grid" aria-label="Calculus reasoning areas" data-calculus-journal>
+                <article class="calculus-topic is-active" id="calculus-rates" role="tabpanel" aria-labelledby="calculus-tab-rates" data-calculus-panel="rates" data-animate>
+                    <span>01</span>
+                    <h3>Rates of Change</h3>
+                    <p>
+                        Derivatives helped me read change as a signal. Instead of only looking at a
+                        result, I learned to ask how quickly the result changes and what that says
+                        about the system.
+                    </p>
+                    <div class="calculus-evidence-links" aria-label="Rates of change evidence">
+                        <a href="#skills">Skills Console</a>
+                        <a href="#calculus-case-study" data-case-link>Search Analysis</a>
+                    </div>
+                </article>
+                <article class="calculus-topic" id="calculus-motion" role="tabpanel" aria-labelledby="calculus-tab-motion" data-calculus-panel="motion" data-animate hidden>
+                    <span>02</span>
+                    <h3>Motion and Direction</h3>
+                    <p>
+                        Working with functions, slopes, and curves strengthened how I think about
+                        movement, growth, decay, and direction across a continuous process.
+                    </p>
+                    <div class="calculus-evidence-links" aria-label="Motion and direction evidence">
+                        <a href="#coursework-calculus">Coursework Evidence</a>
+                        <a href="#flight-log-3">Academic Flight Log</a>
+                    </div>
+                </article>
+                <article class="calculus-topic" id="calculus-optimization" role="tabpanel" aria-labelledby="calculus-tab-optimization" data-calculus-panel="optimization" data-animate hidden>
+                    <span>03</span>
+                    <h3>Optimization Judgment</h3>
+                    <p>
+                        Optimization changed how I compare alternatives. I practiced identifying
+                        constraints, testing boundary cases, and looking for the point where a
+                        decision becomes most efficient.
+                    </p>
+                    <div class="calculus-evidence-links" aria-label="Optimization judgment evidence">
+                        <a href="#projects">Mission Archive</a>
+                        <a href="#calculus-case-study" data-case-link>Case Study</a>
+                    </div>
+                </article>
+                <article class="calculus-topic" id="calculus-accumulation" role="tabpanel" aria-labelledby="calculus-tab-accumulation" data-calculus-panel="accumulation" data-animate hidden>
+                    <span>04</span>
+                    <h3>Accumulation and Total Effect</h3>
+                    <p>
+                        Integration connected small local changes with total outcome. That made it
+                        easier to reason about accumulated cost, area, work, and long-term effect.
+                    </p>
+                    <div class="calculus-evidence-links" aria-label="Accumulation evidence">
+                        <a href="#coursework">Academic Archive</a>
+                        <a href="assets/calculus/calculus-course-outline.pdf">Course Outline</a>
+                    </div>
+                </article>
+                <article class="calculus-topic" id="calculus-models" role="tabpanel" aria-labelledby="calculus-tab-models" data-calculus-panel="models" data-animate hidden>
+                    <span>05</span>
+                    <h3>Continuous Models</h3>
+                    <p>
+                        Limits and continuity improved how I think about thresholds, undefined
+                        behavior, and systems that must remain stable as inputs approach critical
+                        values.
+                    </p>
+                    <div class="calculus-evidence-links" aria-label="Continuous models evidence">
+                        <a href="#discrete">Discrete Structure</a>
+                        <a href="assets/calculus/search-algorithm-calculus-report.docx">Project Report</a>
+                    </div>
+                </article>
+                <article class="calculus-topic" id="calculus-growth" role="tabpanel" aria-labelledby="calculus-tab-growth" data-calculus-panel="growth" data-animate hidden>
+                    <span>06</span>
+                    <h3>Approximation and Growth</h3>
+                    <p>
+                        Sequences, series, and graph-based verification helped me understand how
+                        approximations behave and how growth patterns become visible over time.
+                    </p>
+                    <div class="calculus-evidence-links" aria-label="Growth analysis evidence">
+                        <a href="#calculus-case-study" data-case-link>Search Analysis</a>
+                        <a href="#contact">Discuss the Work</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="calculus-investigation-controls" data-animate aria-label="Calculus investigation controls">
+                <button class="btn secondary" type="button" data-calculus-prev>Previous Investigation</button>
+                <p data-calculus-status aria-live="polite">Investigation 01 of 06 - Rates of Change</p>
+                <button class="btn secondary" type="button" data-calculus-next>Next Investigation</button>
+            </div>
+
+            <div class="calculus-impact" data-animate>
+                <div>
+                    <p class="case-label">Engineering Application</p>
+                    <h3>Search Algorithm Growth Analysis</h3>
+                </div>
+                <p>
+                    The MT-1003 project connected calculus with computer science by modeling Linear
+                    Search and Binary Search as functions, then using derivatives, graphs, and
+                    Python-generated evidence to compare how algorithm behavior changes as input
+                    size grows.
+                </p>
+                <div class="calculus-actions">
+                    <a class="btn secondary" href="#calculus-case-study" data-case-link aria-label="Read Search Algorithm Growth Analysis case study">Read Case Study</a>
+                    <a class="btn secondary" href="assets/calculus/search-algorithm-calculus-report.docx">View Report</a>
+                    <a class="btn secondary" href="assets/calculus/calculus-course-outline.pdf">Course Outline</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-section" id="projects" aria-labelledby="projects-title">
+            <div class="section-heading" data-animate>
+                <p class="eyebrow">Stage 06 / Completed Missions</p>
+                <h2 id="projects-title">Mission archives for the systems I completed.</h2>
+                <p>
+                    Each mission documents the problem, my implementation decisions,
+                    the technical evidence, and what the final result taught me as a
+                    computer science student.
+                </p>
+            </div>
+
+            <div class="mission-console" data-animate aria-label="Project mission archive overview">
+                <span>MISSION ARCHIVE // ACTIVE</span>
+                <span>4 completed builds</span>
+                <span>C++ / SFML / Python / Graph Theory / Calculus</span>
+            </div>
+
+            <div class="project-grid">
+                <article class="project-card mission-card" data-animate>
+                    <div class="project-topline">
+                        <span class="project-index">M-01</span>
+                        <span class="project-type">Learning System</span>
+                    </div>
+                    <h3>QuizMaster</h3>
+                    <p class="project-summary">
+                        A C++ console quiz system built from a Programming Fundamentals brief into a complete
+                        learning flow with difficulty levels, timers, records, logs, replay, and review.
+                    </p>
+                    <div class="mission-meta" aria-label="QuizMaster mission metadata">
+                        <span>Role: solo implementation</span>
+                        <span>Domain: PF logic and files</span>
+                        <span>Status: completed</span>
+                    </div>
+                    <div class="project-artifact quiz-artifact" aria-hidden="true">
+                        <div class="artifact-header">
+                            <span>QUIZMASTER.RUN</span>
+                            <span>Score 08/10</span>
+                        </div>
+                        <div class="artifact-terminal">
+                            <span style="--w: 86%"></span>
+                            <span style="--w: 64%"></span>
+                            <span style="--w: 74%"></span>
+                        </div>
+                        <div class="artifact-meter"><span></span></div>
+                    </div>
+                    <p class="project-insight">
+                        Engineering focus: reliable file handling, deterministic quiz state,
+                        replayable user flow, and score persistence inside a console-first interface.
+                    </p>
+                    <ul class="mission-brief" aria-label="QuizMaster engineering contribution">
+                        <li><strong>Built</strong> menu flow, question loading, random order, timing, scoring, records, and logs.</li>
+                        <li><strong>Solved</strong> state consistency across replay, wrong-answer review, and file writes.</li>
+                        <li><strong>Recruiter signal</strong> demonstrates C++ control flow, file persistence, and user-state management.</li>
+                    </ul>
+                    <ul class="project-features" aria-label="QuizMaster features">
+                        <li>Difficulty-based question files</li>
+                        <li>Timer, scoring, and replay flow</li>
+                        <li>High scores and quiz logs</li>
+                    </ul>
+                    <div class="tech-stack" aria-label="QuizMaster tech stack">
+                        <span>C++</span>
+                        <span>File Handling</span>
+                        <span>Arrays</span>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn secondary project-btn is-disabled" type="button" disabled aria-disabled="true" aria-label="QuizMaster source package is pending upload">Source Pending</button>
+                        <a class="btn primary project-btn" href="#quizmaster-case-study" data-case-link aria-label="Read QuizMaster case study">Case Study</a>
+                    </div>
+                </article>
+
+                <article class="project-card mission-card" data-animate>
+                    <div class="project-topline">
+                        <span class="project-index">M-02</span>
+                        <span class="project-type">Arcade Game</span>
+                    </div>
+                    <h3>Tumble Pop</h3>
+                    <p class="project-summary">
+                        A C++/SFML arcade project that turns a large PF game brief into player movement,
+                        collision, enemy capture, projectile release, dynamic storage, and boss behavior.
+                    </p>
+                    <div class="mission-meta" aria-label="Tumble Pop mission metadata">
+                        <span>Role: gameplay systems</span>
+                        <span>Domain: C++ and SFML</span>
+                        <span>Status: completed</span>
+                    </div>
+                    <div class="project-artifact game-artifact" aria-hidden="true">
+                        <div class="level-lane">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                        <div class="sprite-stage">
+                            <i></i><i></i><i></i>
+                        </div>
+                        <div class="boss-line"><span></span></div>
+                    </div>
+                    <p class="project-insight">
+                        Engineering focus: separating movement, collision, capture,
+                        projectile, and boss behaviors into predictable game systems.
+                    </p>
+                    <ul class="mission-brief" aria-label="Tumble Pop engineering contribution">
+                        <li><strong>Built</strong> movement, gravity, collision checks, vacuum capture, release logic, and boss states.</li>
+                        <li><strong>Solved</strong> large-feature complexity by shipping the game through testable milestones.</li>
+                        <li><strong>Recruiter signal</strong> shows C++/SFML game-loop thinking, collision logic, and dynamic storage.</li>
+                    </ul>
+                    <ul class="project-features" aria-label="Tumble Pop features">
+                        <li>Vacuum capture and release system</li>
+                        <li>360-degree aiming and projectiles</li>
+                        <li>Dynamic enemies and octopus boss</li>
+                    </ul>
+                    <div class="tech-stack" aria-label="Tumble Pop tech stack">
+                        <span>C++</span>
+                        <span>SFML</span>
+                        <span>Dynamic Memory</span>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn secondary project-btn is-disabled" type="button" disabled aria-disabled="true" aria-label="Tumble Pop source package is pending upload">Source Pending</button>
+                        <a class="btn primary project-btn" href="#tumble-pop-case-study" data-case-link aria-label="Read Tumble Pop case study">Case Study</a>
+                    </div>
+                </article>
+
+                <article class="project-card mission-card" data-animate>
+                    <div class="project-topline">
+                        <span class="project-index">M-03</span>
+                        <span class="project-type">Data Network</span>
+                    </div>
+                    <h3>Price Co-Movement Network</h3>
+                    <p class="project-summary">
+                        A graph-theory analysis of PBS CPI data that modeled consumer items as nodes and price co-movement as weighted edges.
+                    </p>
+                    <div class="mission-meta" aria-label="Price Co-Movement Network mission metadata">
+                        <span>Role: analysis and interpretation</span>
+                        <span>Domain: graph theory</span>
+                        <span>Status: completed</span>
+                    </div>
+                    <div class="project-artifact network-artifact" aria-hidden="true">
+                        <span class="node n1"></span>
+                        <span class="node n2"></span>
+                        <span class="node n3"></span>
+                        <span class="node n4"></span>
+                        <span class="edge e1"></span>
+                        <span class="edge e2"></span>
+                        <span class="edge e3"></span>
+                        <span class="edge e4"></span>
+                    </div>
+                    <p class="project-insight">
+                        Engineering focus: turning raw economic records into a weighted
+                        network that exposes central items and yearly movement patterns.
+                    </p>
+                    <ul class="mission-brief" aria-label="Price Co-Movement Network engineering contribution">
+                        <li><strong>Built</strong> a reproducible graph workflow from cleaned CPI data to centrality results.</li>
+                        <li><strong>Solved</strong> interpretation complexity by connecting density, persistent edges, and hubs.</li>
+                        <li><strong>Recruiter signal</strong> proves data modeling, graph reasoning, and evidence-backed analysis.</li>
+                    </ul>
+                    <ul class="project-features" aria-label="Price Co-Movement Network features">
+                        <li>31,212 PBS price records analyzed</li>
+                        <li>Cosine similarity and centrality metrics</li>
+                        <li>Temporal graph comparison across 3 years</li>
+                    </ul>
+                    <div class="tech-stack" aria-label="Price Co-Movement Network tech stack">
+                        <span>Python</span>
+                        <span>NetworkX</span>
+                        <span>Graph Theory</span>
+                    </div>
+                    <div class="project-actions">
+                        <a class="btn secondary project-btn" href="assets/discrete/price-network-source.zip" aria-label="Download Price Co-Movement Network source package">Source</a>
+                        <a class="btn primary project-btn" href="#discrete-case-study" data-case-link aria-label="Read Price Co-Movement Network case study">Case Study</a>
+                    </div>
+                </article>
+
+                <article class="project-card mission-card" data-animate>
+                    <div class="project-topline">
+                        <span class="project-index">M-04</span>
+                        <span class="project-type">Math + Algorithms</span>
+                    </div>
+                    <h3>Search Algorithm Growth Analysis</h3>
+                    <p class="project-summary">
+                        A calculus and Python study comparing Linear Search and Binary Search using functions, derivatives, thresholds, and graphs.
+                    </p>
+                    <div class="mission-meta" aria-label="Search Algorithm Growth Analysis mission metadata">
+                        <span>Role: modeling and visualization</span>
+                        <span>Domain: calculus and Python</span>
+                        <span>Status: completed</span>
+                    </div>
+                    <div class="project-artifact calc-artifact" aria-hidden="true">
+                        <span class="axis x-axis"></span>
+                        <span class="axis y-axis"></span>
+                        <span class="curve linear-curve"></span>
+                        <span class="curve binary-curve"></span>
+                        <span class="threshold-dot"></span>
+                    </div>
+                    <p class="project-insight">
+                        Engineering focus: using calculus to explain algorithm growth,
+                        not just report runtime numbers after execution.
+                    </p>
+                    <ul class="mission-brief" aria-label="Search Algorithm Growth Analysis engineering contribution">
+                        <li><strong>Built</strong> function models, derivative comparisons, threshold reasoning, and Python graphs.</li>
+                        <li><strong>Solved</strong> abstract explanation by making algorithm efficiency visible and measurable.</li>
+                        <li><strong>Recruiter signal</strong> connects algorithmic reasoning with mathematical modeling and Python verification.</li>
+                    </ul>
+                    <ul class="project-features" aria-label="Search Algorithm Growth Analysis features">
+                        <li>Modeled expected comparisons</li>
+                        <li>Compared growth rates using derivatives</li>
+                        <li>Visualized performance gaps with Python</li>
+                    </ul>
+                    <div class="tech-stack" aria-label="Search Algorithm Growth Analysis tech stack">
+                        <span>Calculus</span>
+                        <span>Python</span>
+                        <span>Algorithms</span>
+                    </div>
+                    <div class="project-actions">
+                        <a class="btn secondary project-btn" href="assets/calculus/search-algorithm-calculus-report.docx" aria-label="Download Search Algorithm Growth Analysis report">Report</a>
+                        <a class="btn primary project-btn" href="#calculus-case-study" data-case-link aria-label="Read Search Algorithm Growth Analysis case study">Case Study</a>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <section class="case-study-section quiz-case-study" id="quizmaster-case-study" aria-labelledby="quizmaster-title" data-case-study hidden>
+            <button class="case-close" type="button" data-case-close aria-label="Close QuizMaster case study">Close Case Study</button>
+            <div class="case-study-hero" data-animate>
+                <div class="case-study-copy">
+                    <p class="eyebrow">Case Study</p>
+                    <h2 id="quizmaster-title">QuizMaster - Console Quiz Challenge</h2>
+                    <p>
+                        I completed QuizMaster as a C++ Programming Fundamentals project by turning the
+                        assignment requirements into a complete console quiz system with difficulty levels,
+                        randomized questions, timed answers, score records, logs, replay, and wrong-answer review.
+                    </p>
+                </div>
+
+                <div class="quiz-terminal" aria-label="QuizMaster terminal preview">
+                    <div class="panel-top">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="terminal-lines">
+                        <p>&gt; QUIZ CHALLENGE</p>
+                        <p>1. Play Quiz</p>
+                        <p>2. Show Records</p>
+                        <p>3. Add Question</p>
+                        <p>Difficulty: Advanced</p>
+                        <p class="terminal-highlight">Score saved to records.txt</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Build a reusable quiz application that could load questions externally, manage difficulty, time answers, save records, and support replay.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I designed the menu, split the quiz into functions, managed arrays for question order, handled files for persistence, and kept the flow understandable for users.</p>
+                </article>
+                <article>
+                    <span>Outcome / Recruiter Signal</span>
+                    <p>The final system behaved like a complete PF application with input handling, state transitions, score history, quiz logs, and a wrong-answer review loop.</p>
+                </article>
+            </div>
+
+            <div class="case-study-grid">
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Challenge</span>
+                    <h3>Building a full quiz system in C++</h3>
+                    <p>
+                        The project required a main menu, question bank, difficulty levels, randomized order,
+                        score calculation, timer checks, high scores, logs, replay, and review of wrong answers.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Approach</span>
+                    <h3>I separated the work into functions</h3>
+                    <p>
+                        I used `beginGame()` for the quiz flow, `showRecords()` for the leaderboard, and
+                        `addExtraQuestion()` for the bonus feature so each part had a clear responsibility.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Result</span>
+                    <h3>A complete console experience</h3>
+                    <p>
+                        The final project loads questions from files, shuffles quiz order, tracks answers,
+                        stores records, writes quiz logs, and allows users to add new questions for review.
+                    </p>
+                </article>
+            </div>
+
+            <div class="quiz-flow" data-animate>
+                <article>
+                    <span>01</span>
+                    <h3>Menu and Difficulty</h3>
+                    <p>I started with the core menu and mapped each difficulty to its own file: `level1.txt`, `level2.txt`, and `level3.txt`.</p>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>Gameplay Logic</h3>
+                    <p>I loaded questions into arrays, shuffled an order array, checked answers, and counted correct and wrong attempts.</p>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>Persistence</h3>
+                    <p>I used file handling to save `records.txt`, write `quiz_logs.txt`, and store suggested questions in `extra_questions.txt`.</p>
+                </article>
+                <article>
+                    <span>04</span>
+                    <h3>Review and Replay</h3>
+                    <p>I stored wrong questions during the quiz so the player could review mistakes before choosing to replay.</p>
+                </article>
+            </div>
+
+            <div class="implementation-sheet quiz-sheet" data-animate>
+                <div class="sheet-header">
+                    <div>
+                        <p class="case-label">Project Spreadsheet</p>
+                        <h3>QuizMaster Implementation Tracker</h3>
+                    </div>
+                    <span>PF Project - Console Quiz Game</span>
+                </div>
+
+                <div class="sheet-table-wrap">
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Requirement</th>
+                                <th>How I Completed It</th>
+                                <th>File / Concept</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Phase 1</td>
+                                <td>Main menu and quiz start</td>
+                                <td>I created a console menu for playing the quiz, viewing records, adding questions, and exiting.</td>
+                                <td>C++ conditionals, functions</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 1</td>
+                                <td>Question bank by difficulty</td>
+                                <td>I separated beginner, intermediate, and advanced questions into external text files.</td>
+                                <td>level1.txt, level2.txt, level3.txt</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 2</td>
+                                <td>Randomized quiz order</td>
+                                <td>I used an order array and shuffled indexes so every attempt could show a different sequence.</td>
+                                <td>srand(), rand(), arrays</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 2</td>
+                                <td>Timed questions and scoring</td>
+                                <td>I measured answer time with `time(0)` and `difftime()` and counted timed-out answers as wrong.</td>
+                                <td>ctime, score logic</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 3</td>
+                                <td>High scores and logs</td>
+                                <td>I saved scores in `records.txt`, sorted the top records, and wrote session activity into `quiz_logs.txt`.</td>
+                                <td>ifstream, ofstream, bubble sort</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Bonus</td>
+                                <td>Add new questions</td>
+                                <td>I added a feature that stores user-submitted questions in `extra_questions.txt` with difficulty labels.</td>
+                                <td>File append, input handling</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="case-metrics" data-animate>
+                <article>
+                    <span>01</span>
+                    <h3>Modular Code</h3>
+                    <p>I kept gameplay, records, and question addition in separate functions to make the program easier to explain.</p>
+                    <div class="metric-bar"><span style="--progress: 92%"></span></div>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>File Handling</h3>
+                    <p>I used external files for question banks, records, logs, and submitted questions.</p>
+                    <div class="metric-bar"><span style="--progress: 95%"></span></div>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>User Experience</h3>
+                    <p>I added timer feedback, replay, score summary, leaderboard, and wrong-answer review.</p>
+                    <div class="metric-bar"><span style="--progress: 89%"></span></div>
+                </article>
+            </div>
+
+            <div class="case-analytics" data-animate>
+                <div class="analytics-heading">
+                    <p class="case-label">Deeper Analysis</p>
+                    <h3>How QuizMaster became a complete PF system</h3>
+                    <p>
+                        The important part of this project was not only displaying questions. I had to
+                        design a repeatable quiz flow where file input, randomized selection, time limits,
+                        scoring, records, and review all worked together without breaking the user journey.
+                    </p>
+                </div>
+                <div class="analysis-graphs">
+                    <article class="graph-card">
+                        <span>Feature Coverage</span>
+                        <div class="bar-graph" aria-label="QuizMaster feature coverage graph">
+                            <i style="--value: 92%"><b>Menu</b></i>
+                            <i style="--value: 95%"><b>Files</b></i>
+                            <i style="--value: 88%"><b>Timer</b></i>
+                            <i style="--value: 90%"><b>Logs</b></i>
+                        </div>
+                    </article>
+                    <article class="graph-card">
+                        <span>Data Flow</span>
+                        <div class="flow-graph">
+                            <b>Question Files</b>
+                            <b>Shuffle Array</b>
+                            <b>Quiz Attempt</b>
+                            <b>Records + Logs</b>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="case-summary-final" data-animate>
+                <p class="case-label">Most Important Summary</p>
+                <h3>What I did in QuizMaster</h3>
+                <p>
+                    I built QuizMaster as a complete C++ console application, not a small quiz script.
+                    I handled the menu system, difficulty-based question files, randomized order, timing,
+                    scoring, wrong-answer review, high-score storage, quiz logs, and question submission.
+                    This project proved that I can turn a Programming Fundamentals brief into a structured,
+                    testable, file-driven application with clear user flow. For a recruiter, the strongest
+                    signal is disciplined C++ state management without relying on a framework.
+                </p>
+            </div>
+        </section>
+
+        <section class="case-study-section" id="tumble-pop-case-study" aria-labelledby="tumble-pop-title" data-case-study hidden>
+            <button class="case-close" type="button" data-case-close aria-label="Close Tumble Pop case study">Close Case Study</button>
+            <div class="case-study-hero" data-animate>
+                <div class="case-study-copy">
+                    <p class="eyebrow">Case Study</p>
+                    <h2 id="tumble-pop-title">Tumble Pop - PF Project Build</h2>
+                    <p>
+                        I completed Tumble Pop as a Programming Fundamentals game project by breaking a large
+                        arcade-style brief into smaller systems: player control, collision, level rendering,
+                        enemy capture, projectile release, dynamic memory, and the final boss sequence.
+                    </p>
+                </div>
+
+                <div class="case-study-visual" aria-label="Tumble Pop project artwork">
+                    <img src="assets/images/tumble-pop/Octopus.png" alt="Octopus boss sprite">
+                    <img src="assets/images/tumble-pop/min1.png" alt="Tumble Pop minion sprite">
+                    <img src="assets/images/tumble-pop/revolve.png" alt="Rotating vacuum direction sprite">
+                </div>
+            </div>
+
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Transform a multi-phase arcade game statement into a playable C++/SFML build with movement, collisions, capture mechanics, dynamic enemies, and a boss encounter.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I worked system by system: first the SFML window and level, then player physics, then capture and release mechanics, then dynamic storage and boss behavior.</p>
+                </article>
+                <article>
+                    <span>Outcome / Recruiter Signal</span>
+                    <p>The project became manageable because each feature had a testable responsibility before it was integrated with the rest of the game loop.</p>
+                </article>
+            </div>
+
+            <div class="case-study-grid">
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Challenge</span>
+                    <h3>Turning a complex brief into playable systems</h3>
+                    <p>
+                        The assignment required more than a simple platformer. I had to support two player
+                        styles, four-direction movement in Phase 1, 360-degree vacuum aiming in Phase 2,
+                        enemy capture and release, dynamic enemy producers, cloud behavior, and an octopus boss.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Approach</span>
+                    <h3>I built the game in layers</h3>
+                    <p>
+                        I started from the SFML skeleton, verified the window, level grid, gravity, textures,
+                        and music first, then added mechanics one by one. This helped me test each feature
+                        before combining it with the next system.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Result</span>
+                    <h3>A structured arcade project</h3>
+                    <p>
+                        The final build became easier to manage because every major feature had a clear role:
+                        rendering handled the world, collision handled movement, capture storage handled enemies,
+                        and boss logic handled the final challenge.
+                    </p>
+                </article>
+            </div>
+
+            <div class="case-study-showcase" data-animate>
+                <div class="showcase-screen">
+                    <img src="assets/images/tumble-pop/bg.png" alt="Tumble Pop background level preview">
+                    <div class="sprite-row" aria-label="Tumble Pop sprites used in the project">
+                        <img src="assets/images/tumble-pop/Arcade%20-%20Tumble%20Pop%20-%20Playable%20Characters%20-%20Tumblepoppers.png" alt="Playable Tumble Pop characters">
+                        <img src="assets/images/tumble-pop/Arcade%20-%20Tumble%20Pop%20-%20Enemies%20-%20Ghost.png" alt="Ghost enemy sprite">
+                        <img src="assets/images/tumble-pop/Tentacles.png" alt="Octopus tentacle sprite">
+                    </div>
+                </div>
+
+                <div class="showcase-copy">
+                    <p class="case-label">How I Worked Efficiently</p>
+                    <h3>I followed a milestone-based workflow</h3>
+                    <p>
+                        Instead of trying to code the whole game at once, I separated the project into testable
+                        milestones. I first made sure the player, level grid, gravity, and collisions worked.
+                        After that, I implemented enemy behavior, vacuum capture, release logic, and dynamic
+                        resizing. The boss level was added last because it depended on all previous systems.
+                    </p>
+                </div>
+            </div>
+
+            <div class="implementation-sheet" data-animate>
+                <div class="sheet-header">
+                    <div>
+                        <p class="case-label">Project Spreadsheet</p>
+                        <h3>Implementation Tracker</h3>
+                    </div>
+                    <span>PF Project - Tumble Pop</span>
+                </div>
+
+                <div class="sheet-table-wrap">
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Requirement</th>
+                                <th>How I Completed It</th>
+                                <th>Tech / Concept</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Phase 1</td>
+                                <td>Level, player, gravity, and collisions</td>
+                                <td>I used the provided SFML skeleton, grid-based tiles, collision points, and gravity checks.</td>
+                                <td>SFML, arrays, collision logic</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 1</td>
+                                <td>Vacuum capture and enemy release</td>
+                                <td>I treated captured enemies like a stack so the last captured enemy could be released first.</td>
+                                <td>LIFO logic, keyboard input</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 2</td>
+                                <td>360-degree aiming for Yellow Tumblepopper</td>
+                                <td>I connected direction control to projectile movement so enemies could release by angle.</td>
+                                <td>Trigonometry, vectors</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 2</td>
+                                <td>Dynamic enemy storage</td>
+                                <td>I resized the captured-enemy structure only when needed so memory matched the current count.</td>
+                                <td>Dynamic memory, pointers</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                            <tr>
+                                <td>Boss</td>
+                                <td>Octopus boss, minions, and tentacles</td>
+                                <td>I reused capture and resize logic for boss minions and tentacle behavior to keep the design consistent.</td>
+                                <td>Runtime spawning, game states</td>
+                                <td><span class="status-chip done">Complete</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="case-metrics" data-animate>
+                <article>
+                    <span>01</span>
+                    <h3>System First</h3>
+                    <p>I completed the core mechanics before polishing visuals, which kept debugging simple.</p>
+                    <div class="metric-bar"><span style="--progress: 94%"></span></div>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>Memory Focus</h3>
+                    <p>I used dynamic allocation carefully for captured enemies and boss-related objects.</p>
+                    <div class="metric-bar"><span style="--progress: 88%"></span></div>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>Feature Testing</h3>
+                    <p>I tested movement, suction, release, enemies, and boss behavior as separate milestones.</p>
+                    <div class="metric-bar"><span style="--progress: 91%"></span></div>
+                </article>
+            </div>
+
+            <div class="case-analytics" data-animate>
+                <div class="analytics-heading">
+                    <p class="case-label">Deeper Analysis</p>
+                    <h3>How I controlled complexity in Tumble Pop</h3>
+                    <p>
+                        The project had many moving parts, so I treated the game like a set of connected
+                        systems. Movement, collision, capture, release, enemy storage, and boss behavior
+                        were built as milestones, then integrated after each piece was testable.
+                    </p>
+                </div>
+                <div class="analysis-graphs">
+                    <article class="graph-card">
+                        <span>System Difficulty</span>
+                        <div class="bar-graph" aria-label="Tumble Pop system difficulty graph">
+                            <i style="--value: 78%"><b>Movement</b></i>
+                            <i style="--value: 84%"><b>Collision</b></i>
+                            <i style="--value: 92%"><b>Vacuum</b></i>
+                            <i style="--value: 96%"><b>Boss</b></i>
+                        </div>
+                    </article>
+                    <article class="graph-card">
+                        <span>Build Sequence</span>
+                        <div class="flow-graph">
+                            <b>SFML Setup</b>
+                            <b>Grid + Gravity</b>
+                            <b>Enemy Systems</b>
+                            <b>Boss Stage</b>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="case-summary-final" data-animate>
+                <p class="case-label">Most Important Summary</p>
+                <h3>What I did in Tumble Pop</h3>
+                <p>
+                    I completed Tumble Pop by converting a large SFML game brief into manageable C++
+                    systems. I implemented player control, tile collisions, gravity, sprite rendering,
+                    enemy capture, projectile release, dynamic enemy storage, and boss-level behavior.
+                    The most important achievement was that I learned how to manage a large project
+                    through milestones instead of writing everything at once. For a recruiter, it shows
+                    I can break an interactive system into testable mechanics before integration.
+                </p>
+            </div>
+        </section>
+
+        <section class="case-study-section calculus-case-study" id="calculus-case-study" aria-labelledby="calculus-case-title" data-case-study hidden>
+            <button class="case-close" type="button" data-case-close aria-label="Close Calculus project case study">Close Case Study</button>
+
+            <div class="case-study-hero" data-animate>
+                <div class="case-study-copy">
+                    <p class="eyebrow">Case Study</p>
+                    <h2 id="calculus-case-title">Analyzing Binary Search vs Linear Search</h2>
+                    <p>
+                        This MT-1003 project connected calculus with computer science by modeling
+                        search algorithms as mathematical functions. The project compared expected
+                        comparisons, growth rates, derivatives, threshold behavior, and Python-generated
+                        visualizations.
+                    </p>
+                </div>
+
+                <div class="formula-visual" aria-label="Calculus algorithm comparison preview">
+                    <p>L(n) = (n + 1) / 2</p>
+                    <p>B(n) = log2(n)</p>
+                    <div class="formula-lines">
+                        <span class="linear-line"></span>
+                        <span class="log-line"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Use calculus to explain why two search strategies behave differently as input size grows, then verify the reasoning with Python-generated evidence.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I helped model expected comparisons as functions, compare growth rates through derivatives, interpret thresholds, and convert the results into visual graphs.</p>
+                </article>
+                <article>
+                    <span>Outcome / Recruiter Signal</span>
+                    <p>The final report connected programming and mathematics in a way that made Binary Search efficiency understandable, measurable, and presentation-ready.</p>
+                </article>
+            </div>
+
+            <div class="case-study-grid">
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Problem</span>
+                    <h3>Comparing two search strategies</h3>
+                    <p>
+                        The project studied why Linear Search becomes inefficient for large inputs
+                        while Binary Search scales better when data is sorted.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Method</span>
+                    <h3>Calculus plus Python verification</h3>
+                    <p>
+                        We derived L(n) and B(n), computed derivatives to compare growth rates,
+                        solved a threshold inequality, and verified the results using Python.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Result</span>
+                    <h3>Logarithmic growth wins at scale</h3>
+                    <p>
+                        The graphs and tables showed that Linear Search grows steadily with input
+                        size, while Binary Search grows slowly because every step halves the search space.
+                    </p>
+                </article>
+            </div>
+
+            <div class="calculus-showcase" data-animate>
+                <div class="calc-image-panel">
+                    <img src="assets/calculus/images/report-image-23.jpeg" alt="Comparison graph of Linear Search and Binary Search">
+                    <img src="assets/calculus/images/report-image-22.jpeg" alt="Derivative graph of Linear Search and Binary Search">
+                </div>
+                <div class="showcase-copy">
+                    <p class="case-label">What We Made</p>
+                    <h3>A full analytical and computational comparison</h3>
+                    <p>
+                        The project included manual derivations, Python symbolic expressions, graph
+                        plotting, derivative comparison, threshold analysis, and a table of comparison
+                        values for different input sizes. It turned an algorithmic topic into a calculus
+                        model that could be reasoned about visually and mathematically.
+                    </p>
+                </div>
+            </div>
+
+            <div class="implementation-sheet" data-animate>
+                <div class="sheet-header">
+                    <div>
+                        <p class="case-label">Analysis Tracker</p>
+                        <h3>Project Method and Results</h3>
+                    </div>
+                    <span>MT-1003 Calculus Project</span>
+                </div>
+
+                <div class="sheet-table-wrap">
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th>Stage</th>
+                                <th>What Was Done</th>
+                                <th>Calculus Concept</th>
+                                <th>Professional Outcome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Modeling</td>
+                                <td>Defined expected comparisons as L(n) = (n + 1) / 2 and B(n) = log2(n).</td>
+                                <td>Functions and growth</td>
+                                <td>Converted algorithm behavior into clear mathematical expressions.</td>
+                            </tr>
+                            <tr>
+                                <td>Derivatives</td>
+                                <td>Compared d/dn L(n) and d/dn B(n) to understand rate of change.</td>
+                                <td>Differentiation</td>
+                                <td>Showed that Linear Search grows faster as input size increases.</td>
+                            </tr>
+                            <tr>
+                                <td>Threshold</td>
+                                <td>Solved where Linear Search becomes significantly slower than Binary Search.</td>
+                                <td>Inequalities and approximation</td>
+                                <td>Identified the point where Binary Search becomes clearly more efficient.</td>
+                            </tr>
+                            <tr>
+                                <td>Visualization</td>
+                                <td>Plotted functions and derivatives using Python to verify the manual work.</td>
+                                <td>Graph interpretation</td>
+                                <td>Made the performance gap easy to understand and present.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="case-study-showcase" data-animate>
+                <div class="challenge-list">
+                    <article>
+                        <span>Challenge</span>
+                        <p>Connecting abstract calculus formulas with algorithm behavior in a way that was mathematically correct and easy to explain.</p>
+                    </article>
+                    <article>
+                        <span>Solution</span>
+                        <p>We separated the project into derivation, Python verification, visualization, and interpretation so each result could be checked twice.</p>
+                    </article>
+                    <article>
+                        <span>Learning</span>
+                        <p>The project clarified how calculus can explain computational efficiency, not just physical motion or geometry.</p>
+                    </article>
+                </div>
+
+                <div class="calc-image-panel compact">
+                    <img src="assets/calculus/images/report-image-20.jpeg" alt="Calculus project contribution and summary page">
+                    <img src="assets/calculus/images/report-image-10.jpeg" alt="Python code screenshot from calculus project">
+                </div>
+            </div>
+
+            <div class="resource-grid" data-animate>
+                <a href="assets/calculus/search-algorithm-calculus-report.docx">
+                    <span>Project Report</span>
+                    Complete report with manual work, Python outputs, graphs, and conclusion.
+                </a>
+                <a href="assets/calculus/calculus-project-statement.pdf">
+                    <span>Project Statement</span>
+                    Original MT-1003 project requirements and evaluation criteria.
+                </a>
+                <a href="assets/calculus/calculus-course-outline.pdf">
+                    <span>Course Outline</span>
+                    Topics covered in Calculus and Analytical Geometry.
+                </a>
+                <a href="assets/calculus/calculus-assignment-1.pdf">
+                    <span>Assignment 1</span>
+                    Function modeling, domains, optimization setup, and applied problems.
+                </a>
+                <a href="assets/calculus/calculus-assignment-2.pdf">
+                    <span>Assignment 2</span>
+                    Derivatives, rates of change, tangent lines, and marginal analysis.
+                </a>
+                <a href="assets/calculus/calculus-assignment-3.pdf">
+                    <span>Assignment 3</span>
+                    Related rates and multi-variable change interpretation.
+                </a>
+                <a href="assets/calculus/calculus-assignment-4.pdf">
+                    <span>Assignment 4</span>
+                    Interpolation, differentials, catenaries, and applied approximation.
+                </a>
+            </div>
+
+            <div class="case-analytics" data-animate>
+                <div class="analytics-heading">
+                    <p class="case-label">Deeper Analysis</p>
+                    <h3>What the calculus proved</h3>
+                    <p>
+                        The core result was that calculus made algorithm behavior measurable. Linear
+                        Search increases almost directly with input size, while Binary Search grows
+                        slowly because each comparison removes half of the remaining search space.
+                    </p>
+                </div>
+                <div class="analysis-graphs">
+                    <article class="graph-card">
+                        <span>Growth Comparison</span>
+                        <div class="growth-graph" aria-label="Linear versus logarithmic growth graph">
+                            <i class="growth-linear"></i>
+                            <i class="growth-log"></i>
+                            <em>n</em>
+                            <strong>comparisons</strong>
+                        </div>
+                    </article>
+                    <article class="graph-card">
+                        <span>Analytical Method</span>
+                        <div class="flow-graph">
+                            <b>Define Functions</b>
+                            <b>Differentiate</b>
+                            <b>Find Threshold</b>
+                            <b>Verify in Python</b>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="case-summary-final" data-animate>
+                <p class="case-label">Most Important Summary</p>
+                <h3>What I did in the Calculus project</h3>
+                <p>
+                    I helped turn Linear Search and Binary Search into mathematical models, compared
+                    their growth using functions and derivatives, interpreted the threshold where Binary
+                    Search becomes clearly better, and supported the work with Python graphs. This project
+                    shows that I can connect programming with mathematical reasoning and explain algorithm
+                    efficiency in a visual, evidence-based way. For a recruiter, it shows technical
+                    communication around algorithms, not only code execution.
+                </p>
+            </div>
+        </section>
+
+        <section class="case-study-section discrete-case-study" id="discrete-case-study" aria-labelledby="discrete-case-title" data-case-study hidden>
+            <button class="case-close" type="button" data-case-close aria-label="Close Discrete project case study">Close Case Study</button>
+
+            <div class="case-study-hero" data-animate>
+                <div class="case-study-copy">
+                    <p class="eyebrow">Case Study</p>
+                    <h2 id="discrete-case-title">Item-Level Price Co-Movement Network</h2>
+                    <p>
+                        We built a reproducible Discrete Structures project that uses Pakistan Bureau
+                        of Statistics CPI data to model consumer items as graph nodes. Two items are
+                        connected when their monthly price-change patterns move similarly across a
+                        sufficient number of cities.
+                    </p>
+                </div>
+
+                <div class="network-visual" aria-label="Discrete graph network preview">
+                    <span class="node n1">Fuel</span>
+                    <span class="node n2">Milk</span>
+                    <span class="node n3">Daal</span>
+                    <span class="node n4">Oil</span>
+                    <span class="node n5">Bread</span>
+                    <span class="edge e1"></span>
+                    <span class="edge e2"></span>
+                    <span class="edge e3"></span>
+                    <span class="edge e4"></span>
+                </div>
+            </div>
+
+            <div class="mission-briefing" data-animate>
+                <article>
+                    <span>Mission Objective</span>
+                    <p>Turn PBS price statistics into a graph model that reveals which consumer items move together across cities and fiscal years.</p>
+                </article>
+                <article>
+                    <span>My Implementation</span>
+                    <p>I focused on graph interpretation, centrality findings, year-to-year comparison, persistent item pairs, and presenting the analysis in a professional format.</p>
+                </article>
+                <article>
+                    <span>Outcome / Recruiter Signal</span>
+                    <p>The case study shows how discrete structures can explain a real dataset through nodes, edges, similarity thresholds, centrality, and temporal change.</p>
+                </article>
+            </div>
+
+            <div class="case-study-grid">
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Problem</span>
+                    <h3>Finding items that move together</h3>
+                    <p>
+                        The project asked us to analyze CPI item prices across cities and years,
+                        then identify which consumer items show similar price increase/decrease
+                        patterns.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">Model</span>
+                    <h3>Items as graph nodes</h3>
+                    <p>
+                        Each item became a node. We computed monthly price-change vectors, compared
+                        item pairs using cosine similarity, and added an edge when at least K cities
+                        crossed the similarity threshold.
+                    </p>
+                </article>
+
+                <article class="case-panel" data-animate>
+                    <span class="case-label">My Role</span>
+                    <h3>Visualization and interpretation</h3>
+                    <p>
+                        My contribution focused on interpreting category connectivity, sensitivity
+                        analysis, network graphs, centrality charts, temporal comparisons, and final
+                        result explanation.
+                    </p>
+                </article>
+            </div>
+
+            <div class="discrete-stats" data-animate>
+                <article>
+                    <strong>31,212</strong>
+                    <span>Compiled PBS price records</span>
+                </article>
+                <article>
+                    <strong>64</strong>
+                    <span>Consumer items modeled as nodes</span>
+                </article>
+                <article>
+                    <strong>17</strong>
+                    <span>Cities used in similarity comparison</span>
+                </article>
+                <article>
+                    <strong>3</strong>
+                    <span>Fiscal years analyzed from 2023 to 2026</span>
+                </article>
+            </div>
+
+            <div class="analysis-pipeline" data-animate>
+                <div class="pipeline-step">
+                    <span>01</span>
+                    <h3>Clean Data</h3>
+                    <p>Loaded the PBS dataset, standardized fields, handled missing prices, and prepared a continuous item-city time series.</p>
+                </div>
+                <div class="pipeline-step">
+                    <span>02</span>
+                    <h3>Build Vectors</h3>
+                    <p>Converted monthly prices into price-change vectors using month-to-month differences instead of raw prices.</p>
+                </div>
+                <div class="pipeline-step">
+                    <span>03</span>
+                    <h3>Compare Items</h3>
+                    <p>Computed cosine similarity for each item pair in each city to measure whether prices moved in the same direction.</p>
+                </div>
+                <div class="pipeline-step">
+                    <span>04</span>
+                    <h3>Create Graphs</h3>
+                    <p>Created yearly weighted graphs using TAU = 0.6 and K = 3, then analyzed centrality and temporal changes.</p>
+                </div>
+            </div>
+
+            <div class="implementation-sheet" data-animate>
+                <div class="sheet-header">
+                    <div>
+                        <p class="case-label">Results Spreadsheet</p>
+                        <h3>Graph Results and Interpretation</h3>
+                    </div>
+                    <span>PBS CPI Data 2023-2026</span>
+                </div>
+
+                <div class="sheet-table-wrap">
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Edges</th>
+                                <th>Density</th>
+                                <th>Average Degree</th>
+                                <th>Interpretation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2023-24</td>
+                                <td>232</td>
+                                <td>0.1151</td>
+                                <td>7.25</td>
+                                <td>Peak inflation synchronized many categories, producing the densest graph.</td>
+                            </tr>
+                            <tr>
+                                <td>2024-25</td>
+                                <td>87</td>
+                                <td>0.0432</td>
+                                <td>2.72</td>
+                                <td>Price movement became more independent, causing a 62% edge drop.</td>
+                            </tr>
+                            <tr>
+                                <td>2025-26</td>
+                                <td>105</td>
+                                <td>0.0521</td>
+                                <td>3.28</td>
+                                <td>The network partially recovered with more selective co-movement patterns.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="case-study-showcase" data-animate>
+                <div class="showcase-copy">
+                    <p class="case-label">Outcome</p>
+                    <h3>What we discovered</h3>
+                    <p>
+                        The analysis showed that inflation can synchronize unrelated categories.
+                        Ten commodity pairs stayed connected across all three years, including
+                        Petrol/Diesel, Milk/Curd, Sugar/Gur, oil pairs, pulse substitutes, and
+                        meat substitutes. Around 69-75% of edges crossed category boundaries,
+                        showing that price shocks spread systemically across the consumer basket.
+                    </p>
+                </div>
+
+                <div class="challenge-list">
+                    <article>
+                        <span>Challenge</span>
+                        <p>Raw PBS data had missing values and inconsistent reporting across item-city-month combinations.</p>
+                    </article>
+                    <article>
+                        <span>Solution</span>
+                        <p>We cleaned prices, filled gaps carefully, used price differences, and excluded zero-norm vectors from similarity calculations.</p>
+                    </article>
+                    <article>
+                        <span>Analysis</span>
+                        <p>We used degree, closeness, and betweenness centrality to identify hubs, bridges, and structurally important items.</p>
+                    </article>
+                </div>
+            </div>
+
+            <div class="resource-grid" data-animate>
+                <a href="assets/discrete/price-network-technical-report.pdf">
+                    <span>Technical Report</span>
+                    Full methodology, results, limitations, and references.
+                </a>
+                <a href="assets/discrete/price-network-presentation.pptx">
+                    <span>Presentation Slides</span>
+                    Project highlights, visual analysis, and final conclusions.
+                </a>
+                <a href="assets/discrete/pbs-price-network-data.xlsx">
+                    <span>Excel Dataset</span>
+                    Compiled PBS CPI data with 31,212 records.
+                </a>
+                <a href="assets/discrete/price-network-source.zip">
+                    <span>Source Code</span>
+                    Python pipeline, dataset, and project files.
+                </a>
+                <a href="assets/discrete/pbs-project-statement.pdf">
+                    <span>Problem Statement</span>
+                    Original project requirements and deliverables.
+                </a>
+                <a href="https://youtu.be/QzhHWpDYZaY?si=iCB_WoPwstDid6cD" target="_blank" rel="noopener noreferrer">
+                    <span>YouTube Demo</span>
+                    Project explanation video and analysis walkthrough.
+                </a>
+                <a href="https://www.pbs.gov.pk/price-statistics/?authuser=0" target="_blank" rel="noopener noreferrer">
+                    <span>PBS Data Source</span>
+                    Price statistics portal used for CPI item price data.
+                </a>
+                <a href="https://snap.stanford.edu/class/cs224w-2018/handouts/15-centrality.pdf" target="_blank" rel="noopener noreferrer">
+                    <span>Centrality Reference</span>
+                    Network centrality concepts used for graph interpretation.
+                </a>
+            </div>
+
+            <div class="case-analytics" data-animate>
+                <div class="analytics-heading">
+                    <p class="case-label">Deeper Analysis</p>
+                    <h3>What the network revealed</h3>
+                    <p>
+                        The graph analysis showed that price movement is not isolated by product category.
+                        Some items repeatedly moved together across cities and years, which made centrality,
+                        density, and persistent edges important for interpreting inflation behavior.
+                    </p>
+                </div>
+                <div class="analysis-graphs">
+                    <article class="graph-card">
+                        <span>Network Density by Year</span>
+                        <div class="bar-graph" aria-label="Network density by fiscal year">
+                            <i style="--value: 100%"><b>2023-24</b></i>
+                            <i style="--value: 38%"><b>2024-25</b></i>
+                            <i style="--value: 45%"><b>2025-26</b></i>
+                        </div>
+                    </article>
+                    <article class="graph-card">
+                        <span>Graph Pipeline</span>
+                        <div class="flow-graph">
+                            <b>PBS Data</b>
+                            <b>Price Change Vectors</b>
+                            <b>Cosine Similarity</b>
+                            <b>Centrality Analysis</b>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="case-summary-final" data-animate>
+                <p class="case-label">Most Important Summary</p>
+                <h3>What I did in the Discrete Structures project</h3>
+                <p>
+                    I contributed to a full graph-theory analysis of PBS CPI item prices by helping
+                    interpret item relationships, network density, persistent commodity pairs, centrality
+                    results, and temporal changes. The project demonstrates my ability to use Discrete
+                    Structures beyond theory: I applied graphs, similarity, and centrality to explain
+                    real economic data in a professional case-study format. For a recruiter, it shows
+                    I can move from raw data to a defensible model, then explain the model clearly.
+                </p>
+            </div>
+        </section>
+
+        <section class="timeline-section" id="timeline" aria-labelledby="timeline-title">
+            <div class="section-heading" data-animate>
+                <p class="eyebrow">Stage 07 / Flight Log</p>
+                <h2 id="timeline-title">How curiosity became engineering.</h2>
+                <p>
+                    This is the route behind the portfolio: nine logs that show how each
+                    milestone changed the way I think, build, explain, and keep moving.
+                </p>
+            </div>
+
+            <div class="flight-log-route" data-animate data-flight-card style="--flight-log-progress: 0%">
+                <div class="flight-route-line" aria-hidden="true"></div>
+
+                <article class="flight-log-entry is-expanded" data-flight-log-entry data-flight-log-index="1">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-1" aria-expanded="true" aria-controls="flight-log-panel-1">
+                        <span class="flight-log-number">Flight Log 001</span>
+                        <span class="flight-log-heading">Takeoff</span>
+                        <span class="flight-log-next">Destination Selected</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-1" role="region" aria-labelledby="flight-log-trigger-1">
+                        <p>
+                            The route began when I selected FAST National University and committed to BS Computer Science.
+                            It was the first serious decision that turned curiosity about technology into a direction I could follow.
+                        </p>
+                        <div class="flight-log-details">
+                            <span><strong>Skills</strong> Academic discipline, computer science foundations, long-term planning</span>
+                            <span><strong>Biggest Lesson</strong> A clear destination makes difficult work easier to accept.</span>
+                            <span><strong>Why It Mattered</strong> It gave my learning a runway instead of leaving it as scattered interest.</span>
+                            <span><strong>Next Heading</strong> Learning to Think</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="2">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-2" aria-expanded="false" aria-controls="flight-log-panel-2">
+                        <span class="flight-log-number">Flight Log 002</span>
+                        <span class="flight-log-heading">Learning to Think</span>
+                        <span class="flight-log-next">Programming Fundamentals</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-2" role="region" aria-labelledby="flight-log-trigger-2" hidden>
+                        <p>
+                            Programming Fundamentals taught me that code is not about typing fast. It is about understanding
+                            the problem, breaking it into smaller pieces, and checking every assumption before moving forward.
+                        </p>
+                        <div class="flight-log-skills" aria-label="Programming fundamentals topics">
+                            <span>Variables</span><span>Loops</span><span>Functions</span><span>Arrays</span><span>Pointers</span><span>File Handling</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Large problems become manageable when they are divided into smaller decisions.</span>
+                            <span><strong>Why It Mattered</strong> This mindset became the base for every assignment, project, and debugging session after it.</span>
+                            <span><strong>Next Heading</strong> Engineering the Mind</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" id="flight-log-3" data-flight-log-entry data-flight-log-index="3">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-3" aria-expanded="false" aria-controls="flight-log-panel-3">
+                        <span class="flight-log-number">Flight Log 003</span>
+                        <span class="flight-log-heading">Engineering the Mind</span>
+                        <span class="flight-log-next">Physics, Calculus, Discrete Mathematics</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-3" role="region" aria-labelledby="flight-log-trigger-3" hidden>
+                        <p>
+                            Applied Physics, Calculus, and Discrete Mathematics trained me to look for structure. Vectors,
+                            graphs, logic, and mathematical models made problem solving feel less like guessing and more like reasoning.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Vectors</span><span>Graphs</span><span>Logic</span><span>Mathematics</span><span>Problem Solving</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Good engineering starts with clear thinking before implementation.</span>
+                            <span><strong>Why It Mattered</strong> These subjects improved how I explain systems, growth, relationships, and tradeoffs.</span>
+                            <span><strong>Next Heading</strong> Software Architecture</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" id="flight-log-4" data-flight-log-entry data-flight-log-index="4">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-4" aria-expanded="false" aria-controls="flight-log-panel-4">
+                        <span class="flight-log-number">Flight Log 004</span>
+                        <span class="flight-log-heading">Software Architecture</span>
+                        <span class="flight-log-next">Object-Oriented Programming</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-4" role="region" aria-labelledby="flight-log-trigger-4" hidden>
+                        <p>
+                            Object-Oriented Programming changed the way I saw software. I started moving from writing isolated
+                            code toward designing systems with responsibilities, relationships, and reusable structure.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Classes</span><span>Objects</span><span>Constructors</span><span>Memory</span><span>Inheritance</span><span>Projects</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Code becomes easier to grow when responsibilities are clear.</span>
+                            <span><strong>Why It Mattered</strong> It prepared me to think about architecture instead of only solving the current line of code.</span>
+                            <span><strong>Next Heading</strong> Engineering Missions</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" id="flight-log-5" data-flight-log-entry data-flight-log-index="5">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-5" aria-expanded="false" aria-controls="flight-log-panel-5">
+                        <span class="flight-log-number">Flight Log 005</span>
+                        <span class="flight-log-heading">Engineering Missions</span>
+                        <span class="flight-log-next">QuizMaster, Tumble Pop, PBS</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-5" role="region" aria-labelledby="flight-log-trigger-5" hidden>
+                        <p>
+                            The projects became completed missions. QuizMaster taught me reliable user flow and files,
+                            Tumble Pop taught me system-by-system game building, and the PBS project taught me how to explain real data through graphs.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>QuizMaster</span><span>Tumble Pop</span><span>PBS</span><span>C++</span><span>SFML</span><span>Python</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> A finished project is proof that planning, debugging, and communication worked together.</span>
+                            <span><strong>Why It Mattered</strong> These missions turned classroom concepts into evidence recruiters can inspect.</span>
+                            <span><strong>Next Heading</strong> Building Experiences</span>
+                        </div>
+                        <a class="btn secondary flight-log-mission-link" href="#projects">View Mission Archive</a>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="6">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-6" aria-expanded="false" aria-controls="flight-log-panel-6">
+                        <span class="flight-log-number">Flight Log 006</span>
+                        <span class="flight-log-heading">Building Experiences</span>
+                        <span class="flight-log-next">Three.js, GSAP, UI Architecture</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-6" role="region" aria-labelledby="flight-log-trigger-6" hidden>
+                        <p>
+                            This portfolio became another learning project. I used Three.js, GSAP, UI structure,
+                            accessibility, and performance decisions to make the site feel like one connected experience.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Three.js</span><span>GSAP</span><span>UI Architecture</span><span>Animation</span><span>Accessibility</span><span>Performance</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Interaction design matters most when it supports the story instead of distracting from it.</span>
+                            <span><strong>Why It Mattered</strong> It helped me connect frontend engineering with motion, layout, and user experience.</span>
+                            <span><strong>Next Heading</strong> Sharing Knowledge</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="7">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-7" aria-expanded="false" aria-controls="flight-log-panel-7">
+                        <span class="flight-log-number">Flight Log 007</span>
+                        <span class="flight-log-heading">Sharing Knowledge</span>
+                        <span class="flight-log-next">Teaching strengthened understanding</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-7" role="region" aria-labelledby="flight-log-trigger-7" hidden>
+                        <p>
+                            Helping other students made my own understanding stronger. Explaining notes, creating tests,
+                            and tutoring forced me to simplify ideas until the logic became clear.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Tutoring</span><span>Notes</span><span>Tests</span><span>Explaining Concepts</span><span>Revision Systems</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> If I cannot explain a concept simply, I do not understand it deeply enough yet.</span>
+                            <span><strong>Why It Mattered</strong> Teaching improved my debugging, communication, and patience as an engineer.</span>
+                            <span><strong>Next Heading</strong> Today</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="8">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-8" aria-expanded="false" aria-controls="flight-log-panel-8">
+                        <span class="flight-log-number">Flight Log 008</span>
+                        <span class="flight-log-heading">Today</span>
+                        <span class="flight-log-next">Current Stack and Focus</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-8" role="region" aria-labelledby="flight-log-trigger-8" hidden>
+                        <p>
+                            Today I am focused on frontend engineering, interactive experiences, and practical problem solving.
+                            My current stack is built around C++, JavaScript, Three.js, HTML, CSS, GSAP, Git, and GitHub.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>C++</span><span>JavaScript</span><span>Three.js</span><span>HTML</span><span>CSS</span><span>GSAP</span><span>Git</span><span>GitHub</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> Tools matter, but the stronger skill is choosing the right tool for the problem.</span>
+                            <span><strong>Why It Mattered</strong> It defines who I am right now: a student building toward polished, useful software.</span>
+                            <span><strong>Next Heading</strong> Destination Ahead</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="flight-log-entry" data-flight-log-entry data-flight-log-index="9">
+                    <button class="flight-log-trigger" type="button" id="flight-log-trigger-9" aria-expanded="false" aria-controls="flight-log-panel-9">
+                        <span class="flight-log-number">Flight Log 009</span>
+                        <span class="flight-log-heading">Destination Ahead</span>
+                        <span class="flight-log-next">The horizon keeps moving</span>
+                    </button>
+                    <div class="flight-log-panel" id="flight-log-panel-9" role="region" aria-labelledby="flight-log-trigger-9" hidden>
+                        <p>
+                            The next destination is not a finish line. I want to grow through internships,
+                            artificial intelligence, cloud systems, open source, research, and the habit of never stopping my learning.
+                        </p>
+                        <div class="flight-log-skills">
+                            <span>Internship</span><span>Artificial Intelligence</span><span>Cloud</span><span>Open Source</span><span>Research</span><span>Never Stop Learning</span>
+                        </div>
+                        <div class="flight-log-details">
+                            <span><strong>Biggest Lesson</strong> A good engineer keeps the route open and keeps improving the aircraft.</span>
+                            <span><strong>Why It Mattered</strong> It keeps the portfolio honest: this is progress, not completion.</span>
+                            <span><strong>Next Heading</strong> Continue the flight</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="contact-section final-approach" id="contact" aria-labelledby="contact-title">
+            <div class="section-heading" data-animate>
+                <p class="eyebrow">Stage 08 / Final Approach</p>
+                <h2 id="contact-title">Open channel for internships, collaborations, and serious engineering conversations.</h2>
+                <p>
+                    This portfolio documents my current route as a Computer Science student:
+                    building projects, studying systems, and turning coursework into practical
+                    engineering judgement.
+                </p>
+            </div>
+
+            <div class="contact-runway" data-animate aria-label="Contact readiness summary">
+                <article>
+                    <span>Current Base</span>
+                    <strong>Islamabad, Pakistan</strong>
+                    <p>Available for remote-first conversations, academic collaboration, and early-career software opportunities.</p>
+                </article>
+                <article>
+                    <span>Academic Signal</span>
+                    <strong>NUCES / FAST</strong>
+                    <p>Computer Science foundation across programming, discrete structures, calculus, and project-based problem solving.</p>
+                </article>
+                <article>
+                    <span>Best Fit</span>
+                    <strong>Frontend, C++, Python, SFML</strong>
+                    <p>Roles or projects where careful implementation, communication, and learning velocity matter.</p>
+                </article>
+            </div>
+
+            <div class="arrival-clearance" data-animate aria-label="Final approach summary">
+                <span>Arrival Clearance</span>
+                <p>
+                    If the work, case studies, and flight log match what you are looking for,
+                    the next step is simple: send context, ask a focused question, or start a conversation.
+                </p>
+            </div>
+
+            <div class="contact-grid">
+                <aside class="contact-card" data-animate aria-label="Direct contact details">
+                    <div class="contact-card__intro">
+                        <p class="case-label">Transmission Details</p>
+                        <h3>Reach Muhammad Usman</h3>
+                        <p>
+                            Use the direct channels below for internship discussions, project reviews,
+                            collaboration ideas, or feedback on this portfolio.
+                        </p>
+                    </div>
+                    <article class="contact-route">
+                        <span>Email</span>
+                        <a href="mailto:usmankhan312007@gmail.com">usmankhan312007@gmail.com</a>
+                    </article>
+                    <article class="contact-route">
+                        <span>GitHub</span>
+                        <a href="https://github.com/usmankhan-23" target="_blank" rel="noopener noreferrer" aria-label="Open Muhammad Usman's GitHub profile in a new tab">github.com/usmankhan-23</a>
+                    </article>
+                    <article class="contact-route">
+                        <span>Resume</span>
+                        <a href="assets/resume.pdf" aria-label="Download Muhammad Usman's resume PDF">Download resume PDF</a>
+                    </article>
+                    <article class="contact-route">
+                        <span>LinkedIn</span>
+                        <a href="https://www.linkedin.com/in/usman-khan-a8a88440a" target="_blank" rel="noopener noreferrer" aria-label="Open Muhammad Usman's LinkedIn profile in a new tab">linkedin.com/in/usman-khan-a8a88440a</a>
+                    </article>
+                    <article class="contact-route">
+                        <span>Phone</span>
+                        <a href="tel:+923209442741">+92 3209442741</a>
+                    </article>
+                    <article class="contact-route">
+                        <span>Location</span>
+                        <p>Islamabad, Pakistan</p>
+                    </article>
+                    <article class="contact-route">
+                        <span>University</span>
+                        <p>National University of Computer and Emerging Sciences (NUCES)</p>
+                    </article>
+                    <div class="contact-assurance" aria-label="Contact expectations">
+                        <span>Response Intent</span>
+                        <p>I prefer clear context: role, project, timeline, and what you would like me to review or discuss.</p>
+                    </div>
+                </aside>
+
+                <form class="contact-form" data-animate aria-labelledby="contact-form-title" data-contact-form novalidate>
+                    <div class="contact-form__heading">
+                        <p class="case-label">Message Draft</p>
+                        <h3 id="contact-form-title">Prepare a focused introduction</h3>
+                        <p>
+                            This form opens your email app with the message prepared. It does not send
+                            anything automatically or store your data.
+                        </p>
+                    </div>
+                    <label for="contact-name">
+                        <span>Your Name</span>
+                        <input id="contact-name" type="text" name="name" placeholder="Enter your name" autocomplete="name" aria-describedby="contact-name-feedback" aria-invalid="false" required>
+                        <small class="field-feedback" id="contact-name-feedback">Please enter your name.</small>
+                    </label>
+                    <label for="contact-email">
+                        <span>Your Email</span>
+                        <input id="contact-email" type="email" name="email" placeholder="Enter your email" autocomplete="email" aria-describedby="contact-email-feedback" aria-invalid="false" required>
+                        <small class="field-feedback" id="contact-email-feedback">Please enter your email.</small>
+                    </label>
+                    <label for="contact-subject">
+                        <span>Subject</span>
+                        <select id="contact-subject" name="subject" autocomplete="off" aria-describedby="contact-subject-feedback" aria-invalid="false" required>
+                            <option value="">Select a subject</option>
+                            <option value="Internship opportunity">Internship opportunity</option>
+                            <option value="Project collaboration">Project collaboration</option>
+                            <option value="Portfolio feedback">Portfolio feedback</option>
+                            <option value="Academic or technical discussion">Academic or technical discussion</option>
+                        </select>
+                        <small class="field-feedback" id="contact-subject-feedback">Please select a subject.</small>
+                    </label>
+                    <label for="contact-message">
+                        <span>Message</span>
+                        <textarea id="contact-message" name="message" rows="5" placeholder="Write your message" autocomplete="off" aria-describedby="contact-message-feedback" aria-invalid="false" required></textarea>
+                        <small class="field-feedback" id="contact-message-feedback">Message cannot be empty.</small>
+                    </label>
+                    <div class="contact-form__actions">
+                        <button class="btn primary" type="submit">Prepare Email Message</button>
+                        <button class="btn secondary contact-clear-draft" type="button" data-contact-clear hidden>Clear Draft</button>
+                    </div>
+                    <p class="form-status" id="contact-status" role="status" aria-live="polite">Ready to prepare your email.</p>
+                </form>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <p>Muhammad Usman - CS Student Portfolio</p>
+        </footer>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./assets/vendor/three.module.js"
+            }
+        }
+    </script>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/ScrollTrigger.min.js"></script>
+    <script src="script.js?v=phase11-module4"></script>
+    <script src="cursor-glitter.js?v=phase11-module2"></script>
+    <script type="module" src="three-scene.js?v=phase8-discrete-module2"></script>
+</body>
+</html>

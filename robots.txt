@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://usmankhan-23.github.io/usman-portfolio/sitemap.xml
